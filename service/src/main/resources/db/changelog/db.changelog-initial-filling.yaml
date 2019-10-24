@@ -1,0 +1,182 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/db.changelog-lesson1.yaml
+  - changeSet:
+      id: 18
+      author: vrg18
+      comment: "Create user admin"
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "1bccd8de-fd7e-4e60-8d0d-760ebbfa728b"
+              - column:
+                  name: user_name
+                  value: "admin1"
+              - column:
+                  name: encrypted_password
+                  value: "$2a$10$PrI5Gk9L.tSZiW9FXhTS8O8Mz9E97k2FZbFvGFFaSsiTUIl.TCrFu"
+              - column:
+                  name: enabled
+                  value: true
+              - column:
+                  name: bot
+                  value: false
+              - column:
+                  name: first_name
+                  value: "Administrator"
+              - column:
+                  name: last_activity
+                  value: 01.01.2001
+  - changeSet:
+      id: 19
+      author: vrg18
+      comment: "Create user moderator"
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "3d691e1b-0354-45e5-b921-bdbbdbfcd621"
+              - column:
+                  name: user_name
+                  value: "moderator1"
+              - column:
+                  name: encrypted_password
+                  value: "$2a$10$PrI5Gk9L.tSZiW9FXhTS8O8Mz9E97k2FZbFvGFFaSsiTUIl.TCrFu"
+              - column:
+                  name: enabled
+                  value: true
+              - column:
+                  name: bot
+                  value: false
+              - column:
+                  name: first_name
+                  value: "Moderator"
+              - column:
+                  name: last_activity
+                  value: 01.01.2001
+  - changeSet:
+      id: 20
+      author: vrg18
+      comment: "Create simple user"
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "58d4213e-ffec-47f8-b55a-d8cb747669d3"
+              - column:
+                  name: user_name
+                  value: "user1"
+              - column:
+                  name: encrypted_password
+                  value: "$2a$10$PrI5Gk9L.tSZiW9FXhTS8O8Mz9E97k2FZbFvGFFaSsiTUIl.TCrFu"
+              - column:
+                  name: enabled
+                  value: true
+              - column:
+                  name: bot
+                  value: false
+              - column:
+                  name: first_name
+                  value: "Interlocutor"
+              - column:
+                  name: last_activity
+                  value: 01.01.2001
+  - changeSet:
+      id: 21
+      author: vrg18
+      comment: "Create role admin"
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  value: "a429f65e-f85c-4bd0-aa83-5187518a734e"
+              - column:
+                  name: name
+                  value: "ROLE_ADMIN"
+  - changeSet:
+      id: 22
+      author: vrg18
+      comment: "Create role moderator"
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  value: "ac1349d5-680f-472f-91e8-40ca4525256b"
+              - column:
+                  name: name
+                  value: "ROLE_MODERATOR"
+  - changeSet:
+      id: 23
+      author: vrg18
+      comment: "Create role user"
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  value: "b978f459-5b60-4223-8ea6-78c18be5342c"
+              - column:
+                  name: name
+                  value: "ROLE_USER"
+  - changeSet:
+      id: 24
+      author: vrg18
+      comment: "Create user-role admin"
+      changes:
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: id
+                  value: "8708b2ff-5e2d-4b10-89e6-0c92a099e712"
+              - column:
+                  name: user_id
+                  value: "1bccd8de-fd7e-4e60-8d0d-760ebbfa728b"
+              - column:
+                  name: role_id
+                  value: "a429f65e-f85c-4bd0-aa83-5187518a734e"
+  - changeSet:
+      id: 25
+      author: vrg18
+      comment: "Create user-role moderator"
+      changes:
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: id
+                  value: "918d87d1-96a9-470b-9711-5c98697e06e1"
+              - column:
+                  name: user_id
+                  value: "3d691e1b-0354-45e5-b921-bdbbdbfcd621"
+              - column:
+                  name: role_id
+                  value: "ac1349d5-680f-472f-91e8-40ca4525256b"
+  - changeSet:
+      id: 26
+      author: vrg18
+      comment: "Create user-role simple user"
+      changes:
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: id
+                  value: "f01eda82-cb48-4783-acb1-77f525aeb719"
+              - column:
+                  name: user_id
+                  value: "58d4213e-ffec-47f8-b55a-d8cb747669d3"
+              - column:
+                  name: role_id
+                  value: "b978f459-5b60-4223-8ea6-78c18be5342c"

@@ -1,0 +1,189 @@
+databaseChangeLog:
+- changeSet:
+    id: 1571903909296-1
+    author: vrg18 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: date
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: text
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: UUID
+        tableName: messages
+- changeSet:
+    id: 1571903909296-2
+    author: vrg18 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(30)
+        tableName: roles
+- changeSet:
+    id: 1571903909296-3
+    author: vrg18 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: bot
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: enabled
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: encrypted_password
+            type: VARCHAR(128)
+        - column:
+            constraints:
+              nullable: false
+            name: first_name
+            type: VARCHAR(100)
+        - column:
+            constraints:
+              nullable: false
+            name: last_activity
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            name: last_name
+            type: VARCHAR(100)
+        - column:
+            constraints:
+              nullable: false
+            name: user_name
+            type: VARCHAR(50)
+        tableName: users
+- changeSet:
+    id: 1571903909296-4
+    author: vrg18 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: role_id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: UUID
+        tableName: users_roles
+- changeSet:
+    id: 1571903909296-5
+    author: vrg18 (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: messagesPK
+        tableName: messages
+- changeSet:
+    id: 1571903909296-6
+    author: vrg18 (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: rolesPK
+        tableName: roles
+- changeSet:
+    id: 1571903909296-7
+    author: vrg18 (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: usersPK
+        tableName: users
+- changeSet:
+    id: 1571903909296-8
+    author: vrg18 (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: users_rolesPK
+        tableName: users_roles
+- changeSet:
+    id: 1571903909296-9
+    author: vrg18 (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: user_name
+        constraintName: UC_USERSUSER_NAME_COL
+        tableName: users
+- changeSet:
+    id: 1571903909296-10
+    author: vrg18 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: users_roles
+        constraintName: FK2o0jvgh89lemvvo17cbqvdxaa
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+- changeSet:
+    id: 1571903909296-11
+    author: vrg18 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: role_id
+        baseTableName: users_roles
+        constraintName: FKj6m8fwv7oqv74fcehir1a9ffy
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: roles
+- changeSet:
+    id: 1571903909296-12
+    author: vrg18 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: messages
+        constraintName: FKpsmh6clh3csorw43eaodlqvkn
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+

@@ -1,4 +1,10 @@
 databaseChangeLog:
   - include:
-      file: db.changelog-20191022-143402.yaml
+      file: db.changelog-20191024-075809.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-initial-filling.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-create-table-persistent_logins.yaml
       relativeToChangelogFile: true

@@ -13,21 +13,21 @@
     <h3>Editing user-role relationships</h3>
 </div>
 <div class="container">
-    <form class="form-horizontal" th:object="${userRole}" th:action="@{/save_userrole}" name="edit_form"
+    <form th:object="${userRole}" th:action="@{/save_userrole}" name="edit_form"
           id="edit_form" method="post" role="form">
         <div th:if="${newUserRole}" class="form-group">
             <input type="hidden" id="id" name="id"/>
             <label for="user">User</label>
-            <select class="form-control" name="user" id="user">
-                <option value="">Select user</option>
+            <select name="user" id="user">
+                <option value="">-- Select user --</option>
                 <option th:each="user : ${users}"
                         th:value="${user.id}"
                         th:text="${user.userName}">
                 </option>
             </select>
             <label for="role">Role</label>
-            <select class="form-control" name="role" id="role">
-                <option value="">Select role</option>
+            <select name="role" id="role">
+                <option value="">-- Select role --</option>
                 <option th:each="role : ${roles}"
                         th:value="${role.id}"
                         th:text="${role.name}">
@@ -35,9 +35,9 @@
             </select>
         </div>
         <div th:unless="${newUserRole}" class="form-group">
-            <input type="hidden" id="id" name="id" th:field="*{id}"/>
+            <input type="hidden" th:field="*{id}"/>
             <label for="user">User</label>
-            <select class="form-control" name="user" id="user">
+            <select name="user" id="user">
                 <option th:each="user : ${users}"
                         th:value="${user.id}"
                         th:selected="${user.id.equals(userRole.user.id)}"
@@ -45,7 +45,7 @@
                 </option>
             </select>
             <label for="role">Role</label>
-            <select class="form-control" name="role" id="role">
+            <select name="role" id="role">
                 <option th:each="role : ${roles}"
                         th:value="${role.id}"
                         th:selected="${role.id.equals(userRole.role.id)}"

@@ -1,6 +1,7 @@
 package edu.vrg18.cyber_chat.entity;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.Column;
@@ -38,6 +39,7 @@ public class AppUser {
     private String lastName;
 
     @Column(name = "last_activity", nullable = false)
+    @DateTimeFormat(pattern ="dd.MM.yyyy HH:mm")
     private Date lastActivity;
 
     @Transient

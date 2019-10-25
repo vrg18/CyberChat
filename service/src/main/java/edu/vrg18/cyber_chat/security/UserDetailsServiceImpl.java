@@ -36,14 +36,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        AppUser user = userRepository.findUserByUserName(userName);
 
-        if (user == null) {
-            System.out.println("User not found! " + userName);
-            throw new UsernameNotFoundException("User " + userName + " was not found in the database");
-        }
-
-        System.out.println("Found User: " + user);
+        AppUser user = userRepository.findAppUserByUserName(userName)
+                .orElseThrow(() -> new UsernameNotFoundException("User " + userName + " was not found in the database"));
 
         // [ROLE_USER, ROLE_ADMIN,..]
         List<String> roleNames = getRoleNames(user.getId());

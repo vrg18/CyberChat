@@ -1,40 +1,33 @@
 package edu.vrg18.cyber_chat.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name = "messages")
+@Table(name = "interlocutors")
 @Data
-public class Message {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Interlocutor {
 
     @Id
     @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false)
-    @DateTimeFormat(pattern ="dd.MM.yyyy HH:mm")
-    private Date date;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private AppUser author;
-
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
-    @Column(nullable = false)
-    private String text;
-
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private AppUser user;
 }

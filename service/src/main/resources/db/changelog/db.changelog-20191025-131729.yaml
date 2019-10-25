@@ -1,6 +1,28 @@
 databaseChangeLog:
 - changeSet:
-    id: 1571903909296-1
+    id: 1572009467810-1
+    author: vrg18 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: room_id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: UUID
+        tableName: interlocutors
+- changeSet:
+    id: 1572009467810-2
     author: vrg18 (generated)
     changes:
     - createTable:
@@ -25,9 +47,14 @@ databaseChangeLog:
               nullable: false
             name: user_id
             type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: room_id
+            type: UUID
         tableName: messages
 - changeSet:
-    id: 1571903909296-2
+    id: 1572009467810-3
     author: vrg18 (generated)
     changes:
     - createTable:
@@ -41,10 +68,42 @@ databaseChangeLog:
             constraints:
               nullable: false
             name: name
-            type: VARCHAR(30)
+            type: VARCHAR(50)
         tableName: roles
 - changeSet:
-    id: 1571903909296-3
+    id: 1572009467810-4
+    author: vrg18 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: closed
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: confidential
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(50)
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: UUID
+        tableName: rooms
+- changeSet:
+    id: 1572009467810-5
     author: vrg18 (generated)
     changes:
     - createTable:
@@ -89,7 +148,7 @@ databaseChangeLog:
             type: VARCHAR(50)
         tableName: users
 - changeSet:
-    id: 1571903909296-4
+    id: 1572009467810-6
     author: vrg18 (generated)
     changes:
     - createTable:
@@ -111,7 +170,15 @@ databaseChangeLog:
             type: UUID
         tableName: users_roles
 - changeSet:
-    id: 1571903909296-5
+    id: 1572009467810-7
+    author: vrg18 (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: interlocutorsPK
+        tableName: interlocutors
+- changeSet:
+    id: 1572009467810-8
     author: vrg18 (generated)
     changes:
     - addPrimaryKey:
@@ -119,7 +186,7 @@ databaseChangeLog:
         constraintName: messagesPK
         tableName: messages
 - changeSet:
-    id: 1571903909296-6
+    id: 1572009467810-9
     author: vrg18 (generated)
     changes:
     - addPrimaryKey:
@@ -127,7 +194,15 @@ databaseChangeLog:
         constraintName: rolesPK
         tableName: roles
 - changeSet:
-    id: 1571903909296-7
+    id: 1572009467810-10
+    author: vrg18 (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: roomsPK
+        tableName: rooms
+- changeSet:
+    id: 1572009467810-11
     author: vrg18 (generated)
     changes:
     - addPrimaryKey:
@@ -135,7 +210,7 @@ databaseChangeLog:
         constraintName: usersPK
         tableName: users
 - changeSet:
-    id: 1571903909296-8
+    id: 1572009467810-12
     author: vrg18 (generated)
     changes:
     - addPrimaryKey:
@@ -143,7 +218,7 @@ databaseChangeLog:
         constraintName: users_rolesPK
         tableName: users_roles
 - changeSet:
-    id: 1571903909296-9
+    id: 1572009467810-13
     author: vrg18 (generated)
     changes:
     - addUniqueConstraint:
@@ -151,7 +226,7 @@ databaseChangeLog:
         constraintName: UC_USERSUSER_NAME_COL
         tableName: users
 - changeSet:
-    id: 1571903909296-10
+    id: 1572009467810-14
     author: vrg18 (generated)
     changes:
     - addForeignKeyConstraint:
@@ -163,7 +238,55 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: users
 - changeSet:
-    id: 1571903909296-11
+    id: 1572009467810-15
+    author: vrg18 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: room_id
+        baseTableName: messages
+        constraintName: FK92hs6y8g4al98ihp4ms6nbxeq
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: rooms
+- changeSet:
+    id: 1572009467810-16
+    author: vrg18 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: rooms
+        constraintName: FKa84ab0lpjkgd9beja545d9ysd
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+- changeSet:
+    id: 1572009467810-17
+    author: vrg18 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: room_id
+        baseTableName: interlocutors
+        constraintName: FKakr2k3pobx1qgim1kfte1gmg5
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: rooms
+- changeSet:
+    id: 1572009467810-18
+    author: vrg18 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: interlocutors
+        constraintName: FKcqrilogbj0rcn3wiunu9leitg
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+- changeSet:
+    id: 1572009467810-19
     author: vrg18 (generated)
     changes:
     - addForeignKeyConstraint:
@@ -175,7 +298,7 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: roles
 - changeSet:
-    id: 1571903909296-12
+    id: 1572009467810-20
     author: vrg18 (generated)
     changes:
     - addForeignKeyConstraint:

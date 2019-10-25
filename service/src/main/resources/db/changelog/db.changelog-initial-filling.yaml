@@ -25,7 +25,7 @@ databaseChangeLog:
                   value: false
               - column:
                   name: first_name
-                  value: "Administrator"
+                  value: "Администратор"
               - column:
                   name: last_activity
                   value: 01.01.2001
@@ -54,7 +54,7 @@ databaseChangeLog:
                   value: false
               - column:
                   name: first_name
-                  value: "Moderator"
+                  value: "Модератор"
               - column:
                   name: last_activity
                   value: 01.01.2001
@@ -83,7 +83,7 @@ databaseChangeLog:
                   value: false
               - column:
                   name: first_name
-                  value: "Interlocutor"
+                  value: "Собеседник"
               - column:
                   name: last_activity
                   value: 01.01.2001
@@ -180,3 +180,77 @@ databaseChangeLog:
               - column:
                   name: role_id
                   value: "b978f459-5b60-4223-8ea6-78c18be5342c"
+  - changeSet:
+      id: 27
+      author: vrg18
+      comment: "Create room Bazaar"
+      changes:
+        - insert:
+            tableName: rooms
+            columns:
+              - column:
+                  name: id
+                  value: "0b2cf69c-3c7a-438e-b962-8191aa200ade"
+              - column:
+                  name: name
+                  value: "Bazaar"
+              - column:
+                  name: user_id
+                  value: "1bccd8de-fd7e-4e60-8d0d-760ebbfa728b"
+              - column:
+                  name: confidential
+                  value: false
+              - column:
+                  name: closed
+                  value: false
+  - changeSet:
+      id: 28
+      author: vrg18
+      comment: "Put the admin in the Bazaar"
+      changes:
+        - insert:
+            tableName: interlocutors
+            columns:
+              - column:
+                  name: id
+                  value: "82eeab9a-b90d-49ef-9af9-93761c7e5448"
+              - column:
+                  name: room_id
+                  value: "0b2cf69c-3c7a-438e-b962-8191aa200ade"
+              - column:
+                  name: user_id
+                  value: "1bccd8de-fd7e-4e60-8d0d-760ebbfa728b"
+  - changeSet:
+      id: 29
+      author: vrg18
+      comment: "Put the moderator in the Bazaar"
+      changes:
+        - insert:
+            tableName: interlocutors
+            columns:
+              - column:
+                  name: id
+                  value: "b34fdbf7-75df-4569-9dd0-c686a96bdde1"
+              - column:
+                  name: room_id
+                  value: "0b2cf69c-3c7a-438e-b962-8191aa200ade"
+              - column:
+                  name: user_id
+                  value: "3d691e1b-0354-45e5-b921-bdbbdbfcd621"
+  - changeSet:
+      id: 30
+      author: vrg18
+      comment: "Put the simple user in the Bazaar"
+      changes:
+        - insert:
+            tableName: interlocutors
+            columns:
+              - column:
+                  name: id
+                  value: "cae678cc-2704-44d4-b324-70b20c24505b"
+              - column:
+                  name: room_id
+                  value: "0b2cf69c-3c7a-438e-b962-8191aa200ade"
+              - column:
+                  name: user_id
+                  value: "58d4213e-ffec-47f8-b55a-d8cb747669d3"

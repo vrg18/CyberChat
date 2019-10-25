@@ -1,8 +1,13 @@
-package edu.vrg18.cyber_chat.service;
+package edu.vrg18.cyber_chat.service.implementation;
 
 import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.Interlocutor;
+import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
+import edu.vrg18.cyber_chat.repository.RoomRepository;
 import edu.vrg18.cyber_chat.repository.UserRepository;
+import edu.vrg18.cyber_chat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -14,10 +19,14 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final InterlocutorRepository interlocutorRepository;
+    private final RoomRepository roomRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, InterlocutorRepository interlocutorRepository, RoomRepository roomRepository) {
         this.userRepository = userRepository;
+        this.interlocutorRepository = interlocutorRepository;
+        this.roomRepository = roomRepository;
     }
 
     @Override
@@ -26,10 +35,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<AppUser> getUserByUserName(String userName) {
+        return userRepository.findAppUserByUserName(userName);
+    }
+
+    @Override
     public AppUser createUser(AppUser user) {
         user.setEncryptedPassword(user.getNewPassword());
         user.setLastActivity(new Date());
-        return userRepository.save(user);
+        user = userRepository.save(user);
+        interlocutorRepository.save(new Interlocutor(null, roomRepository.findRoomByName("Bazaar").get(), user));
+        return user;
     }
 
     @Override
@@ -47,6 +63,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<AppUser> findAllUsers() {
-        return userRepository.findAll();
+        return userRepository.findAll(new Sort(Sort.Direction.ASC, "userName"));
     }
 }

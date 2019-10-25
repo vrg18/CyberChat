@@ -1,9 +1,11 @@
-package edu.vrg18.cyber_chat.service;
+package edu.vrg18.cyber_chat.service.implementation;
 
 import edu.vrg18.cyber_chat.entity.Role;
 import edu.vrg18.cyber_chat.repository.RoleRepository;
 import edu.vrg18.cyber_chat.repository.UserRepository;
+import edu.vrg18.cyber_chat.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +44,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public List<Role> findAllRoles() {
-        return roleRepository.findAll();
+        return roleRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
     }
 }

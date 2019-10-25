@@ -5,9 +5,7 @@
 <!-- Include _menu.html -->
 <th:block th:include="/_menu"></th:block>
 <h3>Users and roles management</h3>
-<h4>
-    <div th:if="${userInfo != null}" th:utext="${userInfo}"></div>
-</h4>
+<h4 th:if="${userInfo != null}" th:utext="${userInfo}"></h4>
 
 <br>
 <table class="table table-bordered table-hover horizontal-align">
@@ -41,7 +39,7 @@
         </td>
         <td th:text="${user.firstName}"></td>
         <td th:text="${user.lastName}"></td>
-        <td th:text="${#dates.format(user.lastActivity,'dd.MM.yyyy HH:mm:ss')}"></td>
+        <td th:text="${#dates.format(user.lastActivity,'dd.MM.yyyy HH:mm')}"></td>
         <td style="text-align: center"><a th:href="@{'/edit_user/{id}'(id=${user.id})}"><i class="fa fa-edit"
                                                                                                style="font-size:20px"></i></a>
         </td>
@@ -118,5 +116,6 @@
 <form th:action="@{/new_userrole}">
     <button type="submit" class="btn btn-primary">Add link</button>
 </form>
+
 </body>
 </html>

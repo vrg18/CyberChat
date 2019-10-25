@@ -18,7 +18,7 @@ public class Role {
     @GeneratedValue
     private UUID id;
 
-    @Column(name = "name", length = 30, nullable = false)
+    @Column(name = "name", length = 50, nullable = false)
     private String name;
 
 }

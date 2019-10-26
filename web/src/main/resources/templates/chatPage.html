@@ -1,11 +1,40 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_head :: head"></head>
 <head>
     <title th:utext="${title}"></title>
 </head>
 <body>
 <!-- Include _menu.html -->
 <th:block th:include="/_menu"></th:block>
-<h2><span th:utext="${message}"></span></h2>
+
+<div class="container-fluid">
+    <div class="text-center"><h3><span th:utext="${message}"></h3></div>
+    <table class="table table-sm table-bordered">
+        <thead class="thead-light text-center">
+        <tr>
+            <th class="col-2">Rooms</th>
+            <th class="col-8">Chat</th>
+            <th class="col-2">Users</th>
+        </tr>
+        </thead>
+        <tbody>
+        <table class="table table-sm">
+            <colgroup>
+                <col span="1" style="background:Khaki">
+            </colgroup>
+            <tbody>
+            <tr th:each="room : ${rooms}">
+                <td th:text="${room.name}"><a th:href="@{'/select_room/{id}'(id=${room.id})}"></a></td>
+            </tr>
+            </tbody>
+        </table>
+        </tbody>
+    </table>
+    <form th:action="@{/new_interlocutor}">
+        <button type="submit" class="btn btn-primary">Add link</button>
+    </form>
+</div>
+
 </body>
 </html>

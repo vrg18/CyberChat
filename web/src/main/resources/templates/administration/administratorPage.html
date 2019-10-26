@@ -8,114 +8,122 @@
 <h4 th:if="${userInfo != null}" th:utext="${userInfo}"></h4>
 
 <br>
-<table class="table table-bordered table-hover horizontal-align">
-    <caption><h3>Users</h3></caption>
-    <colgroup>
-        <col span="6" style="background:Khaki">
-        <col span="2" style="background-color:LightCyan">
-    </colgroup>
-    <thead>
-    <tr>
-        <th style="width: 15%">Username</th>
-        <th style="width: 3%">On</th>
-        <th style="width: 3%">Bot</th>
-        <th style="width: 20%">First name</th>
-        <th style="width: 20%">Last name</th>
-        <th style="width: 12%">Last activity</th>
-        <th style="width: 3%"></th>
-        <th style="width: 3%"></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="user : ${users}">
-        <td th:text="${user.userName}"></td>
-        <td style="text-align: center">
-            <div th:if="${user.enabled}" class="fa fa-check"
-                 style="font-size:20px"></div>
-        </td>
-        <td style="text-align: center">
-            <div th:if="${user.bot}" class="fa fa-check"
-                 style="font-size:20px"></div>
-        </td>
-        <td th:text="${user.firstName}"></td>
-        <td th:text="${user.lastName}"></td>
-        <td th:text="${#dates.format(user.lastActivity,'dd.MM.yyyy HH:mm')}"></td>
-        <td style="text-align: center"><a th:href="@{'/edit_user/{id}'(id=${user.id})}"><i class="fa fa-edit"
+<div class="container-fluid">
+    <div class="text-center"><h4>Users</h4></div>
+    <table class="table table-sm table-bordered">
+        <colgroup>
+            <col span="6" style="background:Khaki">
+            <col span="2" style="background-color:LightCyan">
+        </colgroup>
+        <thead class="thead-light text-center">
+        <tr>
+            <th>Username</th>
+            <th class="col-1">On</th>
+            <th class="col-1">Bot</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th></th>
+            <th class="col-1"></th>
+            <th class="col-1"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.userName}"></td>
+            <td style="text-align: center">
+                <div th:if="${user.enabled}" class="fa fa-check"
+                     style="font-size:20px"></div>
+            </td>
+            <td style="text-align: center">
+                <div th:if="${user.bot}" class="fa fa-check"
+                     style="font-size:20px"></div>
+            </td>
+            <td th:text="${user.firstName}"></td>
+            <td th:text="${user.lastName}"></td>
+            <td th:text="${#dates.format(user.lastActivity,'dd.MM.yyyy HH:mm')}"></td>
+            <td style="text-align: center"><a th:href="@{'/edit_user/{id}'(id=${user.id})}"><i class="fa fa-edit"
                                                                                                style="font-size:20px"></i></a>
-        </td>
-        <td style="text-align: center"><a th:href="@{'/delete_user/{id}'(id=${user.id})}"><i class="fa fa-trash"
+            </td>
+            <td style="text-align: center"><a th:href="@{'/delete_user/{id}'(id=${user.id})}"><i class="fa fa-trash"
                                                                                                  style="font-size:20px"></i></a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<form th:action="@{/new_user}">
-    <button type="submit" class="btn btn-primary">Add user</button>
-</form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <form th:action="@{/new_user}">
+        <button type="submit" class="btn btn-primary">Add user</button>
+    </form>
+</div>
 
 <br>
-<table class="table table-bordered table-hover horizontal-align">
-    <caption><h3>Roles</h3></caption>
-    <colgroup>
-        <col span="1" style="background:Khaki">
-        <col span="2" style="background-color:LightCyan">
-    </colgroup>
-    <thead>
-    <tr>
-        <th style="width: 40%">Role name</th>
-        <th style="width: 5%"></th>
-        <th style="width: 5%"></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="role : ${roles}">
-        <td th:hidden="${role.id}">roleId</td>
-        <td th:text="${role.name}">roleName</td>
-        <td style="text-align: center"><a th:href="@{'/edit_role/{id}'(id=${role.id})}"><i class="fa fa-edit"
+<div class="container-fluid">
+    <div class="text-center"><h4>Roles</h4></div>
+    <table class="table table-sm table-bordered">
+        <colgroup>
+            <col span="1" style="background:Khaki">
+            <col span="2" style="background-color:LightCyan">
+        </colgroup>
+        <thead class="thead-light text-center">
+        <tr>
+            <th>Role name</th>
+            <th class="col-1"></th>
+            <th class="col-1"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="role : ${roles}">
+            <td th:hidden="${role.id}">roleId</td>
+            <td th:text="${role.name}">roleName</td>
+            <td style="text-align: center"><a th:href="@{'/edit_role/{id}'(id=${role.id})}"><i class="fa fa-edit"
                                                                                                style="font-size:20px"></i></a>
-        </td>
-        <td style="text-align: center"><a th:href="@{'/delete_role/{id}'(id=${role.id})}"><i class="fa fa-trash"
+            </td>
+            <td style="text-align: center"><a th:href="@{'/delete_role/{id}'(id=${role.id})}"><i class="fa fa-trash"
                                                                                                  style="font-size:20px"></i></a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<form th:action="@{/new_role}">
-    <button type="submit" class="btn btn-primary">Add role</button>
-</form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <form th:action="@{/new_role}">
+        <button type="submit" class="btn btn-primary">Add role</button>
+    </form>
+</div>
 
 <br>
-<table class="table table-bordered table-hover horizontal-align">
-    <caption><h3>Users and their roles</h3></caption>
-    <colgroup>
-        <col span="2" style="background:Khaki">
-        <col span="2" style="background-color:LightCyan">
-    </colgroup>
-    <thead>
-    <tr>
-        <th style="width: 35%">User</th>
-        <th style="width: 35%">His role</th>
-        <th style="width: 15%"></th>
-        <th style="width: 15%"></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="userRole : ${usersRoles}">
-        <td th:hidden="${userRole.id}">id</td>
-        <td th:text="${userRole.user.userName}">User</td>
-        <td th:text="${userRole.role.name}">Role</td>
-        <td style="text-align: center"><a th:href="@{'/edit_userrole/{id}'(id=${userRole.id})}"><i class="fa fa-edit"
-                                                                                           style="font-size:20px"></i></a>
-        </td>
-        <td style="text-align: center"><a th:href="@{'/delete_userrole/{id}'(id=${userRole.id})}"><i class="fa fa-trash"
-                                                                                             style="font-size:20px"></i></a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<form th:action="@{/new_userrole}">
-    <button type="submit" class="btn btn-primary">Add link</button>
-</form>
+<div class="container-fluid">
+    <div class="text-center"><h4>Users and their roles</h4></div>
+    <table class="table table-sm table-bordered">
+        <colgroup>
+            <col span="2" style="background:Khaki">
+            <col span="2" style="background-color:LightCyan">
+        </colgroup>
+        <thead class="thead-light text-center">
+        <tr>
+            <th>User</th>
+            <th>His role</th>
+            <th class="col-1"></th>
+            <th class="col-1"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="userRole : ${usersRoles}">
+            <td th:hidden="${userRole.id}">id</td>
+            <td th:text="${userRole.user.userName}">User</td>
+            <td th:text="${userRole.role.name}">Role</td>
+            <td class="text-center"><a th:href="@{'/edit_userrole/{id}'(id=${userRole.id})}"><i
+                    class="fa fa-edit"
+                    style="font-size:20px"></i></a>
+            </td>
+            <td class="text-center"><a th:href="@{'/delete_userrole/{id}'(id=${userRole.id})}"><i
+                    class="fa fa-trash"
+                    style="font-size:20px"></i></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <form th:action="@{/new_userrole}">
+        <button type="submit" class="btn btn-primary">Add link</button>
+    </form>
+</div>
 
 </body>
 </html>

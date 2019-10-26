@@ -14,7 +14,7 @@
 </div>
 <div class="container">
     <form th:object="${message}" th:action="@{/save_message}" name="edit_form"
-          id="edit_form" method="post" message="form">
+          id="edit_form" method="post" role="form">
         <div th:if="${newMessage}" class="form-group">
             <input type="hidden" id="id" name="id"/>
             <label for="room">Room</label>

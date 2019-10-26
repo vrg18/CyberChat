@@ -2,6 +2,7 @@ package edu.vrg18.cyber_chat.service.implementation;
 
 import edu.vrg18.cyber_chat.entity.AppUser;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
+import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
 import edu.vrg18.cyber_chat.repository.RoomRepository;
 import edu.vrg18.cyber_chat.repository.UserRepository;
@@ -42,6 +43,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public AppUser createUser(AppUser user) {
         user.setEncryptedPassword(user.getNewPassword());
+        Room bazaarRoom = roomRepository.findRoomByName("Bazaar").orElse(roomRepository.findAllByConfidential(false).get(0));
+        user.setLastRoom(bazaarRoom);
         user.setLastActivity(new Date());
         user = userRepository.save(user);
         interlocutorRepository.save(new Interlocutor(null, roomRepository.findRoomByName("Bazaar").get(), user));

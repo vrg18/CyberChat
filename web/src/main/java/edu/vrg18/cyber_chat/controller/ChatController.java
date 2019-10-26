@@ -1,5 +1,7 @@
 package edu.vrg18.cyber_chat.controller;
 
+import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.service.InterlocutorService;
 import edu.vrg18.cyber_chat.service.MessageService;
@@ -9,8 +11,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR','ROLE_USER')")
@@ -29,11 +34,23 @@ public class ChatController {
     }
 
     @GetMapping("/")
-    public String welcomePage(Model model) {
+    public String chatPage(Model model, Principal principal) {
+        AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
+        String lastRoomId = currentUser.getLastRoom().getId().toString();
+        return "redirect:/room/".concat(lastRoomId);
+    }
+
+    @GetMapping("/room/{id}")
+    public String roomPage(@PathVariable UUID id, Model model, Principal principal) {
         model.addAttribute("title", "CyberChat");
         model.addAttribute("message", "Добро пожаловать в CyberChat!");
-        List<Room> rooms = roomService.findAllRooms();
+        AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
+        List<Room> rooms = roomService.findAllRoomsByUser(currentUser);
         model.addAttribute("rooms", rooms);
-        return "chatPage";
+        List<Message> messages = messageService.findAllMessages();
+        model.addAttribute("messages", messages);
+        List<AppUser> users = userService.findAllUsers();
+        model.addAttribute("users", users);
+        return "roomPage";
     }
 }

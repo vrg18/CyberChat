@@ -1,5 +1,6 @@
 package edu.vrg18.cyber_chat.service;
 
+import edu.vrg18.cyber_chat.entity.AppUser;
 import edu.vrg18.cyber_chat.entity.Room;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface RoomService {
     Room updateRoom(Room room);
     void deleteRoom(UUID id);
     List<Room> findAllRooms();
+    List<Room> findAllRoomsByUser(AppUser user);
+    List<Room> findAllNonConfidentialRooms();
 }

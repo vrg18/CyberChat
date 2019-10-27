@@ -11,5 +11,4 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
 
     Optional<Room> findRoomByName(String name);
     List<Room> findAllByConfidential(boolean confidential);
-
 }

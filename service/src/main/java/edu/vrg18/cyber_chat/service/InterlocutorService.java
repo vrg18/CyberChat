@@ -16,5 +16,5 @@ public interface InterlocutorService {
     Interlocutor updateInterlocutor(Interlocutor interlocutor);
     void deleteInterlocutor(UUID id);
     List<Interlocutor> findAllInterlocutors();
-    List<Room> findAllRoomsByUser(AppUser user);
+    int getInterlocutorsInRoomId(UUID id);
 }

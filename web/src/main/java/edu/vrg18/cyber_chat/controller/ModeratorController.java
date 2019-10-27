@@ -48,12 +48,13 @@ public class ModeratorController {
         String userInfo = WebUtils.userToString(loginedUser);
         model.addAttribute("userInfo", userInfo);
 
-        List<Message> messages = messageService.findAllMessages();
+        List<Message> messages = messageService.findAllMessages(false);
         model.addAttribute("messages", messages);
         List<Room> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
         List<Interlocutor> interlocutors = interlocutorService.findAllInterlocutors();
         model.addAttribute("interlocutors", interlocutors);
+        model.addAttribute("interlocutorService", interlocutorService);
 
         return "moderation/moderatorPage";
     }

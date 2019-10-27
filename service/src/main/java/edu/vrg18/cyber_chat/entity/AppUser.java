@@ -1,6 +1,7 @@
 package edu.vrg18.cyber_chat.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -9,7 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.Date;
@@ -17,7 +18,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 public class AppUser {
 
     @Id
@@ -40,7 +42,7 @@ public class AppUser {
     @Column(name = "last_name", length = 100)
     private String lastName;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "room_id")
     private Room lastRoom;
 

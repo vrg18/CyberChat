@@ -4,6 +4,7 @@ import edu.vrg18.cyber_chat.entity.AppUser;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
+import edu.vrg18.cyber_chat.repository.RoomRepository;
 import edu.vrg18.cyber_chat.service.InterlocutorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -19,10 +20,12 @@ import java.util.stream.Collectors;
 public class InterlocutorServiceImpl implements InterlocutorService {
 
     private final InterlocutorRepository interlocutorRepository;
+    private final RoomRepository roomRepository;
 
     @Autowired
-    public InterlocutorServiceImpl(InterlocutorRepository interlocutorRepository) {
+    public InterlocutorServiceImpl(InterlocutorRepository interlocutorRepository, RoomRepository roomRepository) {
         this.interlocutorRepository = interlocutorRepository;
+        this.roomRepository = roomRepository;
     }
 
     @Override
@@ -51,7 +54,7 @@ public class InterlocutorServiceImpl implements InterlocutorService {
     }
 
     @Override
-    public List<Room> findAllRoomsByUser(AppUser user) {
-        return interlocutorRepository.findAllByUser(user).stream().map(i -> i.getRoom()).sorted(Comparator.comparing(Room::getName)).collect(Collectors.toList());
+    public int getInterlocutorsInRoomId(UUID id) {
+        return interlocutorRepository.findAllByRoomId(id).size();
     }
 }

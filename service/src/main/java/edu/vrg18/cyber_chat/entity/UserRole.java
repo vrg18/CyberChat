@@ -1,6 +1,7 @@
 package edu.vrg18.cyber_chat.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +13,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users_roles")
-@Data
+@Getter
+@Setter
 public class UserRole {
 
     @Id

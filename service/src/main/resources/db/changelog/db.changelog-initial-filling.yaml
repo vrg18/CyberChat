@@ -206,7 +206,7 @@ databaseChangeLog:
   - changeSet:
       id: 28
       author: vrg18
-      comment: "Put the admin in the Bazaar"
+      comment: "Put the admin in the room Bazaar"
       changes:
         - insert:
             tableName: interlocutors
@@ -223,7 +223,7 @@ databaseChangeLog:
   - changeSet:
       id: 29
       author: vrg18
-      comment: "Put the moderator in the Bazaar"
+      comment: "Put the moderator in the room Bazaar"
       changes:
         - insert:
             tableName: interlocutors
@@ -240,7 +240,7 @@ databaseChangeLog:
   - changeSet:
       id: 30
       author: vrg18
-      comment: "Put the simple user in the Bazaar"
+      comment: "Put the simple user in the room Bazaar"
       changes:
         - insert:
             tableName: interlocutors
@@ -254,3 +254,37 @@ databaseChangeLog:
               - column:
                   name: user_id
                   value: "58d4213e-ffec-47f8-b55a-d8cb747669d3"
+  - changeSet:
+      id: 31
+      author: vrg18
+      comment: "Make room Bazaar as default room for all users"
+      changes:
+        - sql:
+            sql: UPDATE users SET room_id = '0b2cf69c-3c7a-438e-b962-8191aa200ade' WHERE id = '1bccd8de-fd7e-4e60-8d0d-760ebbfa728b';
+        - sql:
+            sql: UPDATE users SET room_id = '0b2cf69c-3c7a-438e-b962-8191aa200ade' WHERE id = '3d691e1b-0354-45e5-b921-bdbbdbfcd621';
+        - sql:
+            sql: UPDATE users SET room_id = '0b2cf69c-3c7a-438e-b962-8191aa200ade' WHERE id = '58d4213e-ffec-47f8-b55a-d8cb747669d3';
+  - changeSet:
+      id: 32
+      author: vrg18
+      comment: "Create a welcome message"
+      changes:
+        - insert:
+            tableName: messages
+            columns:
+              - column:
+                  name: id
+                  value: "94fbe418-e5a4-4302-8744-293a195e0eee"
+              - column:
+                  name: date
+                  value: 26.10.2019
+              - column:
+                  name: room_id
+                  value: "0b2cf69c-3c7a-438e-b962-8191aa200ade"
+              - column:
+                  name: user_id
+                  value: "1bccd8de-fd7e-4e60-8d0d-760ebbfa728b"
+              - column:
+                  name: text
+                  value: "Добро пожаловать в CyberChat!"

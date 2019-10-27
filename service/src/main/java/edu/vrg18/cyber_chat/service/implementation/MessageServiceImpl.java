@@ -44,7 +44,12 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> findAllMessages() {
-        return messageRepository.findAll(new Sort(Sort.Direction.DESC, "date"));
+    public List<Message> findAllMessages(Boolean increase) {
+        return messageRepository.findAll(new Sort(increase ? Sort.Direction.ASC : Sort.Direction.DESC, "date"));
+    }
+
+    @Override
+    public List<Message> findAllMessagesByRoomId(UUID id) {
+        return messageRepository.findAllByRoomId(id, new Sort(Sort.Direction.ASC, "date"));
     }
 }

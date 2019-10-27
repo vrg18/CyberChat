@@ -12,7 +12,7 @@
     <div class="text-center"><h4>Users</h4></div>
     <table class="table table-sm table-bordered">
         <colgroup>
-            <col span="6" style="background:Khaki">
+            <col span="7" style="background:Khaki">
             <col span="2" style="background-color:LightCyan">
         </colgroup>
         <thead class="thead-light text-center">
@@ -22,7 +22,8 @@
             <th class="col-1">Bot</th>
             <th>First name</th>
             <th>Last name</th>
-            <th></th>
+            <th>Last room</th>
+            <th>Last activity</th>
             <th class="col-1"></th>
             <th class="col-1"></th>
         </tr>
@@ -40,6 +41,7 @@
             </td>
             <td th:text="${user.firstName}"></td>
             <td th:text="${user.lastName}"></td>
+            <td th:text="${user.lastRoom.name}"></td>
             <td th:text="${#dates.format(user.lastActivity,'dd.MM.yyyy HH:mm')}"></td>
             <td style="text-align: center"><a th:href="@{'/edit_user/{id}'(id=${user.id})}"><i class="fa fa-edit"
                                                                                                style="font-size:20px"></i></a>

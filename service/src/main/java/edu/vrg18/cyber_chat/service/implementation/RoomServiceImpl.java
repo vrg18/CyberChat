@@ -5,12 +5,14 @@ import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
 import edu.vrg18.cyber_chat.repository.RoomRepository;
+import edu.vrg18.cyber_chat.repository.UserRepository;
 import edu.vrg18.cyber_chat.service.RoomService;
-//import org.apache.el.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -23,11 +25,13 @@ public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
     private final InterlocutorRepository interlocutorRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public RoomServiceImpl(RoomRepository roomRepository, InterlocutorRepository interlocutorRepository) {
+    public RoomServiceImpl(RoomRepository roomRepository, InterlocutorRepository interlocutorRepository, UserRepository userRepository) {
         this.roomRepository = roomRepository;
         this.interlocutorRepository = interlocutorRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -59,13 +63,36 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<Room> findAllRoomsByUser(AppUser user) {
+
         return Stream.concat(roomRepository.findAllByConfidential(false).stream(),
-                interlocutorRepository.findAllByUser(user).stream().map(i -> i.getRoom()))
-                .distinct().sorted(Comparator.comparing(Room::getName)).collect(Collectors.toList());
+                interlocutorRepository.findAllByUser(user).stream().map(Interlocutor::getRoom)).distinct()
+                .filter(r -> !r.isClosed()).sorted(Comparator.comparing(Room::getName)).collect(Collectors.toList());
     }
 
     @Override
     public List<Room> findAllNonConfidentialRooms() {
+
         return roomRepository.findAllByConfidential(false);
+    }
+
+    @Override
+    public Room findOrCreateTeteATeteRoom(AppUser user1, AppUser user2) {
+
+        Room teteATeteRoom = roomRepository.save(
+                new Room(null, nameOfNewTeteATeteRoom(user1, user2), user1, true, false));
+        user1.setLastRoom(teteATeteRoom);
+        userRepository.save(user1);
+        interlocutorRepository.save(new Interlocutor(null, teteATeteRoom, user1));
+        interlocutorRepository.save(new Interlocutor(null, teteATeteRoom, user2));
+        return teteATeteRoom;
+    }
+
+    private String nameOfNewTeteATeteRoom(AppUser user1, AppUser user2) {
+
+        return user1.getFirstName()
+                .concat(" and ")
+                .concat(user2.getFirstName())
+                .concat(" ")
+                .concat(LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
     }
 }

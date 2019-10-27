@@ -2,8 +2,10 @@ package edu.vrg18.cyber_chat.controller;
 
 import edu.vrg18.cyber_chat.entity.AppUser;
 import edu.vrg18.cyber_chat.entity.Role;
+import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.entity.UserRole;
 import edu.vrg18.cyber_chat.service.RoleService;
+import edu.vrg18.cyber_chat.service.RoomService;
 import edu.vrg18.cyber_chat.service.UserRoleService;
 import edu.vrg18.cyber_chat.service.UserService;
 import edu.vrg18.cyber_chat.utils.WebUtils;
@@ -28,11 +30,13 @@ public class AdministratorController {
     private final UserService userService;
     private final RoleService roleService;
     private final UserRoleService userRoleService;
+    private final RoomService roomService;
 
-    public AdministratorController(UserService userService, RoleService roleService, UserRoleService userRoleService) {
+    public AdministratorController(UserService userService, RoleService roleService, UserRoleService userRoleService, RoomService roomService) {
         this.userService = userService;
         this.roleService = roleService;
         this.userRoleService = userRoleService;
+        this.roomService = roomService;
     }
 
     @GetMapping("/administrator")
@@ -60,6 +64,8 @@ public class AdministratorController {
         model.addAttribute("title", "EditUser");
         AppUser user = userService.getUserById(id).get();
         model.addAttribute("user", user);
+        List<Room> rooms = roomService.findAllRooms();
+        model.addAttribute("rooms", rooms);
         return "administration/createOrEditUser";
     }
 

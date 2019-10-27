@@ -45,6 +45,14 @@
             <input type="text" th:field="*{firstName}" maxlength="100"/>
             <label for="lastName">Last name</label>
             <input type="text" th:field="*{lastName}" maxlength="100"/>
+            <label for="lastRoom">Last room</label>
+            <select name="lastRoom" id="lastRoom">
+                <option th:each="room : ${rooms}"
+                        th:value="${room.id}"
+                        th:selected="${room.id.equals(user.lastRoom.id)}"
+                        th:text="${room.name}">
+                </option>
+            </select>
             <label for="lastActivity">Last activity</label>
             <input type="datetime-local" th:field="*{lastActivity}" readonly/>
         </div>

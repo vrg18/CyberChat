@@ -12,5 +12,6 @@ public interface MessageService {
     Message createMessage(Message message);
     Message updateMessage(Message message);
     void deleteMessage(UUID id);
-    List<Message> findAllMessages();
+    List<Message> findAllMessages(Boolean increase);
+    List<Message> findAllMessagesByRoomId(UUID id);
 }

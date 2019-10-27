@@ -35,6 +35,7 @@ public class ChatController {
 
     @GetMapping("/")
     public String chatPage(Model model, Principal principal) {
+
         AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
         String lastRoomId = currentUser.getLastRoom().getId().toString();
         return "redirect:/room/".concat(lastRoomId);
@@ -42,15 +43,25 @@ public class ChatController {
 
     @GetMapping("/room/{id}")
     public String roomPage(@PathVariable UUID id, Model model, Principal principal) {
+
         model.addAttribute("title", "CyberChat");
-        model.addAttribute("message", "Добро пожаловать в CyberChat!");
+//        model.addAttribute("message", "Добро пожаловать в CyberChat!");
         AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
+        model.addAttribute("currentUser", currentUser);
         List<Room> rooms = roomService.findAllRoomsByUser(currentUser);
         model.addAttribute("rooms", rooms);
-        List<Message> messages = messageService.findAllMessages();
+        List<Message> messages = messageService.findAllMessagesByRoomId(id);
         model.addAttribute("messages", messages);
         List<AppUser> users = userService.findAllUsers();
         model.addAttribute("users", users);
+        model.addAttribute("interlocutorService", interlocutorService);
         return "roomPage";
+    }
+
+    @GetMapping("/teteatete_room/{id}")
+    public String newTeteATeteRoom(@PathVariable UUID id, Principal principal) {
+        AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
+        Room teteATeteRoom = roomService.findOrCreateTeteATeteRoom(currentUser, userService.getUserById(id).get());
+        return "redirect:/room/".concat(teteATeteRoom.getId().toString());
     }
 }

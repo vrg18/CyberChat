@@ -4,12 +4,12 @@
 <body>
 <!-- Include _menu.html -->
 <th:block th:include="/_menu"></th:block>
-<h3>Users and roles management</h3>
-<h4 th:if="${userInfo != null}" th:utext="${userInfo}"></h4>
+<h4>Users and roles management</h4>
+<h5 th:if="${userInfo != null}" th:utext="${userInfo}"></h5>
 
 <br>
 <div class="container-fluid">
-    <div class="text-center"><h4>Users</h4></div>
+    <div class="text-center"><h5>Users</h5></div>
     <table class="table table-sm table-bordered">
         <colgroup>
             <col span="7" style="background:Khaki">
@@ -59,7 +59,7 @@
 
 <br>
 <div class="container-fluid">
-    <div class="text-center"><h4>Roles</h4></div>
+    <div class="text-center"><h5>Roles</h5></div>
     <table class="table table-sm table-bordered">
         <colgroup>
             <col span="1" style="background:Khaki">
@@ -92,7 +92,7 @@
 
 <br>
 <div class="container-fluid">
-    <div class="text-center"><h4>Users and their roles</h4></div>
+    <div class="text-center"><h5>Users and their roles</h5></div>
     <table class="table table-sm table-bordered">
         <colgroup>
             <col span="2" style="background:Khaki">

@@ -7,45 +7,70 @@
 <!-- Include _menu.html -->
 <th:block th:include="/_menu"></th:block>
 <div th:if="${newUser}">
-    <h3>New user</h3>
+    <h4>New user</h4>
 </div>
 <div th:unless="${newUser}">
-    <h3>User editing</h3>
+    <h4>User editing</h4>
 </div>
-<div class="container">
-    <form th:object="${user}" th:action="@{/save_user}" name="edit_form"
-          id="edit_form" method="post" role="form">
-        <div th:if="${newUser}" class="form-group">
-            <input type="hidden" id="id" name="id"/>
-            <label for="userName">Username</label>
+<br>
+<form th:object="${user}" th:action="@{/save_user}" method="post">
+    <div th:if="${newUser}">
+        <input type="hidden" id="id" name="id"/>
+        <div class="form-group">
+            <label for="userName" class="col-1 text-right">Username</label>
             <input type="text" id="userName" name="userName" placeholder="Nickname of user" maxlength="50"/>
-            <label for="newPassword">Password</label>
+        </div>
+        <div class="form-group">
+            <label for="newPassword" class="col-1 text-right">Password</label>
             <input type="password" id="newPassword" name="newPassword" maxlength="36"/>
-            <label for="enabled">On</label>
+        </div>
+        <div class="form-group">
+            <label for="enabled" class="col-1 text-right">On</label>
             <input type="checkbox" id="enabled" name="enabled" th:checked="true"/>
-            <label for="bot">Bot</label>
+        </div>
+        <div class="form-group">
+            <label for="bot" class="col-1 text-right">Bot</label>
             <input type="checkbox" id="bot" name="bot" th:checked="false"/>
-            <label for="firstName">First name</label>
+        </div>
+        <div class="form-group">
+            <label for="firstName" class="col-1 text-right">First name</label>
             <input type="text" id="firstName" name="firstName" placeholder="First name of user" maxlength="100"/>
-            <label for="lastName">Last name</label>
+        </div>
+        <div class="form-group">
+            <label for="lastName" class="col-1 text-right">Last name</label>
             <input type="text" id="lastName" name="lastName" placeholder="Last name of user" maxlength="100"/>
         </div>
-        <div th:unless="${newUser}" class="form-group">
-            <input type="hidden" th:field="*{id}"/>
-            <label for="userName">Username</label>
+    </div>
+    <div th:unless="${newUser}">
+        <input type="hidden" th:field="*{id}"/>
+        <div class="form-group">
+            <label for="userName" class="col-1 text-right">Username</label>
             <input type="text" th:field="*{userName}" maxlength="50"/>
-            <label for="newPassword">Password</label>
-            <input type="password" id="newPassword" name="newPassword" th:value="8a38aeb0-0caa-49be-8f8b-f64b6ae2ce1e" maxlength="36"/>
+        </div>
+        <div class="form-group">
+            <label for="newPassword" class="col-1 text-right">Password</label>
+            <input type="password" id="newPassword" name="newPassword" th:value="8a38aeb0-0caa-49be-8f8b-f64b6ae2ce1e"
+                   maxlength="36"/>
             <input type="hidden" th:field="*{encryptedPassword}"/>
-            <label for="enabled">On</label>
+        </div>
+        <div class="form-group">
+            <label for="enabled" class="col-1 text-right">On</label>
             <input type="checkbox" th:field="*{enabled}"/>
-            <label for="bot">Bot</label>
+        </div>
+        <div class="form-group">
+            <label for="bot" class="col-1 text-right">Bot</label>
             <input type="checkbox" th:field="*{bot}"/>
-            <label for="firstName">First name</label>
+        </div>
+        <div class="form-group">
+            <label for="firstName" class="col-1 text-right">First name</label>
             <input type="text" th:field="*{firstName}" maxlength="100"/>
-            <label for="lastName">Last name</label>
+        </div>
+        <div class="form-group">
+            <label for="lastName" class="col-1 text-right">Last name</label>
             <input type="text" th:field="*{lastName}" maxlength="100"/>
-            <label for="lastRoom">Last room</label>
+        </div>
+        <div class="form-group">
+            <label for="lastRoom" class="col-1 text-right">Last room</label>
             <select name="lastRoom" id="lastRoom">
                 <option th:each="room : ${rooms}"
                         th:value="${room.id}"
@@ -53,11 +78,14 @@
                         th:text="${room.name}">
                 </option>
             </select>
-            <label for="lastActivity">Last activity</label>
+        </div>
+        <div class="form-group">
+            <label for="lastActivity" class="col-1 text-right">Last activity</label>
             <input type="datetime-local" th:field="*{lastActivity}" readonly/>
         </div>
-        <button type="submit" class="btn btn-primary">Save</button>
-    </form>
-</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+<!--</div>-->
 </body>
 </html>

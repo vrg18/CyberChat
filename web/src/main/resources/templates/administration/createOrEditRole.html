@@ -7,10 +7,10 @@
 <!-- Include _menu.html -->
 <th:block th:include="/_menu"></th:block>
 <div th:if="${newRole}">
-    <h3>New role</h3>
+    <h4>New role</h4>
 </div>
 <div th:unless="${newRole}">
-    <h3>Role editing</h3>
+    <h4>Role editing</h4>
 </div>
 <div class="container">
     <form th:object="${role}" th:action="@{/save_role}" name="edit_form"

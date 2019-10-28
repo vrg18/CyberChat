@@ -4,12 +4,12 @@
 <body>
 <!-- Include _menu.html -->
 <th:block th:include="/_menu"></th:block>
-<h3>Rooms and messages management</h3>
-<h4 th:if="${userInfo != null}" th:utext="${userInfo}"></h4>
+<h4>Rooms and messages management</h4>
+<h5 th:if="${userInfo != null}" th:utext="${userInfo}"></h5>
 
 <br>
 <div class="container-fluid">
-    <div class="text-center"><h4>Rooms</h4></div>
+    <div class="text-center"><h5>Rooms</h5></div>
     <table class="table table-sm table-bordered">
         <colgroup>
             <col span="4" style="background:Khaki">
@@ -51,7 +51,7 @@
 
 <br>
 <div class="container-fluid">
-    <div class="text-center"><h4>Interlocutors in rooms</h4></div>
+    <div class="text-center"><h5>Interlocutors in rooms</h5></div>
     <table class="table table-sm table-bordered">
         <colgroup>
             <col span="2" style="background:Khaki">
@@ -88,7 +88,7 @@
 
 <br>
 <div class="container-fluid">
-    <div class="text-center"><h4>Messages</h4></div>
+    <div class="text-center"><h5>Messages</h5></div>
     <table class="table table-sm table-bordered">
         <colgroup>
             <col span="4" style="background:Khaki">

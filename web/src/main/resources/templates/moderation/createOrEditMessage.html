@@ -7,10 +7,10 @@
 <!-- Include _menu.html -->
 <th:block th:include="/_menu"></th:block>
 <div th:if="${newMessage}">
-    <h3>New message</h3>
+    <h4>New message</h4>
 </div>
 <div th:unless="${newMessage}">
-    <h3>Message editing</h3>
+    <h4>Message editing</h4>
 </div>
 <div class="container">
     <form th:object="${message}" th:action="@{/save_message}" name="edit_form"

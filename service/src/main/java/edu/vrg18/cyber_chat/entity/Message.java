@@ -1,6 +1,8 @@
 package edu.vrg18.cyber_chat.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -18,6 +20,8 @@ import java.util.UUID;
 @Table(name = "messages")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Message {
 
     @Id

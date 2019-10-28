@@ -14,7 +14,7 @@
         <thead class="thead-light text-center">
         <tr>
             <th class="col-2">Rooms</th>
-            <th class="col-8">Chat</th>
+            <th class="col-8" th:text="${roomName}"></th>
             <th class="col-2">Users</th>
         </tr>
         </thead>
@@ -22,12 +22,13 @@
         <td>
             <table class="table table-sm">
                 <colgroup>
-                    <col span="3" style="background:Thistle">
+                    <col span="3" style="background:Pink">
                 </colgroup>
                 <tbody>
                 <tr th:each="room : ${rooms}">
                     <td><a th:href="@{'/room/{id}'(id=${room.id})}"
-                           th:text="${room.name+' ('+interlocutorService.getInterlocutorsInRoomId(room.id)+')'}"></a></td>
+                           th:text="${room.name+' ('+interlocutorService.getInterlocutorsInRoomId(room.id)+')'}"></a>
+                    </td>
                     <div th:if="${room.confidential}">
                         <td style="text-align: center">
                             <div th:if="${room.maker!=currentUser}" class="fa fa-lock" style="font-size: 15px"></div>
@@ -60,12 +61,14 @@
         <td>
             <table class="table table-sm">
                 <colgroup>
-                    <col span="2" style="background:Lavender">
+                    <col span="2" style="background:Moccasin">
                 </colgroup>
                 <tbody>
                 <tr th:each="message : ${messages}">
-                    <td class="col-2"
-                        th:text="${message.author.firstName+' '+#strings.defaultString(message.author.lastName,'')+' '+#dates.format(message.date,'dd.MM.yyyy HH:mm')}"></td>
+                    <td class="col-2">
+                        <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.6&rounded=true&name='+#strings.substring(message.author.firstName,0,1)+#strings.substring(#strings.defaultString(message.author.lastName,' '),0,1)}">
+                        <div th:text="${message.author.firstName+' '+#strings.defaultString(message.author.lastName,'')+' '+#dates.format(message.date,'dd.MM.yyyy HH:mm')}"></div>
+                    </td>
                     <td th:text="${message.text}"></td>
                 </tr>
                 </tbody>
@@ -73,8 +76,8 @@
             <form style="text-align: justify" th:object="${newMessage}" th:action="@{/send_message}" name="edit_form"
                   id="edit_form" method="post" role="form">
                 <input type="hidden" id="id" name="id"/>
-                <!--                <input type="hidden" th:field="*{room}"/>-->
-                <!--                <input type="hidden" th:field="*{author}"/>-->
+                <input type="hidden" th:field="*{author}"/>
+                <input type="hidden" th:field="*{room}"/>
                 <textarea id="text" name="text" placeholder="Text of message" maxlength="255"></textarea>
                 <button type="submit" class="btn btn-primary">Send a message</button>
             </form>
@@ -82,15 +85,14 @@
         <td>
             <table class="table table-sm">
                 <colgroup>
-                    <col span="2" style="background:Thistle">
+                    <col span="1" style="background:Pink">
                 </colgroup>
                 <tbody>
                 <tr th:each="user : ${users}">
-                    <td><a th:href="@{'/select_user/{id}'(id=${user.id})}"
-                           th:text="${user.firstName+' '+#strings.defaultString(user.lastName,'')}"></a></td>
-                    <td style="text-align: center">
-                        <a th:href="@{'/teteatete_room/{id}'(id=${user.id})}">
-                            <i class="fa fa-comments-o" style="font-size: 15px"></i></a>
+                    <td>
+                        <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.6&rounded=true&name='+#strings.substring(user.firstName,0,1)+#strings.substring(#strings.defaultString(user.lastName,' '),0,1)}">
+                        <a th:href="@{'/teteatete_room/{id}'(id=${user.id})}"
+                           th:text="${user.firstName+' '+#strings.defaultString(user.lastName,'')}"></a>
                     </td>
                 </tr>
                 </tbody>

@@ -90,7 +90,7 @@ public class RoomServiceImpl implements RoomService {
     private String nameOfNewTeteATeteRoom(AppUser user1, AppUser user2) {
 
         return user1.getFirstName()
-                .concat(" and ")
+                .concat(" & ")
                 .concat(user2.getFirstName())
                 .concat(" ")
                 .concat(LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));

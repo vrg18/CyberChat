@@ -14,4 +14,5 @@ public interface UserService {
     AppUser updateUser(AppUser user);
     void deleteUser(UUID id);
     List<AppUser> findAllUsers();
+    List<String> findUsersInRoomId(UUID id);
 }

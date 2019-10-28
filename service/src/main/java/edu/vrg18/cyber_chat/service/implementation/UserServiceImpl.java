@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AppUser updateUser(AppUser user) {
-        if (!user.getNewPassword().equals("8a38aeb0-0caa-49be-8f8b-f64b6ae2ce1e")) {
+        if (!(user.getNewPassword() == null) && !user.getNewPassword().equals("8a38aeb0-0caa-49be-8f8b-f64b6ae2ce1e")) {
             user.setEncryptedPassword(user.getNewPassword());
         }
         return userRepository.save(user);
@@ -67,5 +68,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<AppUser> findAllUsers() {
         return userRepository.findAll(new Sort(Sort.Direction.ASC, "userName"));
+    }
+
+    @Override
+    public List<String> findUsersInRoomId(UUID id) {
+        return interlocutorRepository.findAllByRoomId(id).stream().map(i -> i.getUser().getFirstName()).sorted().collect(Collectors.toList());
     }
 }

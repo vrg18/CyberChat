@@ -1,6 +1,8 @@
 package edu.vrg18.cyber_chat.service;
 
+import edu.vrg18.cyber_chat.entity.AppUser;
 import edu.vrg18.cyber_chat.entity.Message;
+import edu.vrg18.cyber_chat.entity.Room;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,5 +15,5 @@ public interface MessageService {
     Message updateMessage(Message message);
     void deleteMessage(UUID id);
     List<Message> findAllMessages(Boolean increase);
-    List<Message> findAllMessagesByRoomId(UUID id);
+    List<Message> findAllMessagesByRoomAndMarkAsRead(Room room, AppUser user);
 }

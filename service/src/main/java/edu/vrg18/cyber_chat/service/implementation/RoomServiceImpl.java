@@ -65,7 +65,7 @@ public class RoomServiceImpl implements RoomService {
     public List<Room> findAllRoomsByUser(AppUser user) {
 
         return Stream.concat(roomRepository.findAllByConfidential(false).stream(),
-                interlocutorRepository.findAllByUser(user).stream().map(Interlocutor::getRoom)).distinct()
+                roomRepository.findAllUserRooms(user).stream()).distinct()
                 .filter(r -> !r.isClosed()).sorted(Comparator.comparing(Room::getName)).collect(Collectors.toList());
     }
 
@@ -76,14 +76,21 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room findOrCreateTeteATeteRoom(AppUser user1, AppUser user2) {
+    public Room findOrCreateTeteATeteRoom(AppUser initiatingUser, AppUser slaveUser) {
+
+        List<Room> teteATeteRooms = roomRepository.findSharedRoomsOfTwoUsers(initiatingUser, slaveUser);
+        return teteATeteRooms.stream().filter(r -> interlocutorRepository.findAllByRoomId(r.getId()).size() == 2)
+                .findFirst().orElseGet(() -> createNewTeteATeteRoom(initiatingUser, slaveUser));
+    }
+
+    private Room createNewTeteATeteRoom(AppUser initiatingUser, AppUser slaveUser) {
 
         Room teteATeteRoom = roomRepository.save(
-                new Room(null, nameOfNewTeteATeteRoom(user1, user2), user1, true, false));
-        user1.setLastRoom(teteATeteRoom);
-        userRepository.save(user1);
-        interlocutorRepository.save(new Interlocutor(null, teteATeteRoom, user1));
-        interlocutorRepository.save(new Interlocutor(null, teteATeteRoom, user2));
+                new Room(null, nameOfNewTeteATeteRoom(initiatingUser, slaveUser), initiatingUser, true, false));
+        initiatingUser.setLastRoom(teteATeteRoom);
+        userRepository.save(initiatingUser);
+        interlocutorRepository.save(new Interlocutor(null, teteATeteRoom, initiatingUser));
+        interlocutorRepository.save(new Interlocutor(null, teteATeteRoom, slaveUser));
         return teteATeteRoom;
     }
 

@@ -1,0 +1,72 @@
+databaseChangeLog:
+- changeSet:
+    id: 1572330089262-1
+    author: vrg18 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: message_id
+            type: UUID
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: UUID
+        tableName: familiarized
+- changeSet:
+    id: 1572330089262-2
+    author: vrg18 (generated)
+    changes:
+    - addPrimaryKey:
+        columnNames: id
+        constraintName: familiarizedPK
+        tableName: familiarized
+- changeSet:
+    id: 1572330089262-3
+    author: vrg18 (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: name
+        constraintName: UC_ROLESNAME_COL
+        tableName: roles
+- changeSet:
+    id: 1572330089262-4
+    author: vrg18 (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: name
+        constraintName: UC_ROOMSNAME_COL
+        tableName: rooms
+- changeSet:
+    id: 1572330089262-5
+    author: vrg18 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: message_id
+        baseTableName: familiarized
+        constraintName: FK461h6g0i9nubjbhdc79nd601e
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: messages
+- changeSet:
+    id: 1572330089262-6
+    author: vrg18 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: familiarized
+        constraintName: FKcsrvhrtfng4af0qh59p0i98g9
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+

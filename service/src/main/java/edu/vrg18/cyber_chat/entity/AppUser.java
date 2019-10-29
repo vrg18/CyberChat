@@ -52,10 +52,4 @@ public class AppUser {
 
     @Transient
     private String newPassword;
-
-    private static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
-    public void setEncryptedPassword(String password) {
-        this.encryptedPassword = encoder.encode(password);
-    }
 }

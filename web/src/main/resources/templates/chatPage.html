@@ -26,7 +26,13 @@
                 </colgroup>
                 <tbody>
                 <tr th:each="room : ${rooms}">
-                    <td><a th:href="@{'/room/{id}'(id=${room.id})}"
+                    <td>
+                        <!--                    <td style="white-space: nowrap">-->
+                        <!--                        <div th:if="${!#strings.isEmpty(familiarizeService.numberOfUnreadInRoom(currentUser,room))}">-->
+                        <img th:if="${!#strings.isEmpty(familiarizeService.numberOfUnreadInRoom(currentUser,room))}"
+                             th:src="${'https://ui-avatars.com/api/?size=24&font-size=0.6&rounded=true&name='+familiarizeService.numberOfUnreadInRoom(currentUser,room)}">
+                        <!--                        </div>-->
+                        <a th:href="@{'/room/{id}'(id=${room.id})}"
                            th:text="${room.name+' ('+interlocutorService.getInterlocutorsInRoomId(room.id)+')'}"></a>
                     </td>
                     <div th:if="${room.confidential}">
@@ -66,8 +72,8 @@
                 <tbody>
                 <tr th:each="message : ${messages}">
                     <td class="col-2">
-                        <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.6&rounded=true&name='+#strings.substring(message.author.firstName,0,1)+#strings.substring(#strings.defaultString(message.author.lastName,' '),0,1)}">
-                        <div th:text="${message.author.firstName+' '+#strings.defaultString(message.author.lastName,'')+' '+#dates.format(message.date,'dd.MM.yyyy HH:mm')}"></div>
+                        <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.6&rounded=true&name='+#strings.substring(message.author.firstName,0,1)+#strings.substring(#strings.defaultString(message.author.lastName,' '),0,1)}"
+                             th:text="${' '+message.author.firstName+' '+#strings.defaultString(message.author.lastName,'')+' '+#dates.format(message.date,'dd.MM.yyyy HH:mm')}">
                     </td>
                     <td th:text="${message.text}"></td>
                 </tr>
@@ -78,7 +84,7 @@
                 <input type="hidden" id="id" name="id"/>
                 <input type="hidden" th:field="*{author}"/>
                 <input type="hidden" th:field="*{room}"/>
-                <textarea class="form-control" id="text" name="text" placeholder="Text of message"
+                <textarea class="form-control" id="text" name="text" placeholder="Text of new message"
                           maxlength="255"></textarea>
                 <button type="submit" class="btn btn-primary">Send a message</button>
             </form>

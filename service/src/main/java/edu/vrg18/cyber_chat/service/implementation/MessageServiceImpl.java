@@ -1,6 +1,10 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
+import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.Familiarize;
 import edu.vrg18.cyber_chat.entity.Message;
+import edu.vrg18.cyber_chat.entity.Room;
+import edu.vrg18.cyber_chat.repository.FamiliarizeRepository;
 import edu.vrg18.cyber_chat.repository.MessageRepository;
 import edu.vrg18.cyber_chat.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +20,12 @@ import java.util.UUID;
 public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository messageRepository;
+    private final FamiliarizeRepository familiarizeRepository;
 
     @Autowired
-    public MessageServiceImpl(MessageRepository messageRepository) {
+    public MessageServiceImpl(MessageRepository messageRepository, FamiliarizeRepository familiarizeRepository) {
         this.messageRepository = messageRepository;
+        this.familiarizeRepository = familiarizeRepository;
     }
 
     @Override
@@ -49,7 +55,10 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> findAllMessagesByRoomId(UUID id) {
-        return messageRepository.findAllByRoomId(id, new Sort(Sort.Direction.ASC, "date"));
+    public List<Message> findAllMessagesByRoomAndMarkAsRead(Room room, AppUser user) {
+        List<Message> allMessagesByRoom = messageRepository.findAllByRoom(room, new Sort(Sort.Direction.ASC, "date"));
+        allMessagesByRoom.forEach(m -> familiarizeRepository.findByMessageAndUser(m, user)
+                .orElseGet(() -> familiarizeRepository.save(new Familiarize(null, m, user))));
+        return allMessagesByRoom;
     }
 }

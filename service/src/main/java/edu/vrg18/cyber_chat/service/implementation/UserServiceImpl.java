@@ -9,6 +9,7 @@ import edu.vrg18.cyber_chat.repository.UserRepository;
 import edu.vrg18.cyber_chat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final InterlocutorRepository interlocutorRepository;
     private final RoomRepository roomRepository;
+    private static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, InterlocutorRepository interlocutorRepository, RoomRepository roomRepository) {
@@ -43,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AppUser createUser(AppUser user) {
-        user.setEncryptedPassword(user.getNewPassword());
+        user.setEncryptedPassword(encoder.encode(user.getNewPassword()));
         Room bazaarRoom = roomRepository.findRoomByName("Bazaar").orElse(roomRepository.findAllByConfidential(false).get(0));
         user.setLastRoom(bazaarRoom);
         user.setLastActivity(new Date());
@@ -55,7 +57,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public AppUser updateUser(AppUser user) {
         if (!(user.getNewPassword() == null) && !user.getNewPassword().equals("8a38aeb0-0caa-49be-8f8b-f64b6ae2ce1e")) {
-            user.setEncryptedPassword(user.getNewPassword());
+            user.setEncryptedPassword(encoder.encode(user.getNewPassword()));
         }
         return userRepository.save(user);
     }

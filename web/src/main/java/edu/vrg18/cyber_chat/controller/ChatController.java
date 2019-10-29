@@ -1,9 +1,9 @@
 package edu.vrg18.cyber_chat.controller;
 
 import edu.vrg18.cyber_chat.entity.AppUser;
-import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.entity.Room;
+import edu.vrg18.cyber_chat.service.FamiliarizeService;
 import edu.vrg18.cyber_chat.service.InterlocutorService;
 import edu.vrg18.cyber_chat.service.MessageService;
 import edu.vrg18.cyber_chat.service.RoomService;
@@ -29,12 +29,14 @@ public class ChatController {
     private final MessageService messageService;
     private final RoomService roomService;
     private final InterlocutorService interlocutorService;
+    private final FamiliarizeService familiarizeService;
 
-    public ChatController(UserService userService, MessageService messageService, RoomService roomService, InterlocutorService interlocutorService) {
+    public ChatController(UserService userService, MessageService messageService, RoomService roomService, InterlocutorService interlocutorService, FamiliarizeService familiarizeService) {
         this.userService = userService;
         this.messageService = messageService;
         this.roomService = roomService;
         this.interlocutorService = interlocutorService;
+        this.familiarizeService = familiarizeService;
     }
 
     @GetMapping("/")
@@ -61,15 +63,15 @@ public class ChatController {
         List<Room> rooms = roomService.findAllRoomsByUser(currentUser);
         model.addAttribute("rooms", rooms);
 
-        List<Message> messages = messageService.findAllMessagesByRoomId(id);
+        Room currentRoom = roomService.getRoomById(id).get();
+        List<Message> messages = messageService.findAllMessagesByRoomAndMarkAsRead(currentRoom, currentUser);
         model.addAttribute("messages", messages);
+        Message newMessage = new Message(null, null, currentUser, currentRoom, null);
+        model.addAttribute("newMessage", newMessage);
 
         List<AppUser> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
-        Room currentRoom = roomService.getRoomById(id).get();
-        Message newMessage = new Message(null, null, currentUser, currentRoom, null);
-        model.addAttribute("newMessage", newMessage);
 
         StringBuffer roomName = new StringBuffer(currentRoom.getName());
         roomName.append(" (");
@@ -79,22 +81,38 @@ public class ChatController {
         model.addAttribute("roomName", roomName);
 
         model.addAttribute("interlocutorService", interlocutorService);
+        model.addAttribute("familiarizeService", familiarizeService);
 
         return "chatPage";
     }
 
     @GetMapping("/teteatete_room/{id}")
-    public String newTeteATeteRoom(@PathVariable UUID id, Principal principal) {
+    public String newTeteATeteRoom(@PathVariable UUID id, Principal principal, HttpServletRequest request) {
 
         AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
-        Room teteATeteRoom = roomService.findOrCreateTeteATeteRoom(currentUser, userService.getUserById(id).get());
-        return "redirect:/room/".concat(teteATeteRoom.getId().toString());
+        if (currentUser.getId().equals(id)) {
+            String referer = request.getHeader("Referer");
+            return "redirect:".concat(referer);
+        } else {
+            Room teteATeteRoom = roomService.findOrCreateTeteATeteRoom(currentUser, userService.getUserById(id).get());
+            return "redirect:/room/".concat(teteATeteRoom.getId().toString());
+        }
     }
 
     @PostMapping("/send_message")
     public String sendMessage(@ModelAttribute("message") Message message, HttpServletRequest request) {
 
         messageService.createMessage(message);
+        String referer = request.getHeader("Referer");
+        return "redirect:".concat(referer);
+    }
+
+    @GetMapping("/lock_unlock_room/{id}")
+    public String lockUnlockRoom(@PathVariable UUID id, HttpServletRequest request) {
+
+        Room room = roomService.getRoomById(id).get();
+        room.setConfidential(!room.isConfidential());
+        roomService.updateRoom(room);
         String referer = request.getHeader("Referer");
         return "redirect:".concat(referer);
     }

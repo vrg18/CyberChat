@@ -60,7 +60,7 @@ public class ChatController {
         }
         model.addAttribute("currentUser", currentUser);
 
-        List<Room> rooms = roomService.findAllRoomsByUser(currentUser);
+        List<Room> rooms = roomService.findAllRoomsOfUserAndAllOpenRooms(currentUser);
         model.addAttribute("rooms", rooms);
 
         Room currentRoom = roomService.getRoomById(id).get();

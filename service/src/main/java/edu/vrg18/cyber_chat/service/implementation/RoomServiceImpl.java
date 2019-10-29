@@ -62,11 +62,11 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<Room> findAllRoomsByUser(AppUser user) {
+    public List<Room> findAllRoomsOfUserAndAllOpenRooms(AppUser user) {
 
-        return Stream.concat(roomRepository.findAllByConfidential(false).stream(),
-                roomRepository.findAllUserRooms(user).stream()).distinct()
-                .filter(r -> !r.isClosed()).sorted(Comparator.comparing(Room::getName)).collect(Collectors.toList());
+        return Stream.concat(roomRepository.findAllRoomsOfUser(user).stream(),
+                roomRepository.findAllOpenRooms().stream()).distinct()
+                .sorted(Comparator.comparing(Room::getName)).collect(Collectors.toList());
     }
 
     @Override

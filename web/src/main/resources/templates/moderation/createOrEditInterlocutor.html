@@ -12,49 +12,64 @@
 <div th:unless="${newInterlocutor}">
     <h4>Editing interlocutor in room</h4>
 </div>
-<div class="container">
-    <form th:object="${interlocutor}" th:action="@{/save_interlocutor}" name="edit_form"
-          id="edit_form" method="post" role="form">
-        <div th:if="${newInterlocutor}" class="form-group">
-            <input type="hidden" id="id" name="id"/>
-            <label for="room">Room</label>
-            <select name="room" id="room">
-                <option value="">-- Select room --</option>
-                <option th:each="room : ${rooms}"
-                        th:value="${room.id}"
-                        th:text="${room.name}">
-                </option>
-            </select>
-            <label for="user">User</label>
-            <select name="user" id="user">
-                <option value="">-- Select user --</option>
-                <option th:each="user : ${users}"
-                        th:value="${user.id}"
-                        th:text="${user.userName}">
-                </option>
-            </select>
-        </div>
-        <div th:unless="${newInterlocutor}" class="form-group">
-            <input type="hidden" th:field="*{id}"/>
-            <label for="room">Room</label>
-            <select name="room" id="room">
-                <option th:each="room : ${rooms}"
-                        th:value="${room.id}"
-                        th:selected="${room.id.equals(interlocutor.room.id)}"
-                        th:text="${room.name}">
-                </option>
-            </select>
-            <label for="user">User</label>
-            <select name="user" id="user">
-                <option th:each="user : ${users}"
-                        th:value="${user.id}"
-                        th:selected="${user.id.equals(interlocutor.user.id)}"
-                        th:text="${user.userName}">
-                </option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Save</button>
-    </form>
-</div>
+<br>
+<form th:object="${interlocutor}" th:action="@{/save_interlocutor}" method="post">
+    <div th:if="${newInterlocutor}">
+        <input type="hidden" id="id" name="id"/>
+        <table>
+            <tr>
+                <td class="col-2 text-right">Room</td>
+                <td><select name="room" id="room">
+                    <option value="">-- Select room --</option>
+                    <option th:each="room : ${rooms}"
+                            th:value="${room.id}"
+                            th:text="${room.name}">
+                    </option>
+                </select></td>
+            </tr>
+            <tr>
+                <td class="col-2 text-right">User</td>
+                <td><select name="user" id="user">
+                    <option value="">-- Select user --</option>
+                    <option th:each="user : ${users}"
+                            th:value="${user.id}"
+                            th:text="${user.userName}">
+                    </option>
+                </select></td>
+            </tr>
+            <tr>
+                <td class="col-2"></td>
+                <td><input type="submit" class="btn btn-primary" value="Save"/></td>
+            </tr>
+        </table>
+    </div>
+    <div th:unless="${newInterlocutor}" class="form-group">
+        <input type="hidden" th:field="*{id}"/>
+        <table>
+            <tr>
+                <td class="col-2 text-right">Room</td>
+                <td><select name="room" id="room">
+                    <option th:each="room : ${rooms}"
+                            th:value="${room.id}"
+                            th:selected="${room.id.equals(interlocutor.room.id)}"
+                            th:text="${room.name}">
+                    </option>
+                </select></td>
+            <tr>
+                <td class="col-2 text-right">User</td>
+                <td><select name="user" id="user">
+                    <option th:each="user : ${users}"
+                            th:value="${user.id}"
+                            th:selected="${user.id.equals(interlocutor.user.id)}"
+                            th:text="${user.userName}">
+                    </option>
+                </select></td>
+            <tr>
+                <td class="col-2"></td>
+                <td><input type="submit" class="btn btn-primary" value="Save"/></td>
+            </tr>
+        </table>
+    </div>
+</form>
 </body>
 </html>

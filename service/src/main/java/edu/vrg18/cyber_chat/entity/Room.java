@@ -32,7 +32,7 @@ public class Room {
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private AppUser maker;
+    private AppUser owner;
 
     private boolean confidential;
 

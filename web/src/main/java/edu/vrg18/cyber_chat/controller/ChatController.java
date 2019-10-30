@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Controller
-@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MODERATOR','ROLE_USER')")
+@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
 public class ChatController {
 
     private final UserService userService;
@@ -50,9 +50,6 @@ public class ChatController {
     @GetMapping("/room/{id}")
     public String roomPage(@PathVariable UUID id, Model model, Principal principal) {
 
-        model.addAttribute("title", "CyberChat");
-//        model.addAttribute("message", "Добро пожаловать в CyberChat!");
-
         AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
         if (!currentUser.getLastRoom().getId().equals(id)) {
             currentUser.setLastRoom(roomService.getRoomById(id).get());
@@ -72,7 +69,6 @@ public class ChatController {
         List<AppUser> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
-
         StringBuffer roomName = new StringBuffer(currentRoom.getName());
         roomName.append(" (");
         userService.findUsersInRoomId(id).forEach(s -> roomName.append(s).append(", "));
@@ -80,9 +76,14 @@ public class ChatController {
         roomName.append(")");
         model.addAttribute("roomName", roomName);
 
+        boolean isUserInRoom = interlocutorService.isUserInRoom(currentUser, currentRoom);
+        model.addAttribute("isUserInRoom", isUserInRoom);
+
         model.addAttribute("interlocutorService", interlocutorService);
         model.addAttribute("familiarizeService", familiarizeService);
 
+        model.addAttribute("title", "CyberChat");
+//        model.addAttribute("message", "Добро пожаловать в CyberChat!");
         return "chatPage";
     }
 

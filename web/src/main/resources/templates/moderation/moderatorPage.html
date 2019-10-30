@@ -18,7 +18,7 @@
         <thead class="thead-light text-center">
         <tr>
             <th>Name (members)</th>
-            <th>Maker</th>
+            <th>Owner</th>
             <th class="col-1">Private</th>
             <th class="col-1">Closed</th>
             <th class="col-1"></th>
@@ -27,8 +27,8 @@
         </thead>
         <tbody>
         <tr th:each="room : ${rooms}">
-            <td th:text="${room.name+' ('+interlocutorService.getInterlocutorsInRoomId(room.id)+')'}"></td>
-            <td th:text="${room.maker.userName+' ('+room.maker.firstName+' '+#strings.defaultString(room.maker.lastName,'')+')'}"></td>
+            <td th:text="${room.name+' ('+interlocutorService.getNumberInterlocutorsInRoomId(room.id)+')'}"></td>
+            <td th:text="${room.owner.userName+' ('+room.owner.firstName+' '+#strings.defaultString(room.owner.lastName,'')+')'}"></td>
             <td style="text-align: center">
                 <div th:if="${room.confidential}" class="fa fa-check" style="font-size:20px"></div>
             </td>

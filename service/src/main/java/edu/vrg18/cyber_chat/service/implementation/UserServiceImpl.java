@@ -2,10 +2,14 @@ package edu.vrg18.cyber_chat.service.implementation;
 
 import edu.vrg18.cyber_chat.entity.AppUser;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
+import edu.vrg18.cyber_chat.entity.Role;
 import edu.vrg18.cyber_chat.entity.Room;
+import edu.vrg18.cyber_chat.entity.UserRole;
 import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
+import edu.vrg18.cyber_chat.repository.RoleRepository;
 import edu.vrg18.cyber_chat.repository.RoomRepository;
 import edu.vrg18.cyber_chat.repository.UserRepository;
+import edu.vrg18.cyber_chat.repository.UserRoleRepository;
 import edu.vrg18.cyber_chat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -24,13 +28,17 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final InterlocutorRepository interlocutorRepository;
     private final RoomRepository roomRepository;
+    private final RoleRepository roleRepository;
+    private final UserRoleRepository userRoleRepository;
     private static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, InterlocutorRepository interlocutorRepository, RoomRepository roomRepository) {
+    public UserServiceImpl(UserRepository userRepository, InterlocutorRepository interlocutorRepository, RoomRepository roomRepository, RoleRepository roleRepository, UserRoleRepository userRoleRepository) {
         this.userRepository = userRepository;
         this.interlocutorRepository = interlocutorRepository;
         this.roomRepository = roomRepository;
+        this.roleRepository = roleRepository;
+        this.userRoleRepository = userRoleRepository;
     }
 
     @Override
@@ -50,7 +58,9 @@ public class UserServiceImpl implements UserService {
         user.setLastRoom(bazaarRoom);
         user.setLastActivity(new Date());
         user = userRepository.save(user);
-        interlocutorRepository.save(new Interlocutor(null, roomRepository.findRoomByName("Bazaar").get(), user));
+        interlocutorRepository.save(new Interlocutor(null, bazaarRoom, user));
+        Role simpleUserRole = roleRepository.findRoleByName("ROLE_USER").get();
+        userRoleRepository.save(new UserRole(null, user, simpleUserRole));
         return user;
     }
 

@@ -34,7 +34,18 @@
         </tr>
         <tr>
             <td class="col-2"></td>
-            <td><input type="submit" name="submit" value="Enter"/></td>
+            <td><input type="submit" class="btn btn-primary" value="Enter"/></td>
+        </tr>
+    </table>
+</form>
+<br>
+<br>
+<br>
+<form th:action="@{/new_user_own}" method='GET'>
+    <table>
+        <tr>
+            <td class="col-2 text-right">or</td>
+            <td><input type="submit" class="btn btn-primary" value="Create new user"/></td>
         </tr>
     </table>
 </form>

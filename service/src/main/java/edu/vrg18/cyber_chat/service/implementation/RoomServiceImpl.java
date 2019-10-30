@@ -42,7 +42,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room createRoom(Room room) {
         room = roomRepository.save(room);
-        interlocutorRepository.save(new Interlocutor(null, room, room.getMaker()));
+        interlocutorRepository.save(new Interlocutor(null, room, room.getOwner()));
         return room;
     }
 

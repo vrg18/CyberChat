@@ -29,7 +29,7 @@ public class Message {
     private UUID id;
 
     @Column(nullable = false)
-    @DateTimeFormat(pattern ="dd.MM.yyyy HH:mm")
+    @DateTimeFormat(pattern ="dd.MM.yyyy HH:mm:ss")
     private Date date;
 
     @ManyToOne

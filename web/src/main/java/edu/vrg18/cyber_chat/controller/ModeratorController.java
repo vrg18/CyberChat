@@ -19,12 +19,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
 @Controller
-@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
+@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
 public class ModeratorController {
 
     private final UserService userService;
@@ -42,33 +43,37 @@ public class ModeratorController {
     @GetMapping("/moderator")
     public String adminPage(Model model, Principal principal) {
 
-        model.addAttribute("title", "ModeratorPage");
-
         User loginedUser = (User) ((Authentication) principal).getPrincipal();
         String userInfo = WebUtils.userToString(loginedUser);
         model.addAttribute("userInfo", userInfo);
 
         List<Message> messages = messageService.findAllMessages(false);
         model.addAttribute("messages", messages);
+
         List<Room> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
+
         List<Interlocutor> interlocutors = interlocutorService.findAllInterlocutors();
         model.addAttribute("interlocutors", interlocutors);
         model.addAttribute("interlocutorService", interlocutorService);
 
+        model.addAttribute("title", "ModeratorPage");
         return "moderation/moderatorPage";
     }
 
     @GetMapping("/edit_message/{id}")
     public String editMessage(@PathVariable UUID id, Model model) {
 
-        model.addAttribute("title", "EditMessage");
         Message message = messageService.getMessageById(id).get();
+        model.addAttribute("message", message);
+
         List<Room> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
+
         List<AppUser> users = userService.findAllUsers();
         model.addAttribute("users", users);
-        model.addAttribute("message", message);
+
+        model.addAttribute("title", "EditMessage");
         return "moderation/createOrEditMessage";
     }
 
@@ -82,14 +87,17 @@ public class ModeratorController {
     @GetMapping("/new_message")
     public String newMessage(Model model, Principal principal) {
 
-        model.addAttribute("title", "NewMessage");
         List<Room> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
+
         List<AppUser> users = userService.findAllUsers();
         model.addAttribute("users", users);
+
         AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
         model.addAttribute("currentUserId", currentUser.getId());
+
         model.addAttribute("newMessage", true);
+        model.addAttribute("title", "NewMessage");
         return "moderation/createOrEditMessage";
     }
 
@@ -110,11 +118,13 @@ public class ModeratorController {
     @GetMapping("/edit_room/{id}")
     public String editRoom(@PathVariable UUID id, Model model) {
 
-        model.addAttribute("title", "EditRoom");
         Room room = roomService.getRoomById(id).get();
+        model.addAttribute("room", room);
+
         List<AppUser> users = userService.findAllUsers();
         model.addAttribute("users", users);
-        model.addAttribute("room", room);
+
+        model.addAttribute("title", "EditRoom");
         return "moderation/createOrEditRoom";
     }
 
@@ -128,12 +138,14 @@ public class ModeratorController {
     @GetMapping("/new_room")
     public String newRoom(Model model, Principal principal) {
 
-        model.addAttribute("title", "NewRoom");
         List<AppUser> users = userService.findAllUsers();
         model.addAttribute("users", users);
+
         AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
         model.addAttribute("currentUserId", currentUser.getId());
+
         model.addAttribute("newRoom", true);
+        model.addAttribute("title", "NewRoom");
         return "moderation/createOrEditRoom";
     }
 
@@ -154,13 +166,16 @@ public class ModeratorController {
     @GetMapping("/edit_interlocutor/{id}")
     public String editInterlocutor(@PathVariable UUID id, Model model) {
 
-        model.addAttribute("title", "EditInterlocutor");
         Interlocutor interlocutor = interlocutorService.getInterlocutorById(id).get();
         model.addAttribute("interlocutor", interlocutor);
+
         List<AppUser> users = userService.findAllUsers();
         model.addAttribute("users", users);
+
         List<Room> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
+
+        model.addAttribute("title", "EditInterlocutor");
         return "moderation/createOrEditInterlocutor";
     }
 
@@ -174,12 +189,14 @@ public class ModeratorController {
     @GetMapping("/new_interlocutor")
     public String newInterlocutor(Model model) {
 
-        model.addAttribute("title", "NewInterlocutor");
         List<AppUser> users = userService.findAllUsers();
         model.addAttribute("users", users);
+
         List<Room> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
+
         model.addAttribute("newInterlocutor", true);
+        model.addAttribute("title", "NewInterlocutor");
         return "moderation/createOrEditInterlocutor";
     }
 
@@ -191,9 +208,55 @@ public class ModeratorController {
     }
 
     @GetMapping("/delete_interlocutor/{id}")
-    public String deleteInterlocutor(@PathVariable UUID id) {
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
+    public String deleteInterlocutor(@PathVariable UUID id, HttpServletRequest request) {
 
         interlocutorService.deleteInterlocutor(id);
-        return "redirect:/moderator";
+        String referer = request.getHeader("Referer");
+        return "redirect:".concat(referer);
+    }
+
+    @GetMapping("/edit_list_room/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
+    public String editAndListRoom(@PathVariable UUID id, Model model) {
+
+        Room room = roomService.getRoomById(id).get();
+        model.addAttribute("room", room);
+
+        List<AppUser> users = userService.findAllUsers();
+        model.addAttribute("users", users);
+
+        List<Interlocutor> interlocutors = interlocutorService.findAllInterlocutorsInRoomId(id);
+        model.addAttribute("interlocutors", interlocutors);
+
+        model.addAttribute("title", "EditAndListRoom");
+        return "moderation/editAndListRoom";
+    }
+
+    @PostMapping("/update_room")
+    public String updateRoom2(@ModelAttribute("room") Room room) {
+
+        roomService.updateRoom(room);
+        return "redirect:/";
+    }
+
+    @GetMapping("/new_interlocutor_room/{id}")
+    public String newInterlocutorInRoom(@PathVariable UUID id, Model model) {
+
+        List<AppUser> users = userService.findAllUsers();
+        model.addAttribute("users", users);
+
+        Room room = roomService.getRoomById(id).get();
+        model.addAttribute("room", room);
+
+        model.addAttribute("title", "NewInterlocutorInRoom");
+        return "moderation/addInterlocutorInRoom";
+    }
+
+    @PostMapping("/add_interlocutor_room")
+    public String addInterlocutorInRoom(@ModelAttribute("interlocutor") Interlocutor interlocutor) {
+
+        interlocutorService.createInterlocutor(interlocutor);
+        return "redirect:/edit_list_room/".concat(interlocutor.getRoom().getId().toString());
     }
 }

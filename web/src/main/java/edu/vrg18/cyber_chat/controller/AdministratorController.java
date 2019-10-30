@@ -42,49 +42,52 @@ public class AdministratorController {
     @GetMapping("/administrator")
     public String adminPage(Model model, Principal principal) {
 
-        model.addAttribute("title", "AdministratorPage");
-
         User loginedUser = (User) ((Authentication) principal).getPrincipal();
         String userInfo = WebUtils.userToString(loginedUser);
         model.addAttribute("userInfo", userInfo);
 
         List<AppUser> users = userService.findAllUsers();
         model.addAttribute("users", users);
+
         List<Role> roles = roleService.findAllRoles();
         model.addAttribute("roles", roles);
+
         List<UserRole> usersRoles = userRoleService.findAllUsersRoles();
         model.addAttribute("usersRoles", usersRoles);
 
+        model.addAttribute("title", "AdministratorPage");
         return "administration/administratorPage";
     }
 
-    @GetMapping("/edit_user/{id}")
+    @GetMapping("/edit_user_admin/{id}")
     public String editUser(@PathVariable UUID id, Model model) {
 
-        model.addAttribute("title", "EditUser");
         AppUser user = userService.getUserById(id).get();
         model.addAttribute("user", user);
+
         List<Room> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
-        return "administration/createOrEditUser";
+
+        model.addAttribute("title", "EditUser");
+        return "administration/createOrEditUserAdmin";
     }
 
-    @PostMapping(value = "/save_user", params = "id!=")
+    @PostMapping(value = "/save_user_admin", params = "id!=")
     public String updateUser(@ModelAttribute("user") AppUser user) {
 
         userService.updateUser(user);
         return "redirect:/administrator";
     }
 
-    @GetMapping("/new_user")
-    public String newUser(Model model) {
+    @GetMapping("/new_user_admin")
+    public String newUserAdmin(Model model) {
 
-        model.addAttribute("title", "NewUser");
         model.addAttribute("newUser", true);
-        return "administration/createOrEditUser";
+        model.addAttribute("title", "NewUser");
+        return "administration/createOrEditUserAdmin";
     }
 
-    @PostMapping(value = "/save_user", params = "id=")
+    @PostMapping(value = "/save_user_admin", params = "id=")
     public String createUser(@ModelAttribute("user") AppUser user) {
 
         userService.createUser(user);
@@ -101,9 +104,10 @@ public class AdministratorController {
     @GetMapping("/edit_role/{id}")
     public String editRole(@PathVariable UUID id, Model model) {
 
-        model.addAttribute("title", "EditRole");
         Role role = roleService.getRoleById(id).get();
         model.addAttribute("role", role);
+
+        model.addAttribute("title", "EditRole");
         return "administration/createOrEditRole";
     }
 
@@ -139,13 +143,16 @@ public class AdministratorController {
     @GetMapping("/edit_userrole/{id}")
     public String editUserRole(@PathVariable UUID id, Model model) {
 
-        model.addAttribute("title", "EditUserRole");
         UserRole userRole = userRoleService.getUserRoleById(id).get();
         model.addAttribute("userRole", userRole);
+
         List<AppUser> users = userService.findAllUsers();
         model.addAttribute("users", users);
+
         List<Role> roles = roleService.findAllRoles();
         model.addAttribute("roles", roles);
+
+        model.addAttribute("title", "EditUserRole");
         return "administration/createOrEditUserRole";
     }
 
@@ -159,12 +166,14 @@ public class AdministratorController {
     @GetMapping("/new_userrole")
     public String newUserRole(Model model) {
 
-        model.addAttribute("title", "NewUserRole");
         List<AppUser> users = userService.findAllUsers();
         model.addAttribute("users", users);
+
         List<Role> roles = roleService.findAllRoles();
         model.addAttribute("roles", roles);
+
         model.addAttribute("newUserRole", true);
+        model.addAttribute("title", "NewUserRole");
         return "administration/createOrEditUserRole";
     }
 

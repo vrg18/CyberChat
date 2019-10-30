@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="_head :: head"></head>
+<head style="height: 100vh" th:replace="_head :: head"></head>
 <head>
     <title th:utext="${title}"></title>
 </head>
@@ -33,12 +33,13 @@
                              th:src="${'https://ui-avatars.com/api/?size=24&font-size=0.6&rounded=true&name='+familiarizeService.numberOfUnreadInRoom(currentUser,room)}">
                         <!--                        </div>-->
                         <a th:href="@{'/room/{id}'(id=${room.id})}"
-                           th:text="${room.name+' ('+interlocutorService.getInterlocutorsInRoomId(room.id)+')'}"></a>
+                           th:text="${room.name+' ('+interlocutorService.getNumberInterlocutorsInRoomId(room.id)+')'}"></a>
                     </td>
                     <div th:if="${room.confidential}">
                         <td style="text-align: center">
-                            <div th:if="${room.maker!=currentUser}" class="fa fa-lock" style="font-size: 15px"></div>
-                            <div th:if="${room.maker==currentUser}">
+                            <div th:if="${room.owner!=currentUser}" class="fa fa-lock"
+                                 style="font-size: 15px"></div>
+                            <div th:if="${room.owner==currentUser}">
                                 <a th:href="@{'/lock_unlock_room/{id}'(id=${room.id})}">
                                     <i class="fa fa-lock" style="font-size: 15px"></i></a>
                             </div>
@@ -46,17 +47,18 @@
                     </div>
                     <div th:if="${!room.confidential}">
                         <td style="text-align: center">
-                            <div th:if="${room.maker!=currentUser}" class="fa fa-unlock" style="font-size: 15px"></div>
-                            <div th:if="${room.maker==currentUser}">
+                            <div th:if="${room.owner!=currentUser}" class="fa fa-unlock"
+                                 style="font-size: 15px"></div>
+                            <div th:if="${room.owner==currentUser}">
                                 <a th:href="@{'/lock_unlock_room/{id}'(id=${room.id})}">
                                     <i class="fa fa-unlock" style="font-size: 15px"></i></a>
                             </div>
                         </td>
                     </div>
                     <td style="text-align: center">
-                        <div th:if="${room.maker!=currentUser}" class="fa fa-list-ol" style="font-size: 15px"></div>
-                        <div th:if="${room.maker==currentUser}">
-                            <a th:href="@{'/lock_unlock_room/{id}'(id=${room.id})}">
+                        <div th:if="${room.owner!=currentUser}" class="fa fa-list-ol" style="font-size: 15px"></div>
+                        <div th:if="${room.owner==currentUser}">
+                            <a th:href="@{'/edit_list_room/{id}'(id=${room.id})}">
                                 <i class="fa fa-list-ol" style="font-size: 15px"></i></a>
                         </div>
                     </td>
@@ -72,15 +74,15 @@
                 <tbody>
                 <tr th:each="message : ${messages}">
                     <td class="col-2">
-                        <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.6&rounded=true&name='+#strings.substring(message.author.firstName,0,1)+#strings.substring(#strings.defaultString(message.author.lastName,' '),0,1)}"
+                        <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.55&rounded=true&name='+#strings.substring(message.author.firstName,0,1)+#strings.substring(#strings.defaultString(message.author.lastName,' '),0,1)}"
                              th:text="${' '+message.author.firstName+' '+#strings.defaultString(message.author.lastName,'')+' '+#dates.format(message.date,'dd.MM.yyyy HH:mm')}">
                     </td>
                     <td th:text="${message.text}"></td>
                 </tr>
                 </tbody>
             </table>
-            <form style="text-align: justify" th:object="${newMessage}" th:action="@{/send_message}" name="edit_form"
-                  id="edit_form" method="post" role="form">
+            <form th:if="${isUserInRoom}" style="text-align: justify" th:object="${newMessage}"
+                  th:action="@{/send_message}" method="post">
                 <input type="hidden" id="id" name="id"/>
                 <input type="hidden" th:field="*{author}"/>
                 <input type="hidden" th:field="*{room}"/>
@@ -97,7 +99,7 @@
                 <tbody>
                 <tr th:each="user : ${users}">
                     <td>
-                        <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.6&rounded=true&name='+#strings.substring(user.firstName,0,1)+#strings.substring(#strings.defaultString(user.lastName,' '),0,1)}">
+                        <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.55&rounded=true&name='+#strings.substring(user.firstName,0,1)+#strings.substring(#strings.defaultString(user.lastName,' '),0,1)}">
                         <a th:href="@{'/teteatete_room/{id}'(id=${user.id})}"
                            th:text="${user.firstName+' '+#strings.defaultString(user.lastName,'')}"></a>
                     </td>

@@ -43,7 +43,7 @@
             <td th:text="${user.lastName}"></td>
             <td th:text="${user.lastRoom.name}"></td>
             <td th:text="${#dates.format(user.lastActivity,'dd.MM.yyyy HH:mm')}"></td>
-            <td style="text-align: center"><a th:href="@{'/edit_user/{id}'(id=${user.id})}"><i class="fa fa-edit"
+            <td style="text-align: center"><a th:href="@{'/edit_user_admin/{id}'(id=${user.id})}"><i class="fa fa-edit"
                                                                                                style="font-size:20px"></i></a>
             </td>
             <td style="text-align: center"><a th:href="@{'/delete_user/{id}'(id=${user.id})}"><i class="fa fa-trash"
@@ -52,7 +52,7 @@
         </tr>
         </tbody>
     </table>
-    <form th:action="@{/new_user}">
+    <form th:action="@{/new_user_admin}">
         <button type="submit" class="btn btn-primary">Add user</button>
     </form>
 </div>

@@ -13,7 +13,7 @@
     <h4>User editing</h4>
 </div>
 <br>
-<form th:object="${user}" th:action="@{/save_user}" method="post">
+<form th:object="${user}" th:action="@{/save_user_admin}" method="post">
     <div th:if="${newUser}">
         <input type="hidden" id="id" name="id"/>
         <table>

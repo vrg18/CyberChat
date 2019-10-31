@@ -66,7 +66,7 @@ public class ChatController {
         Message newMessage = new Message(null, null, currentUser, currentRoom, null);
         model.addAttribute("newMessage", newMessage);
 
-        List<AppUser> users = userService.findAllUsers();
+        List<AppUser> users = userService.findAllUsersWithoutDisabled();
         model.addAttribute("users", users);
 
         StringBuffer roomName = new StringBuffer(currentRoom.getName());

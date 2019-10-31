@@ -234,6 +234,7 @@ public class ModeratorController {
     }
 
     @PostMapping("/update_room")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
     public String updateRoom2(@ModelAttribute("room") Room room) {
 
         roomService.updateRoom(room);
@@ -241,6 +242,7 @@ public class ModeratorController {
     }
 
     @GetMapping("/new_interlocutor_room/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
     public String newInterlocutorInRoom(@PathVariable UUID id, Model model) {
 
         List<AppUser> users = userService.findAllUsers();
@@ -254,6 +256,7 @@ public class ModeratorController {
     }
 
     @PostMapping("/add_interlocutor_room")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
     public String addInterlocutorInRoom(@ModelAttribute("interlocutor") Interlocutor interlocutor) {
 
         interlocutorService.createInterlocutor(interlocutor);

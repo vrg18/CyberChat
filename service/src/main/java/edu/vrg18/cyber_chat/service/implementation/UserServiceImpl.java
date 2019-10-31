@@ -83,6 +83,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<AppUser> findAllUsersWithoutDisabled() {
+        return userRepository.findAppUsersByEnabled(true, new Sort(Sort.Direction.ASC, "userName"));
+    }
+
+    @Override
     public List<String> findUsersInRoomId(UUID id) {
         return interlocutorRepository.findAllByRoomId(id).stream().map(i -> i.getUser().getFirstName()).sorted().collect(Collectors.toList());
     }

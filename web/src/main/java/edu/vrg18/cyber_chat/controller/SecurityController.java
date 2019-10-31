@@ -7,6 +7,7 @@ import edu.vrg18.cyber_chat.service.RoomService;
 import edu.vrg18.cyber_chat.service.UserRoleService;
 import edu.vrg18.cyber_chat.service.UserService;
 import edu.vrg18.cyber_chat.utils.WebUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -32,37 +33,32 @@ public class SecurityController {
 
     @GetMapping("/login")
     public String loginPage(Model model) {
+
         model.addAttribute("title", "Login");
         return "security/loginPage";
     }
 
     @GetMapping("/logout_successful")
     public String logoutSuccessfulPage(Model model) {
+
         model.addAttribute("title", "Logout");
         return "security/logoutSuccessfulPage";
     }
 
     @GetMapping("/user_info")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
     public String userInfo(Model model, Principal principal) {
 
-        model.addAttribute("title", "UserInfo");
-        // After user login successfully.
-        String userName = principal.getName();
-
-        System.out.println("User Name: " + userName);
-
         User loginedUser = (User) ((Authentication) principal).getPrincipal();
-
         String userInfo = WebUtils.userToString(loginedUser);
         model.addAttribute("userInfo", userInfo);
 
+        model.addAttribute("title", "UserInfo");
         return "security/userInfoPage";
     }
 
     @GetMapping("/403")
     public String accessDenied(Model model, Principal principal) {
-
-        model.addAttribute("title", "Error403");
 
         if (principal != null) {
             User loginedUser = (User) ((Authentication) principal).getPrincipal();
@@ -72,15 +68,17 @@ public class SecurityController {
             model.addAttribute("message", message);
         }
 
+        model.addAttribute("title", "Error403");
         return "security/403Page";
     }
 
     @GetMapping("/edit_user_own")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
     public String editUser(Model model, Principal principal) {
 
-        model.addAttribute("title", "EditUser");
         AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
         model.addAttribute("user", currentUser);
+        model.addAttribute("title", "EditUser");
         return "security/createOrEditUserOwn";
     }
 
@@ -94,8 +92,8 @@ public class SecurityController {
     @GetMapping("/new_user_own")
     public String newUserAdmin(Model model) {
 
-        model.addAttribute("title", "NewUser");
         model.addAttribute("newUser", true);
+        model.addAttribute("title", "NewUser");
         return "security/createOrEditUserOwn";
     }
 

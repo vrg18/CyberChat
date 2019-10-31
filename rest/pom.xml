@@ -8,8 +8,8 @@
         <artifactId>cyber_chat</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>web</artifactId>
-    <packaging>war</packaging>
+    <artifactId>rest</artifactId>
+    <packaging>jar</packaging>
 
     <properties>
         <java.version>1.8</java.version>
@@ -18,37 +18,15 @@
     <dependencies>
 
         <dependency>
-            <groupId>edu.vrg18</groupId>
-            <artifactId>service</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>edu.vrg18</groupId>
-            <artifactId>rest</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>compile</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-rest</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -65,7 +43,6 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>

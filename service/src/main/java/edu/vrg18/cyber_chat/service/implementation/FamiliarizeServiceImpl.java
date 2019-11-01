@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class FamiliarizeServiceImpl implements FamiliarizeService {
@@ -54,9 +53,9 @@ public class FamiliarizeServiceImpl implements FamiliarizeService {
     }
 
     @Override
-    public String numberOfUnreadInRoom(AppUser user, Room room) {
-        List<Message> readMessage = familiarizeRepository.findByRoomAndUser(user, room);
-        long number = messageRepository.findAllByRoom(room).stream().filter(all -> !readMessage.contains(all)).count();
+    public String numberOfUnreadMessagesInRoom(AppUser user, Room room) {
+        List<Message> readMessages = familiarizeRepository.findReadMessagesByRoomAndUser(user, room);
+        long number = messageRepository.findAllByRoom(room).stream().filter(all -> !readMessages.contains(all)).count();
         if (number == 0) return "";
         else if (number > 9) return "9%2B";
         else return String.valueOf(number);

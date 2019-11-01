@@ -14,6 +14,9 @@ public interface MessageService {
     Message createMessage(Message message);
     Message updateMessage(Message message);
     void deleteMessage(UUID id);
+
     List<Message> findAllMessages(Boolean increase);
     List<Message> findAllMessagesByRoomAndMarkAsRead(Room room, AppUser user);
+    List<Message> getUnreadMessagesByUserId(UUID id);
+    boolean wasThereSuchMessageInRoom(Room room, String messageText);
 }

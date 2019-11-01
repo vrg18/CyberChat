@@ -71,7 +71,7 @@ public class ChatController {
 
         StringBuffer roomName = new StringBuffer(currentRoom.getName());
         roomName.append(" (");
-        userService.findUsersInRoomId(id).forEach(s -> roomName.append(s).append(", "));
+        userService.findUsersInRoomId(id).forEach(u -> roomName.append(u.getFirstName()).append(", "));
         roomName.setLength(roomName.length() - 2);
         roomName.append(")");
         model.addAttribute("roomName", roomName);

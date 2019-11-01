@@ -6,6 +6,7 @@ import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.repository.FamiliarizeRepository;
 import edu.vrg18.cyber_chat.repository.MessageRepository;
+import edu.vrg18.cyber_chat.repository.RoomRepository;
 import edu.vrg18.cyber_chat.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -21,11 +22,13 @@ public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository messageRepository;
     private final FamiliarizeRepository familiarizeRepository;
+    private final RoomRepository roomRepository;
 
     @Autowired
-    public MessageServiceImpl(MessageRepository messageRepository, FamiliarizeRepository familiarizeRepository) {
+    public MessageServiceImpl(MessageRepository messageRepository, FamiliarizeRepository familiarizeRepository, RoomRepository roomRepository) {
         this.messageRepository = messageRepository;
         this.familiarizeRepository = familiarizeRepository;
+        this.roomRepository = roomRepository;
     }
 
     @Override
@@ -57,8 +60,22 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> findAllMessagesByRoomAndMarkAsRead(Room room, AppUser user) {
         List<Message> allMessagesByRoom = messageRepository.findAllByRoom(room, new Sort(Sort.Direction.ASC, "date"));
-        allMessagesByRoom.forEach(m -> familiarizeRepository.findByMessageAndUser(m, user)
+        allMessagesByRoom
+                .forEach(m -> familiarizeRepository.findByMessageAndUser(m, user)
                 .orElseGet(() -> familiarizeRepository.save(new Familiarize(null, m, user))));
         return allMessagesByRoom;
     }
+
+    @Override
+    public List<Message> getUnreadMessagesByUserId(UUID userId) {
+        List<Room> roomsByUser = roomRepository.findAllRoomByUserId(userId);
+        return messageRepository.getUnreadMessagesInRooms(roomsByUser);
+    }
+
+    @Override
+    public boolean wasThereSuchMessageInRoom(Room room, String messageText) {
+        return messageRepository.getMessagesWithSuchTest(room, messageText).size() != 0;
+    };
+
+
 }

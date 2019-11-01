@@ -9,11 +9,12 @@ import java.util.UUID;
 public interface UserService {
 
     Optional<AppUser> getUserById(UUID id);
-    Optional<AppUser> getUserByUserName(String userName);
     AppUser createUser(AppUser user);
     AppUser updateUser(AppUser user);
     void deleteUser(UUID id);
+
+    Optional<AppUser> getUserByUserName(String userName);
     List<AppUser> findAllUsers();
     List<AppUser> findAllUsersWithoutDisabled();
-    List<String> findUsersInRoomId(UUID id);
+    List<AppUser> findUsersInRoomId(UUID id);
 }

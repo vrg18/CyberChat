@@ -29,8 +29,8 @@
                     <td>
                         <!--                    <td style="white-space: nowrap">-->
                         <!--                        <div th:if="${!#strings.isEmpty(familiarizeService.numberOfUnreadInRoom(currentUser,room))}">-->
-                        <img th:if="${!#strings.isEmpty(familiarizeService.numberOfUnreadInRoom(currentUser,room))}"
-                             th:src="${'https://ui-avatars.com/api/?size=24&font-size=0.6&rounded=true&name='+familiarizeService.numberOfUnreadInRoom(currentUser,room)}">
+                        <img th:if="${!#strings.isEmpty(familiarizeService.numberOfUnreadMessagesInRoom(currentUser,room))}"
+                             th:src="${'https://ui-avatars.com/api/?size=24&font-size=0.6&rounded=true&name='+familiarizeService.numberOfUnreadMessagesInRoom(currentUser,room)}">
                         <!--                        </div>-->
                         <a th:href="@{'/room/{id}'(id=${room.id})}"
                            th:text="${room.name+' ('+interlocutorService.getNumberInterlocutorsInRoomId(room.id)+')'}"></a>

@@ -14,6 +14,7 @@ public interface RoomService {
     Room updateRoom(Room room);
     void deleteRoom(UUID id);
     List<Room> findAllRooms();
+
     List<Room> findAllRoomsOfUserAndAllOpenRooms(AppUser user);
     List<Room> findAllNonConfidentialRooms();
     Room findOrCreateTeteATeteRoom(AppUser user1, AppUser user2);

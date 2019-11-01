@@ -14,7 +14,8 @@ import java.util.UUID;
 public interface FamiliarizeRepository extends JpaRepository<Familiarize, UUID> {
 
     @Query("SELECT f.message FROM Familiarize f WHERE f.user = :user AND f.message.room = :room")
-    List<Message> findByRoomAndUser(AppUser user, Room room);
+    List<Message> findReadMessagesByRoomAndUser(AppUser user, Room room);
 
+    @Query("SELECT f FROM Familiarize f WHERE f.message = :message AND f.user = :user")
     Optional<Familiarize> findByMessageAndUser(Message message, AppUser user);
 }

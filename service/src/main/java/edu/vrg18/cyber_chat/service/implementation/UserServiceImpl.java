@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<String> findUsersInRoomId(UUID id) {
-        return interlocutorRepository.findAllByRoomId(id).stream().map(i -> i.getUser().getFirstName()).sorted().collect(Collectors.toList());
+    public List<AppUser> findUsersInRoomId(UUID id) {
+        return userRepository.findAllUsersByRoomId(id);
     }
 }

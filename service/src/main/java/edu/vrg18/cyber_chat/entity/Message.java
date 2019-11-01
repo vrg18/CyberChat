@@ -42,5 +42,4 @@ public class Message {
 
     @Column(nullable = false)
     private String text;
-
 }

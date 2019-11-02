@@ -1,7 +1,10 @@
 package edu.vrg18.cyber_chat.controller;
 
 import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -28,29 +32,31 @@ public class UserRestController {
 
     @GetMapping("/{id}")
     @PreAuthorize("permitAll()")
-    public AppUser oneUser(@PathVariable UUID id) {
-        return userService.getUserById(id).get();
+    public ResponseEntity<AppUser> oneUser(@PathVariable UUID id) {
+        return
+                userService.getUserById(id).map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                        .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+//    @GetMapping(value = "/name/{userName}", produces = "application/json")
     @GetMapping("/name/{userName}")
     @PreAuthorize("permitAll()")
-    public AppUser oneUserByName(@PathVariable String userName) {
-        return userService.getUserByUserName(userName).get();
+    public ResponseEntity<AppUser> oneUserByName(@PathVariable String userName) {
+        return
+                userService.getUserByUserName(userName).map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                        .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
     @PreAuthorize("permitAll()")
-    public AppUser createUser(@RequestBody @Valid AppUser userDto) {
-        return userService.updateUser(userDto);
+    public AppUser createUser(@RequestBody @Valid AppUser user) {
+        user.setBot(true);
+        return userService.createUser(user);
     }
 
     @PutMapping
-    public AppUser updateUser(@RequestBody @Valid AppUser userDto) {
-        return userService.updateUser(userDto);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable UUID id) {
-        userService.deleteUser(id);
+    public AppUser updateUser(@RequestBody @Valid AppUser user) {
+        user.setBot(true);
+        return userService.updateUser(user);
     }
 }

@@ -1,9 +1,9 @@
 package edu.vrg18.cyber_chat.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,6 +44,7 @@ public class AppUser {
 
     @OneToOne
     @JoinColumn(name = "room_id")
+    @JsonBackReference
     private Room lastRoom;
 
     @Column(name = "last_activity", nullable = false)

@@ -1,10 +1,8 @@
 package edu.vrg18.cyber_chat.controller;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
 import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.service.MessageService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,14 +27,16 @@ public class MessageRestController {
         this.messageService = messageService;
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping(value = "/user/{id}", produces = "application/json")
     public List<Message> getUnreadMessagesForUser(@PathVariable UUID id) {
         return messageService.getUnreadMessagesByUserId(id);
     }
 
     @GetMapping("/{id}")
-    public Message oneMessage(@PathVariable UUID id) {
-        return messageService.getMessageById(id).get();
+    public ResponseEntity<Message> oneMessage(@PathVariable UUID id) {
+        return
+                messageService.getMessageById(id).map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                        .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping

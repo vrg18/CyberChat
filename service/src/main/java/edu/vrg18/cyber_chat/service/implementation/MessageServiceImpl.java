@@ -74,7 +74,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public boolean wasThereSuchMessageInRoom(Room room, String messageText) {
-        return messageRepository.getMessagesWithSuchTest(room, messageText).size() != 0;
+        return messageRepository.getMessagesWithSuchText(room, messageText).size() != 0;
     };
 
 

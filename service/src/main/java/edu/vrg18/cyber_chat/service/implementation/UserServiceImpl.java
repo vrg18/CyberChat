@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
         user.setLastRoom(bazaarRoom);
         user.setLastActivity(new Date());
         user = userRepository.save(user);
-        interlocutorRepository.save(new Interlocutor(null, bazaarRoom, user));
+        if (!user.isBot()) interlocutorRepository.save(new Interlocutor(null, bazaarRoom, user));
         Role simpleUserRole = roleRepository.findRoleByName("ROLE_USER").get();
         userRoleRepository.save(new UserRole(null, user, simpleUserRole));
         return user;

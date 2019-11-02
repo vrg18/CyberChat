@@ -18,5 +18,5 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
     List<Message> getUnreadMessagesInRooms(List<Room> rooms);
 
     @Query("SELECT m FROM Message m WHERE m.room = :room AND m.text = :messageText")
-    List<Message> getMessagesWithSuchTest(Room room, String messageText);
+    List<Message> getMessagesWithSuchText(Room room, String messageText);
 }

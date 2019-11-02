@@ -24,6 +24,6 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
     @Query("SELECT r FROM Room r WHERE r.confidential = false AND r.closed = false")
     List<Room> findAllOpenRooms();
 
-    @Query("SELECT i.room FROM Interlocutor i WHERE i.user = :userId AND i.room.closed = false")
+    @Query("SELECT i.room FROM Interlocutor i WHERE i.user.id = :userId AND i.room.closed = false")
     List<Room> findAllRoomByUserId(UUID userId);
 }

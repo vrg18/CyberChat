@@ -69,7 +69,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> getUnreadMessagesByUserId(UUID userId) {
         List<Room> roomsByUser = roomRepository.findAllRoomByUserId(userId);
-        return messageRepository.getUnreadMessagesInRooms(roomsByUser);
+        return messageRepository.getUserUnreadMessagesInRooms(userId, roomsByUser);
     }
 
     @Override

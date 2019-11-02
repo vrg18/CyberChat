@@ -28,7 +28,7 @@ public class Message {
     @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     @DateTimeFormat(pattern ="dd.MM.yyyy HH:mm:ss")
     private Date date;
 

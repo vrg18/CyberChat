@@ -50,6 +50,9 @@ public class ModeratorController {
         List<Message> messages = messageService.findAllMessages(false);
         model.addAttribute("messages", messages);
 
+        List<Message> uMessages= messageService.getUnreadMessagesByUserId(UUID.fromString("6de3e4d4-edf7-4600-8c1e-9b5c17e8119d"));
+        model.addAttribute("uMessages", uMessages);
+
         List<Room> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
 

@@ -88,6 +88,42 @@
 
 <br>
 <div class="container-fluid">
+    <div class="text-center"><h5>Unread messages</h5></div>
+    <table class="table table-sm table-bordered">
+        <colgroup>
+            <col span="4" style="background:Khaki">
+            <col span="2" style="background-color:LightCyan">
+        </colgroup>
+        <thead class="thead-light text-center">
+        <tr>
+            <th>Date</th>
+            <th>Room</th>
+            <th>Author</th>
+            <th>Text</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="message : ${uMessages}">
+            <td th:text="${#dates.format(message.date,'dd.MM.yyyy HH:mm')}"></td>
+            <td th:text="${message.room.name}"></td>
+            <td th:text="${message.author.userName+' ('+message.author.firstName+' '+#strings.defaultString(message.author.lastName,'')+')'}"></td>
+            <td th:text="${message.text}"></td>
+            <td style="text-align: center"><a th:href="@{'/edit_message/{id}'(id=${message.id})}"><i class="fa fa-edit"
+                                                                                                     style="font-size:20px"></i></a>
+            </td>
+            <td style="text-align: center"><a th:href="@{'/delete_message/{id}'(id=${message.id})}"><i
+                    class="fa fa-trash"
+                    style="font-size:20px"></i></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<br>
+<div class="container-fluid">
     <div class="text-center"><h5>Messages</h5></div>
     <table class="table table-sm table-bordered">
         <colgroup>

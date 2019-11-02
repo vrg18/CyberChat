@@ -53,10 +53,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AppUser createUser(AppUser user) {
+
         user.setEncryptedPassword(encoder.encode(user.getNewPassword()));
-        Room bazaarRoom = roomRepository.findRoomByName("Bazaar").orElse(roomRepository.findAllByConfidential(false).get(0));
-        user.setLastRoom(bazaarRoom);
         user.setLastActivity(new Date());
+        Room bazaarRoom = roomRepository.findRoomByName("Bazaar").orElse(roomRepository.findAllByConfidential(false).get(0));
+        if (!user.isBot()) user.setLastRoom(bazaarRoom);
         user = userRepository.save(user);
         if (!user.isBot()) interlocutorRepository.save(new Interlocutor(null, bazaarRoom, user));
         Role simpleUserRole = roleRepository.findRoleByName("ROLE_USER").get();

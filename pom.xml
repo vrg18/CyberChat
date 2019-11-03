@@ -24,7 +24,6 @@
         <module>service</module>
         <module>rest</module>
         <module>web</module>
-        <module>habr_bot</module>
     </modules>
 
     <dependencies>

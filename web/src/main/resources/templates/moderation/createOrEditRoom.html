@@ -4,78 +4,79 @@
       xmlns:th="http://www.thymeleaf.org">
 <head th:replace="_head :: head"></head>
 <body>
-<!-- Include _menu.html -->
-<th:block th:include="/_menu"></th:block>
-<div th:if="${newRoom}">
-    <h4>New room</h4>
-</div>
-<div th:unless="${newRoom}">
-    <h4>Room editing</h4>
-</div>
-<br>
-<form th:object="${room}" th:action="@{/save_room}" method="post">
+<div class="container-fluid">
+    <!-- Include _menu.html -->
+    <th:block th:include="/_menu"></th:block>
     <div th:if="${newRoom}">
-        <input type="hidden" id="id" name="id"/>
-        <table>
-            <tr>
-                <td class="col-2 text-right">Name</td>
-                <td><input type="text" id="name" name="name" placeholder="Name of room" maxlength="50"/></td>
-            </tr>
-            <tr>
-                <td class="col-2 text-right">Owner</td>
-                <td><select name="owner" id="owner">
-                    <option value="">-- Select owner --</option>
-                    <option th:each="owner : ${users}"
-                            th:value="${owner.id}"
-                            th:selected="${owner.id.equals(currentUserId)}"
-                            th:text="${owner.userName}">
-                    </option>
-                </select></td>
-            <tr>
-                <td class="col-2 text-right">Private</td>
-                <td><input type="checkbox" id="confidential" name="confidential" th:checked="true"/></td>
-            </tr>
-            <tr>
-                <td class="col-2 text-right">Сlosed</td>
-                <td><input type="checkbox" id="closed" name="closed" th:checked="false"/></td>
-            </tr>
-            <tr>
-                <td class="col-2"></td>
-                <td><input type="submit" class="btn btn-primary" value="Save"/></td>
-            </tr>
-        </table>
+        <h4>New room</h4>
     </div>
-    <div th:unless="${newRoom}" class="form-group">
-        <input type="hidden" th:field="*{id}"/>
-        <table>
-            <tr>
-                <td class="col-2 text-right">Name</td>
-                <td><input type="text" th:field="*{name}" maxlength="50"/></td>
-            </tr>
-            <tr>
-                <td class="col-2 text-right">Owner</td>
-                <td><select name="owner" id="owner">
-                    <option th:each="owner : ${users}"
-                            th:value="${owner.id}"
-                            th:selected="${owner.id.equals(room.owner.id)}"
-                            th:text="${owner.userName}">
-                    </option>
-                </select></td>
-            </tr>
-            <tr>
-                <td class="col-2 text-right">Private</td>
-                <td><input type="checkbox" th:field="*{confidential}"/></td>
-            </tr>
-            <tr>
-                <td class="col-2 text-right">Сlosed</td>
-                <td><input type="checkbox" th:field="*{closed}"/></td>
-            </tr>
-            <tr>
-                <td class="col-2"></td>
-                <td><input type="submit" class="btn btn-primary" value="Save"/></td>
-            </tr>
-        </table>
+    <div th:unless="${newRoom}">
+        <h4>Room editing</h4>
     </div>
-</form>
+    <br>
+    <table>
+        <form th:object="${room}" th:action="@{/save_room}" method="post">
+            <div th:if="${newRoom}">
+                <input type="hidden" id="id" name="id"/>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">Name</td>
+                    <td><input type="text" id="name" name="name" placeholder="Name of room" maxlength="50"/></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">Owner</td>
+                    <td><select name="owner" id="owner">
+                        <option value="">-- Select owner --</option>
+                        <option th:each="owner : ${users}"
+                                th:value="${owner.id}"
+                                th:selected="${owner.id.equals(currentUserId)}"
+                                th:text="${owner.userName}">
+                        </option>
+                    </select></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">Private</td>
+                    <td><input type="checkbox" id="confidential" name="confidential" th:checked="true"/></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">Сlosed</td>
+                    <td><input type="checkbox" id="closed" name="closed" th:checked="false"/></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5"></td>
+                    <td><input type="submit" class="btn btn-primary" value="Save"/></td>
+                </tr>
+            </div>
+            <div th:unless="${newRoom}" class="form-group">
+                <input type="hidden" th:field="*{id}"/>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">Name</td>
+                    <td><input type="text" th:field="*{name}" maxlength="50"/></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">Owner</td>
+                    <td><select name="owner" id="owner">
+                        <option th:each="owner : ${users}"
+                                th:value="${owner.id}"
+                                th:selected="${owner.id.equals(room.owner.id)}"
+                                th:text="${owner.userName}">
+                        </option>
+                    </select></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">Private</td>
+                    <td><input type="checkbox" th:field="*{confidential}"/></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">Сlosed</td>
+                    <td><input type="checkbox" th:field="*{closed}"/></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5"></td>
+                    <td><input type="submit" class="btn btn-primary" value="Save"/></td>
+                </tr>
+            </div>
+        </form>
+    </table>
+</div>
 </body>
 </html>

@@ -2,44 +2,45 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="_head :: head"></head>
 <body>
-<!-- Include _menu.html -->
-<th:block th:include="/_menu"></th:block>
-<h4>Rooms and messages management</h4>
-<h5 th:if="${userInfo != null}" th:utext="${userInfo}"></h5>
-
-<br>
 <div class="container-fluid">
+    <!-- Include _menu.html -->
+    <th:block th:include="/_menu"></th:block>
+    <h4>Rooms and messages management</h4>
+    <h5 th:if="${userInfo != null}" th:utext="${userInfo}"></h5>
+
+    <br>
     <div class="text-center"><h5>Rooms</h5></div>
     <table class="table table-sm table-bordered">
-        <colgroup>
-            <col span="4" style="background:Khaki">
-            <col span="2" style="background-color:LightCyan">
-        </colgroup>
         <thead class="thead-light text-center">
-        <tr>
-            <th>Name (members)</th>
-            <th>Owner</th>
-            <th class="col-1">Private</th>
-            <th class="col-1">Closed</th>
-            <th class="col-1"></th>
-            <th class="col-1"></th>
+        <tr class="d-flex">
+            <th class="col-lg-4">Name (members)</th>
+            <th class="col-lg-4">Owner</th>
+            <th class="col-lg-1">Private</th>
+            <th class="col-lg-1">Closed</th>
+            <th class="col-lg-1"></th>
+            <th class="col-lg-1"></th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="room : ${rooms}">
-            <td th:text="${room.name+' ('+interlocutorService.getNumberInterlocutorsInRoomId(room.id)+')'}"></td>
-            <td th:text="${room.owner.userName+' ('+room.owner.firstName+' '+#strings.defaultString(room.owner.lastName,'')+')'}"></td>
-            <td style="text-align: center">
+        <tr class="d-flex" th:each="room : ${rooms}">
+            <td th:hidden="${room.id}"></td>
+            <td class="col-lg-4" style="background:Khaki"
+                th:text="${room.name+' ('+interlocutorService.getNumberInterlocutorsInRoomId(room.id)+')'}"></td>
+            <td class="col-lg-4" style="background:Khaki"
+                th:text="${room.owner.userName+' ('+room.owner.firstName+' '+#strings.defaultString(room.owner.lastName,'')+')'}"></td>
+            <td class="col-lg-1 text-center" style="background:Khaki">
                 <div th:if="${room.confidential}" class="fa fa-check" style="font-size:20px"></div>
             </td>
-            <td style="text-align: center">
+            <td class="col-lg-1 text-center" style="background:Khaki">
                 <div th:if="${room.closed}" class="fa fa-check" style="font-size:20px"></div>
             </td>
-            <td style="text-align: center"><a th:href="@{'/edit_room/{id}'(id=${room.id})}">
-                <i class="fa fa-edit" style="font-size:20px"></i></a>
+            <td class="col-lg-1 text-center" style="background-color:LightCyan">
+                <a th:href="@{'/edit_room/{id}'(id=${room.id})}">
+                    <i class="fa fa-edit" style="font-size:20px"></i></a>
             </td>
-            <td style="text-align: center"><a th:href="@{'/delete_room/{id}'(id=${room.id})}">
-                <i class="fa fa-trash" style="font-size:20px"></i></a>
+            <td class="col-lg-1 text-center" style="background-color:LightCyan">
+                <a th:href="@{'/delete_room/{id}'(id=${room.id})}">
+                    <i class="fa fa-trash" style="font-size:20px"></i></a>
             </td>
         </tr>
         </tbody>
@@ -47,36 +48,33 @@
     <form th:action="@{/new_room}">
         <button type="submit" class="btn btn-primary">Add room</button>
     </form>
-</div>
 
-<br>
-<div class="container-fluid">
+    <br>
     <div class="text-center"><h5>Interlocutors in rooms</h5></div>
     <table class="table table-sm table-bordered">
-        <colgroup>
-            <col span="2" style="background:Khaki">
-            <col span="2" style="background-color:LightCyan">
-        </colgroup>
         <thead class="thead-light text-center">
-        <tr>
-            <th>Room</th>
-            <th>Interlocutor</th>
-            <th class="col-1"></th>
-            <th class="col-1"></th>
+        <tr class="d-flex">
+            <th class="col-lg-5">Room</th>
+            <th class="col-lg-5">Interlocutor</th>
+            <th class="col-lg-1"></th>
+            <th class="col-lg-1"></th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="interlocutor : ${interlocutors}">
-            <td th:hidden="${interlocutor.id}">id</td>
-            <td th:text="${interlocutor.room.name}">Room</td>
-            <td th:text="${interlocutor.user.userName+' ('+interlocutor.user.firstName+' '+#strings.defaultString(interlocutor.user.lastName,'')+')'}"></td>
-            <td style="text-align: center"><a th:href="@{'/edit_interlocutor/{id}'(id=${interlocutor.id})}"><i
-                    class="fa fa-edit"
-                    style="font-size:20px"></i></a>
+        <tr class="d-flex" th:each="interlocutor : ${interlocutors}">
+            <td th:hidden="${interlocutor.id}"></td>
+            <td class="col-lg-5" style="background:Khaki"
+                th:text="${interlocutor.room.name}">
             </td>
-            <td style="text-align: center"><a th:href="@{'/delete_interlocutor/{id}'(id=${interlocutor.id})}"><i
-                    class="fa fa-trash"
-                    style="font-size:20px"></i></a>
+            <td class="col-lg-5" style="background:Khaki"
+                th:text="${interlocutor.user.userName+' ('+interlocutor.user.firstName+' '+#strings.defaultString(interlocutor.user.lastName,'')+')'}"></td>
+            <td class="col-lg-1 text-center" style="background-color:LightCyan">
+                <a th:href="@{'/edit_interlocutor/{id}'(id=${interlocutor.id})}">
+                    <i class="fa fa-edit" style="font-size:20px"></i></a>
+            </td>
+            <td class="col-lg-1 text-center" style="background-color:LightCyan">
+                <a th:href="@{'/delete_interlocutor/{id}'(id=${interlocutor.id})}">
+                    <i class="fa fa-trash" style="font-size:20px"></i></a>
             </td>
         </tr>
         </tbody>
@@ -84,38 +82,36 @@
     <form th:action="@{/new_interlocutor}">
         <button type="submit" class="btn btn-primary">Add link</button>
     </form>
-</div>
 
-<br>
-<div class="container-fluid">
+    <br>
     <div class="text-center"><h5>Messages</h5></div>
     <table class="table table-sm table-bordered">
-        <colgroup>
-            <col span="4" style="background:Khaki">
-            <col span="2" style="background-color:LightCyan">
-        </colgroup>
         <thead class="thead-light text-center">
-        <tr>
-            <th>Date</th>
-            <th>Room</th>
-            <th>Author</th>
-            <th>Text</th>
-            <th></th>
-            <th></th>
+        <tr class="d-flex">
+            <th class="col-lg-1">Date</th>
+            <th class="col-lg-2">Room</th>
+            <th class="col-lg-2">Author</th>
+            <th class="col-lg-5">Text</th>
+            <th class="col-lg-1"></th>
+            <th class="col-lg-1"></th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="message : ${messages}">
-            <td th:text="${#dates.format(message.date,'dd.MM.yyyy HH:mm')}"></td>
-            <td th:text="${message.room.name}"></td>
-            <td th:text="${message.author.userName+' ('+message.author.firstName+' '+#strings.defaultString(message.author.lastName,'')+')'}"></td>
-            <td th:text="${message.text}"></td>
-            <td style="text-align: center"><a th:href="@{'/edit_message/{id}'(id=${message.id})}"><i class="fa fa-edit"
-                                                                                                     style="font-size:20px"></i></a>
+        <tr class="d-flex" th:each="message : ${messages}">
+            <td th:hidden="${message.id}"></td>
+            <td class="col-lg-1" style="background:Khaki"
+                th:text="${#dates.format(message.date,'dd.MM.yyyy HH:mm')}"></td>
+            <td class="col-lg-2" style="background:Khaki" th:text="${message.room.name}"></td>
+            <td class="col-lg-2" style="background:Khaki"
+                th:text="${message.author.userName+' ('+message.author.firstName+' '+#strings.defaultString(message.author.lastName,'')+')'}"></td>
+            <td class="col-lg-5" style="background:Khaki" th:text="${message.text}"></td>
+            <td class="col-lg-1 text-center" style="background-color:LightCyan">
+                <a th:href="@{'/edit_message/{id}'(id=${message.id})}">
+                    <i class="fa fa-edit" style="font-size:20px"></i></a>
             </td>
-            <td style="text-align: center"><a th:href="@{'/delete_message/{id}'(id=${message.id})}"><i
-                    class="fa fa-trash"
-                    style="font-size:20px"></i></a>
+            <td class="col-lg-1 text-center" style="background-color:LightCyan">
+                <a th:href="@{'/delete_message/{id}'(id=${message.id})}">
+                    <i class="fa fa-trash" style="font-size:20px"></i></a>
             </td>
         </tr>
         </tbody>
@@ -123,7 +119,7 @@
     <form th:action="@{/new_message}">
         <button type="submit" class="btn btn-primary">Add message</button>
     </form>
-</div>
 
+</div>
 </body>
 </html>

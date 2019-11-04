@@ -4,26 +4,27 @@
       xmlns:th="http://www.thymeleaf.org">
 <head th:replace="_head :: head"></head>
 <body>
-<!-- Include _menu.html -->
-<th:block th:include="/_menu"></th:block>
-<div th:if="${newRole}">
-    <h4>New role</h4>
-</div>
-<div th:unless="${newRole}">
-    <h4>Role editing</h4>
-</div>
-<br>
-<form th:object="${role}" th:action="@{/save_role}" method="post">
+<div class="container-fluid">
+    <!-- Include _menu.html -->
+    <th:block th:include="/_menu"></th:block>
     <div th:if="${newRole}">
-        <input type="hidden" id="id" name="id"/>
-        <input type="text" id="name" name="name" placeholder="Name of role" maxlength="100"/>
+        <h4>New role</h4>
     </div>
     <div th:unless="${newRole}">
-        <input type="hidden" th:field="*{id}"/>
-        <input type="text" th:field="*{name}" maxlength="100"/>
+        <h4>Role editing</h4>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
-
+    <br>
+    <form th:object="${role}" th:action="@{/save_role}" method="post">
+        <div th:if="${newRole}">
+            <input type="hidden" id="id" name="id"/>
+            <input type="text" id="name" name="name" placeholder="Name of role" maxlength="100"/>
+        </div>
+        <div th:unless="${newRole}">
+            <input type="hidden" th:field="*{id}"/>
+            <input type="text" th:field="*{name}" maxlength="100"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
 </body>
 </html>

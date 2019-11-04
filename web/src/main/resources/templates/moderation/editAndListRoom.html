@@ -4,75 +4,68 @@
       xmlns:th="http://www.thymeleaf.org">
 <head th:replace="_head :: head"></head>
 <body>
-<!-- Include _menu.html -->
-<th:block th:include="/_menu"></th:block>
-<h4 th:text="${'Room &#34;'+room.name+'&#34; editing'}"></h4>
-<br>
+<div class="container-fluid">
+    <!-- Include _menu.html -->
+    <th:block th:include="/_menu"></th:block>
+    <h4 th:text="${'Room &#34;'+room.name+'&#34; editing'}"></h4>
+    <br>
 
-<form th:object="${room}" th:action="@{/update_room}" method="post">
-    <input type="hidden" th:field="*{id}"/>
     <table>
-        <tr>
-            <td class="col-2 text-right">Name</td>
-            <td><input type="text" th:field="*{name}" maxlength="50"/></td>
-        </tr>
-        <tr>
-            <td class="col-2 text-right">Owner</td>
-            <td><select name="owner" id="owner">
-                <option th:each="owner : ${users}"
-                        th:value="${owner.id}"
-                        th:selected="${owner.id.equals(room.owner.id)}"
-                        th:text="${owner.firstName+' '+#strings.defaultString(owner.lastName,'')}">
-                </option>
-            </select></td>
-        </tr>
-        <tr>
-            <td class="col-2 text-right">Private</td>
-            <td><input type="checkbox" th:field="*{confidential}"/></td>
-        </tr>
-        <tr>
-            <td class="col-2 text-right">Сlosed</td>
-            <td><input type="checkbox" th:field="*{closed}"/></td>
-        </tr>
-        <tr>
-            <td class="col-2"></td>
-            <td><input type="submit" class="btn btn-primary" value="Save"/></td>
-        </tr>
+        <form th:object="${room}" th:action="@{/update_room}" method="post">
+            <input type="hidden" th:field="*{id}"/>
+            <tr class="d-flex">
+                <td class="col-lg-5 text-right">Name</td>
+                <td><input type="text" th:field="*{name}" maxlength="50"/></td>
+            </tr>
+            <tr class="d-flex">
+                <td class="col-lg-5 text-right">Owner</td>
+                <td><select name="owner" id="owner">
+                    <option th:each="owner : ${users}"
+                            th:value="${owner.id}"
+                            th:selected="${owner.id.equals(room.owner.id)}"
+                            th:text="${owner.firstName+' '+#strings.defaultString(owner.lastName,'')}">
+                    </option>
+                </select></td>
+            </tr>
+            <tr class="d-flex">
+                <td class="col-lg-5 text-right">Private</td>
+                <td><input type="checkbox" th:field="*{confidential}"/></td>
+            </tr>
+            <tr class="d-flex">
+                <td class="col-lg-5 text-right">Сlosed</td>
+                <td><input type="checkbox" th:field="*{closed}"/></td>
+            </tr>
+            <tr class="d-flex">
+                <td class="col-lg-5"></td>
+                <td><input type="submit" class="btn btn-primary" value="Save"/></td>
+            </tr>
+        </form>
     </table>
-</form>
-<br>
+    <br>
 
-<div class="left-container col-4">
-    <div class="text-center"><h5>Interlocutors</h5></div>
-    <table class="table table-sm table-bordered">
-        <colgroup>
-            <col span="1" style="background:Khaki">
-            <col span="1" style="background-color:LightCyan">
-        </colgroup>
-        <thead class="thead-light text-center">
-        <tr>
-            <th class="col-3">Interlocutor</th>
-            <th class="col-1"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="interlocutor : ${interlocutors}">
-            <td th:hidden="${interlocutor.id}">id</td>
-            <td th:text="${interlocutor.user.firstName+' '+#strings.defaultString(interlocutor.user.lastName,'')}"></td>
-            <td style="text-align: center">
-                <div th:if="${room.owner==interlocutor.user}" class="fa fa-trash"
-                     style="font-size: 20px"></div>
-                <div th:if="${room.owner!=interlocutor.user}">
-                    <a th:href="@{'/delete_interlocutor/{id}'(id=${interlocutor.id})}">
-                        <i class="fa fa-trash" style="font-size: 20px"></i></a>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <a th:href="@{'/new_interlocutor_room/{id}'(id=${room.id})}">
-        <button class="btn btn-primary">Add interlocutor</button>
-    </a>
+    <div class="left-container col-lg-5">
+        <div class="text-center"><h5>Interlocutors</h5></div>
+        <table class="table table-sm table-bordered">
+            <tbody>
+            <tr th:each="interlocutor : ${interlocutors}">
+                <td th:hidden="${interlocutor.id}">id</td>
+                <td style="background:Khaki"
+                    th:text="${interlocutor.user.firstName+' '+#strings.defaultString(interlocutor.user.lastName,'')}"></td>
+                <td style="background-color:LightCyan" class="text-center">
+                    <div th:if="${room.owner==interlocutor.user}" class="fa fa-trash"
+                         style="font-size: 20px"></div>
+                    <div th:if="${room.owner!=interlocutor.user}">
+                        <a th:href="@{'/delete_interlocutor/{id}'(id=${interlocutor.id})}">
+                            <i class="fa fa-trash" style="font-size: 20px"></i></a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <a th:href="@{'/new_interlocutor_room/{id}'(id=${room.id})}">
+            <button class="btn btn-primary">Add interlocutor</button>
+        </a>
+    </div>
 </div>
 </body>
 </html>

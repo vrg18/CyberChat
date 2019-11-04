@@ -4,29 +4,31 @@
       xmlns:th="http://www.thymeleaf.org">
 <head th:replace="_head :: head"></head>
 <body>
-<!-- Include _menu.html -->
-<th:block th:include="/_menu"></th:block>
-<h4 th:text="${'Add interlocutor in room &#34;'+room.name+'&#34;'}"></h4>
-<br>
-<form th:object="${interlocutor}" th:action="@{/add_interlocutor_room}" method="post">
-    <input type="hidden" id="id" name="id"/>
-    <input type="hidden" id="room" name="room" th:value="${room.id}"/>
+<div class="container-fluid">
+    <!-- Include _menu.html -->
+    <th:block th:include="/_menu"></th:block>
+    <h4 th:text="${'Add interlocutor in room &#34;'+room.name+'&#34;'}"></h4>
+    <br>
     <table>
-        <tr>
-            <td class="col-2 text-right">User</td>
-            <td><select name="user" id="user">
-                <option value="">-- Select user --</option>
-                <option th:each="user : ${users}"
-                        th:value="${user.id}"
-                        th:text="${user.firstName+' '+#strings.defaultString(user.lastName,'')}">
-                </option>
-            </select></td>
-        </tr>
-        <tr>
-            <td class="col-2"></td>
-            <td><input type="submit" class="btn btn-primary" value="Add"/></td>
-        </tr>
+        <form th:object="${interlocutor}" th:action="@{/add_interlocutor_room}" method="post">
+            <input type="hidden" id="id" name="id"/>
+            <input type="hidden" id="room" name="room" th:value="${room.id}"/>
+            <tr class="d-flex">
+                <td class="col-lg-5 text-right">User</td>
+                <td><select name="user" id="user">
+                    <option value="">-- Select user --</option>
+                    <option th:each="user : ${users}"
+                            th:value="${user.id}"
+                            th:text="${user.firstName+' '+#strings.defaultString(user.lastName,'')}">
+                    </option>
+                </select></td>
+            </tr>
+            <tr class="d-flex">
+                <td class="col-lg-5"></td>
+                <td><input type="submit" class="btn btn-primary" value="Add"/></td>
+            </tr>
+        </form>
     </table>
-</form>
+</div>
 </body>
 </html>

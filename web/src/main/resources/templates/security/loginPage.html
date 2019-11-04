@@ -5,62 +5,50 @@
     <title>Login</title>
 </head>
 <body>
-<!-- Include _menu.html -->
-<th:block th:include="/_menu"></th:block>
-<h4>Entrance to the CyberChat</h4>
-<!-- /login?error=true -->
-<div th:if="${#request.getParameter('error') == 'true'}" style="color:red;margin:10px 0px;">
-    Authorization failed!!!<br>
-    Cause:
-    <span th:if="${#session!= null and #session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION') != null}"
-          th:utext="${#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION').message}">
+<div class="container-fluid">
+    <!-- Include _menu.html -->
+    <th:block th:include="/_menu"></th:block>
+    <h4>Entrance to the CyberChat</h4>
+    <!-- /login?error=true -->
+    <div th:if="${#request.getParameter('error') == 'true'}" style="color:red;margin:10px 0px;">
+        Authorization failed!!!<br>
+        Cause:
+        <span th:if="${#session!= null and #session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION') != null}"
+              th:utext="${#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION').message}">
                 Static summary
          </span>
+    </div>
+    <h5>Enter your username and password:</h5>
+    <table>
+        <form th:action="@{/j_spring_security_check}" method='POST'>
+            <tr class="d-flex">
+                <td class="col-lg-5 text-right">User:</td>
+                <td><input type='text' name='username' value=''></td>
+            </tr>
+            <tr class="d-flex">
+                <td class="col-lg-5 text-right">Password:</td>
+                <td><input type='password' name='password'/></td>
+            </tr>
+            <tr class="d-flex">
+                <td class="col-lg-5 text-right">Remember me?</td>
+                <td><input type="checkbox" name="remember-me"/></td>
+            </tr>
+            <tr class="d-flex">
+                <td class="col-lg-5"></td>
+                <td><input type="submit" class="btn btn-primary" value="Enter"/></td>
+            </tr>
+        </form>
+        <tr>
+            <td><br><br><br></td>
+        </tr>
+        <form th:action="@{/new_user_own}" method='GET'>
+            <tr class="d-flex">
+                <td class="col-lg-5 text-right">or</td>
+                <td><input type="submit" class="btn btn-primary" value="Create new user"/></td>
+            </tr>
+        </form>
+    </table>
 </div>
-<h5>Enter your username and password:</h5>
-<form th:action="@{/j_spring_security_check}" method='POST'>
-    <table>
-        <tr>
-            <td class="col-2 text-right">User:</td>
-            <td><input type='text' name='username' value=''></td>
-        </tr>
-        <tr>
-            <td class="col-2 text-right">Password:</td>
-            <td><input type='password' name='password'/></td>
-        </tr>
-        <tr>
-            <td class="col-2 text-right">Remember me?</td>
-            <td><input type="checkbox" name="remember-me"/></td>
-        </tr>
-        <tr>
-            <td class="col-2"></td>
-            <td><input type="submit" class="btn btn-primary" value="Enter"/></td>
-        </tr>
-    </table>
-</form>
-<br>
-<br>
-<br>
-<form th:action="@{/new_user_own}" method='GET'>
-    <table>
-        <tr>
-            <td class="col-2 text-right">or</td>
-            <td><input type="submit" class="btn btn-primary" value="Create new user"/></td>
-        </tr>
-    </table>
-</form>
-<!--
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-Username/pass:
-<ul>
-    <li>user1/123 (роль ROLE_USER: только просмотр)</li>
-    <li>admin1/123 (роли ROLE_USER и ROLE_ADMIN: просмотр и редактирование)</li>
-</ul>
--->
+
 </body>
 </html>

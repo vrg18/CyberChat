@@ -5,11 +5,13 @@
     <title>User Info</title>
 </head>
 <body>
-<!-- Include _menu.html -->
-<th:block th:include="/_menu"></th:block>
-<h4>User information</h4>
-<h5>
-    <div th:if="${userInfo != null}" th:utext="${userInfo}"></div>
-</h5>
+<div class="container-fluid">
+    <!-- Include _menu.html -->
+    <th:block th:include="/_menu"></th:block>
+    <h4>User information</h4>
+    <h5>
+        <div th:if="${userInfo != null}" th:utext="${userInfo}"></div>
+    </h5>
+</div>
 </body>
 </html>

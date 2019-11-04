@@ -1,113 +1,147 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head style="height: 100vh" th:replace="_head :: head"></head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script type="text/javascript">
+    var stompClient = null;
+    connect();
+
+    function connect() {
+        var socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/[[${currentRoomId}]]', function (greeting) {
+                isOurRequirement(greeting.body);
+            });
+        });
+    }
+
+    function disconnect() {
+        if (stompClient != null) {
+            stompClient.disconnect();
+        }
+        setConnected(false);
+        console.log("Disconnected");
+    }
+
+    function isOurRequirement(newMessageAuthorId) {
+        if (newMessageAuthorId !== '[[${currentRoomId}]]') {
+            location.reload();
+        }
+    }
+</script>
 <head>
     <title th:utext="${title}"></title>
 </head>
 <body>
-<!-- Include _menu.html -->
-<th:block th:include="/_menu"></th:block>
-
 <div class="container-fluid">
+    <!-- Include _menu.html -->
+    <th:block th:include="/_menu"></th:block>
     <!--    <div class="text-center"><h3><span th:utext="${message}"></h3></div>-->
+
     <table class="table table-sm table-bordered">
         <thead class="thead-light text-center">
-        <tr>
-            <th class="col-2">Rooms</th>
-            <th class="col-8" th:text="${roomName}"></th>
-            <th class="col-2">Users</th>
+        <tr class="d-flex">
+            <th class="col-lg-2">Rooms</th>
+            <th class="col-lg-8" th:text="${roomName}"></th>
+            <th class="col-lg-2">Users</th>
         </tr>
         </thead>
         <tbody>
-        <td>
-            <table class="table table-sm">
-                <colgroup>
-                    <col span="3" style="background:Pink">
-                </colgroup>
-                <tbody>
-                <tr th:each="room : ${rooms}">
-                    <td>
-                        <!--                    <td style="white-space: nowrap">-->
-                        <!--                        <div th:if="${!#strings.isEmpty(familiarizeService.numberOfUnreadInRoom(currentUser,room))}">-->
-                        <img th:if="${!#strings.isEmpty(familiarizeService.numberOfUnreadMessagesInRoom(currentUser,room))}"
-                             th:src="${'https://ui-avatars.com/api/?size=24&font-size=0.6&rounded=true&name='+familiarizeService.numberOfUnreadMessagesInRoom(currentUser,room)}">
-                        <!--                        </div>-->
-                        <a th:href="@{'/room/{id}'(id=${room.id})}"
-                           th:text="${room.name+' ('+interlocutorService.getNumberInterlocutorsInRoomId(room.id)+')'}"></a>
-                    </td>
-                    <div th:if="${room.confidential}">
-                        <td style="text-align: center">
-                            <div th:if="${room.owner!=currentUser}" class="fa fa-lock"
-                                 style="font-size: 15px"></div>
-                            <div th:if="${room.owner==currentUser}">
-                                <a th:href="@{'/lock_unlock_room/{id}'(id=${room.id})}">
-                                    <i class="fa fa-lock" style="font-size: 15px"></i></a>
-                            </div>
+        <tr class="d-flex">
+            <td class="col-lg-2">
+                <table class="table table-sm">
+                    <colgroup>
+                        <col span="3" style="background:Pink">
+                    </colgroup>
+                    <tbody>
+                    <tr th:each="room : ${rooms}">
+                        <td>
+                            <!--                    <td style="white-space: nowrap">-->
+                            <!--                        <div th:if="${!#strings.isEmpty(familiarizeService.numberOfUnreadInRoom(currentUser,room))}">-->
+                            <img th:if="${!#strings.isEmpty(familiarizeService.numberOfUnreadMessagesInRoom(currentUser,room))}"
+                                 th:src="${'https://ui-avatars.com/api/?size=24&font-size=0.6&rounded=true&name='+familiarizeService.numberOfUnreadMessagesInRoom(currentUser,room)}">
+                            <!--                        </div>-->
+                            <a th:href="@{'/room/{id}'(id=${room.id})}"
+                               th:text="${room.name+' ('+interlocutorService.getNumberInterlocutorsInRoomId(room.id)+')'}"></a>
                         </td>
-                    </div>
-                    <div th:if="${!room.confidential}">
-                        <td style="text-align: center">
-                            <div th:if="${room.owner!=currentUser}" class="fa fa-unlock"
-                                 style="font-size: 15px"></div>
-                            <div th:if="${room.owner==currentUser}">
-                                <a th:href="@{'/lock_unlock_room/{id}'(id=${room.id})}">
-                                    <i class="fa fa-unlock" style="font-size: 15px"></i></a>
-                            </div>
-                        </td>
-                    </div>
-                    <td style="text-align: center">
-                        <div th:if="${room.owner!=currentUser}" class="fa fa-list-ol" style="font-size: 15px"></div>
-                        <div th:if="${room.owner==currentUser}">
-                            <a th:href="@{'/edit_list_room/{id}'(id=${room.id})}">
-                                <i class="fa fa-list-ol" style="font-size: 15px"></i></a>
+                        <div th:if="${room.confidential}">
+                            <td style="text-align: center">
+                                <div th:if="${room.owner!=currentUser}" class="fa fa-lock"
+                                     style="font-size: 15px"></div>
+                                <div th:if="${room.owner==currentUser}">
+                                    <a th:href="@{'/lock_unlock_room/{id}'(id=${room.id})}">
+                                        <i class="fa fa-lock" style="font-size: 15px"></i></a>
+                                </div>
+                            </td>
                         </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </td>
-        <td>
-            <table class="table table-sm">
-                <colgroup>
-                    <col span="2" style="background:Moccasin">
-                </colgroup>
-                <tbody>
-                <tr th:each="message : ${messages}">
-                    <td class="col-2">
-                        <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.55&rounded=true&name='+#strings.substring(message.author.firstName,0,1)+#strings.substring(#strings.defaultString(message.author.lastName,' '),0,1)}"
-                             th:text="${' '+message.author.firstName+' '+#strings.defaultString(message.author.lastName,'')+' '+#dates.format(message.date,'dd.MM.yyyy HH:mm')}">
-                    </td>
-                    <td th:text="${message.text}"></td>
-                </tr>
-                </tbody>
-            </table>
-            <form th:if="${isUserInRoom}" style="text-align: justify" th:object="${newMessage}"
-                  th:action="@{/send_message}" method="post">
-                <input type="hidden" id="id" name="id"/>
-                <input type="hidden" th:field="*{author}"/>
-                <input type="hidden" th:field="*{room}"/>
-                <textarea class="form-control" id="text" name="text" placeholder="Text of new message"
-                          maxlength="255"></textarea>
-                <button type="submit" class="btn btn-primary">Send a message</button>
-            </form>
-        </td>
-        <td>
-            <table class="table table-sm">
-                <colgroup>
-                    <col span="1" style="background:Pink">
-                </colgroup>
-                <tbody>
-                <tr th:each="user : ${users}">
-                    <td>
-                        <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.55&rounded=true&name='+#strings.substring(user.firstName,0,1)+#strings.substring(#strings.defaultString(user.lastName,' '),0,1)}">
-                        <div th:if="${user.bot}" class="fa fa-android" style="font-size: 15px"></div>
-                        <a th:href="@{'/teteatete_room/{id}'(id=${user.id})}"
-                           th:text="${user.firstName+' '+#strings.defaultString(user.lastName,'')}"></a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </td>
+                        <div th:if="${!room.confidential}">
+                            <td style="text-align: center">
+                                <div th:if="${room.owner!=currentUser}" class="fa fa-unlock"
+                                     style="font-size: 15px"></div>
+                                <div th:if="${room.owner==currentUser}">
+                                    <a th:href="@{'/lock_unlock_room/{id}'(id=${room.id})}">
+                                        <i class="fa fa-unlock" style="font-size: 15px"></i></a>
+                                </div>
+                            </td>
+                        </div>
+                        <td style="text-align: center">
+                            <div th:if="${room.owner!=currentUser}" class="fa fa-list-ol"
+                                 style="font-size: 15px"></div>
+                            <div th:if="${room.owner==currentUser}">
+                                <a th:href="@{'/edit_list_room/{id}'(id=${room.id})}">
+                                    <i class="fa fa-list-ol" style="font-size: 15px"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td class="col-lg-8">
+                <table class="table table-sm">
+                    <colgroup>
+                        <col span="2" style="background:Moccasin">
+                    </colgroup>
+                    <tbody>
+                    <tr class="d-flex" th:each="message : ${messages}">
+                        <td class="col-lg-4">
+                            <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.55&rounded=true&name='+#strings.substring(message.author.firstName,0,1)+#strings.substring(#strings.defaultString(message.author.lastName,' '),0,1)}"
+                                 th:text="${' '+message.author.firstName+' '+#strings.defaultString(message.author.lastName,'')+' '+#dates.format(message.date,'dd.MM.yyyy HH:mm')}">
+                        </td>
+                        <td class="col-lg-8" th:text="${message.text}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <form th:if="${isUserInRoom}" style="text-align: justify" th:object="${newMessage}"
+                      th:action="@{/send_message}" method="post">
+                    <input type="hidden" id="id" name="id"/>
+                    <input type="hidden" th:field="*{author}"/>
+                    <input type="hidden" th:field="*{room}"/>
+                    <textarea class="form-control" id="text" name="text" placeholder="Text of new message"
+                              maxlength="255"></textarea>
+                    <button type="submit" class="btn btn-primary">Send a message</button>
+                </form>
+            </td>
+            <td class="col-lg-2">
+                <table class="table table-sm">
+                    <colgroup>
+                        <col span="1" style="background:Pink">
+                    </colgroup>
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td>
+                            <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.55&rounded=true&name='+#strings.substring(user.firstName,0,1)+#strings.substring(#strings.defaultString(user.lastName,' '),0,1)}">
+                            <div th:if="${user.bot}" class="fa fa-android" style="font-size: 15px"></div>
+                            <a th:href="@{'/teteatete_room/{id}'(id=${user.id})}"
+                               th:text="${user.firstName+' '+#strings.defaultString(user.lastName,'')}"></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
         </tbody>
     </table>
 </div>

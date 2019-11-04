@@ -4,81 +4,82 @@
       xmlns:th="http://www.thymeleaf.org">
 <head th:replace="_head :: head"></head>
 <body>
-<!-- Include _menu.html -->
-<th:block th:include="/_menu"></th:block>
-<div th:if="${newUser}">
-    <h4>New user</h4>
-</div>
-<div th:unless="${newUser}">
-    <h4>User editing</h4>
-</div>
-<br>
-<form th:object="${user}" th:action="@{/save_user_own}" method="post">
+<div class="container-fluid">
+    <!-- Include _menu.html -->
+    <th:block th:include="/_menu"></th:block>
     <div th:if="${newUser}">
-        <input type="hidden" id="id" name="id"/>
-        <input type="hidden" id="enabled" name="enabled" th:value="true"/>
-        <input type="hidden" id="bot" name="bot" th:value="false"/>
-        <table>
-            <tr>
-                <td class="col-2 text-right">Username</td>
-                <td><input type="text" id="userName" name="userName" placeholder="Nickname of user" maxlength="50"/>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-2 text-right">Password</td>
-                <td><input type="password" id="newPassword" name="newPassword" maxlength="36"/></td>
-            </tr>
-            <tr>
-                <td class="col-2 text-right">First name</td>
-                <td><input type="text" id="firstName" name="firstName" placeholder="First name of user"
-                           maxlength="100"/></td>
-            </tr>
-            <tr>
-                <td class="col-2 text-right">Last name</td>
-                <td><input type="text" id="lastName" name="lastName" placeholder="Last name of user" maxlength="100"/>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-2"></td>
-                <td><input type="submit" class="btn btn-primary" value="Save"/></td>
-            </tr>
-        </table>
+        <h4>New user</h4>
     </div>
     <div th:unless="${newUser}">
-        <input type="hidden" th:field="*{id}"/>
-        <input type="hidden" th:field="*{encryptedPassword}"/>
-        <input type="hidden" th:field="*{bot}"/>
-        <input type="hidden" th:field="*{lastRoom}"/>
-        <input type="hidden" th:field="*{lastActivity}"/>
-        <table>
-            <tr>
-                <td class="col-2 text-right">Username</td>
-                <td><input type="text" th:field="*{userName}" maxlength="50"/></td>
-            </tr>
-            <tr>
-                <td class="col-2 text-right">Password</td>
-                <td><input type="password" id="newPassword" name="newPassword"
-                           th:value="8a38aeb0-0caa-49be-8f8b-f64b6ae2ce1e"
-                           maxlength="36"/></td>
-            </tr>
-            <tr>
-                <td class="col-2 text-right">On</td>
-                <td><input type="checkbox" th:field="*{enabled}"/></td>
-            </tr>
-            <tr>
-                <td class="col-2 text-right">First name</td>
-                <td><input type="text" th:field="*{firstName}" maxlength="100"/></td>
-            </tr>
-            <tr>
-                <td class="col-2 text-right">Last name</td>
-                <td><input type="text" th:field="*{lastName}" maxlength="100"/></td>
-            </tr>
-            <tr>
-                <td class="col-2"></td>
-                <td><input type="submit" class="btn btn-primary" value="Save"/></td>
-            </tr>
-        </table>
+        <h4>User editing</h4>
     </div>
-</form>
+    <br>
+    <table>
+        <form th:object="${user}" th:action="@{/save_user_own}" method="post">
+            <div th:if="${newUser}">
+                <input type="hidden" id="id" name="id"/>
+                <input type="hidden" id="enabled" name="enabled" th:value="true"/>
+                <input type="hidden" id="bot" name="bot" th:value="false"/>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">Username</td>
+                    <td><input type="text" id="userName" name="userName" placeholder="Nickname of user" maxlength="50"/>
+                    </td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">Password</td>
+                    <td><input type="password" id="newPassword" name="newPassword" maxlength="36"/></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">First name</td>
+                    <td><input type="text" id="firstName" name="firstName" placeholder="First name of user"
+                               maxlength="100"/></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">Last name</td>
+                    <td><input type="text" id="lastName" name="lastName" placeholder="Last name of user"
+                               maxlength="100"/>
+                    </td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5"></td>
+                    <td><input type="submit" class="btn btn-primary" value="Save"/></td>
+                </tr>
+            </div>
+            <div th:unless="${newUser}">
+                <input type="hidden" th:field="*{id}"/>
+                <input type="hidden" th:field="*{encryptedPassword}"/>
+                <input type="hidden" th:field="*{bot}"/>
+                <input type="hidden" th:field="*{lastRoom}"/>
+                <input type="hidden" th:field="*{lastActivity}"/>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">Username</td>
+                    <td><input type="text" th:field="*{userName}" maxlength="50"/></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">Password</td>
+                    <td><input type="password" id="newPassword" name="newPassword"
+                               th:value="8a38aeb0-0caa-49be-8f8b-f64b6ae2ce1e"
+                               maxlength="36"/></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">On</td>
+                    <td><input type="checkbox" th:field="*{enabled}"/></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">First name</td>
+                    <td><input type="text" th:field="*{firstName}" maxlength="100"/></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5 text-right">Last name</td>
+                    <td><input type="text" th:field="*{lastName}" maxlength="100"/></td>
+                </tr>
+                <tr class="d-flex">
+                    <td class="col-lg-5"></td>
+                    <td><input type="submit" class="btn btn-primary" value="Save"/></td>
+                </tr>
+            </div>
+        </form>
+    </table>
+</div>
 </body>
 </html>

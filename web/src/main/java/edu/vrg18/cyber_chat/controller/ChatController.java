@@ -8,6 +8,7 @@ import edu.vrg18.cyber_chat.service.InterlocutorService;
 import edu.vrg18.cyber_chat.service.MessageService;
 import edu.vrg18.cyber_chat.service.RoomService;
 import edu.vrg18.cyber_chat.service.UserService;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,13 +31,15 @@ public class ChatController {
     private final RoomService roomService;
     private final InterlocutorService interlocutorService;
     private final FamiliarizeService familiarizeService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public ChatController(UserService userService, MessageService messageService, RoomService roomService, InterlocutorService interlocutorService, FamiliarizeService familiarizeService) {
+    public ChatController(UserService userService, MessageService messageService, RoomService roomService, InterlocutorService interlocutorService, FamiliarizeService familiarizeService, SimpMessagingTemplate simpMessagingTemplate) {
         this.userService = userService;
         this.messageService = messageService;
         this.roomService = roomService;
         this.interlocutorService = interlocutorService;
         this.familiarizeService = familiarizeService;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     @GetMapping("/")
@@ -56,6 +59,7 @@ public class ChatController {
             userService.updateUser(currentUser);
         }
         model.addAttribute("currentUser", currentUser);
+        model.addAttribute("currentUserId", currentUser.getId().toString());
 
         List<Room> rooms = roomService.findAllRoomsOfUserAndAllOpenRooms(currentUser);
         model.addAttribute("rooms", rooms);
@@ -65,6 +69,7 @@ public class ChatController {
         model.addAttribute("messages", messages);
         Message newMessage = new Message(null, null, currentUser, currentRoom, null);
         model.addAttribute("newMessage", newMessage);
+        model.addAttribute("currentRoomId", currentRoom.getId().toString());
 
         List<AppUser> users = userService.findAllUsersWithoutDisabled();
         model.addAttribute("users", users);
@@ -104,6 +109,9 @@ public class ChatController {
     public String sendMessage(@ModelAttribute("message") Message message, HttpServletRequest request) {
 
         messageService.createMessage(message);
+
+        simpMessagingTemplate.convertAndSend("/topic/" + message.getRoom().getId().toString(), message.getAuthor().getId().toString());
+
         String referer = request.getHeader("Referer");
         return "redirect:".concat(referer);
     }

@@ -3,51 +3,51 @@
 <head th:replace="_head :: head"></head>
 <body>
 <!-- Include _menu.html -->
-<th:block th:include="/_menu"></th:block>
-<h4>Users and roles management</h4>
-<h5 th:if="${userInfo != null}" th:utext="${userInfo}"></h5>
-
-<br>
 <div class="container-fluid">
+    <th:block th:include="/_menu"></th:block>
+    <h4>Users and roles management</h4>
+    <h5 th:if="${userInfo != null}" th:utext="${userInfo}"></h5>
+
+    <br>
     <div class="text-center"><h5>Users</h5></div>
     <table class="table table-sm table-bordered">
-        <colgroup>
-            <col span="7" style="background:Khaki">
-            <col span="2" style="background-color:LightCyan">
-        </colgroup>
         <thead class="thead-light text-center">
-        <tr>
-            <th>Username</th>
-            <th class="col-1">On</th>
-            <th class="col-1">Bot</th>
-            <th>First name</th>
-            <th>Last name</th>
-            <th>Last room</th>
-            <th>Last activity</th>
-            <th class="col-1"></th>
-            <th class="col-1"></th>
+        <tr class="d-flex">
+            <th class="col-lg-1">Username</th>
+            <th class="col-lg-1">On</th>
+            <th class="col-lg-1">Bot</th>
+            <th class="col-lg-2">First name</th>
+            <th class="col-lg-2">Last name</th>
+            <th class="col-lg-2">Last room</th>
+            <th class="col-lg-1">Last activity</th>
+            <th class="col-lg-1"></th>
+            <th class="col-lg-1"></th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="user : ${users}">
-            <td th:text="${user.userName}"></td>
-            <td style="text-align: center">
-                <div th:if="${user.enabled}" class="fa fa-check"
-                     style="font-size:20px"></div>
+        <tr class="d-flex" th:each="user : ${users}">
+            <td th:hidden="${user.id}"></td>
+            <td class="col-lg-1" style="background:Khaki" th:text="${user.userName}"></td>
+            <td class="col-lg-1 text-center" style="background:Khaki">
+                <div th:if="${user.enabled}" class="fa fa-check" style="font-size:20px"></div>
             </td>
-            <td style="text-align: center">
-                <div th:if="${user.bot}" class="fa fa-check"
-                     style="font-size:20px"></div>
+            <td class="col-lg-1 text-center" style="background:Khaki">
+                <div th:if="${user.bot}" class="fa fa-check" style="font-size:20px"></div>
             </td>
-            <td th:text="${user.firstName}"></td>
-            <td th:text="${user.lastName}"></td>
-            <td th:text="${user.lastRoom.name}"></td>
-            <td th:text="${#dates.format(user.lastActivity,'dd.MM.yyyy HH:mm')}"></td>
-            <td style="text-align: center"><a th:href="@{'/edit_user_admin/{id}'(id=${user.id})}"><i class="fa fa-edit"
-                                                                                               style="font-size:20px"></i></a>
+            <td class="col-lg-2" style="background:Khaki" th:text="${user.firstName}"></td>
+            <td class="col-lg-2" style="background:Khaki" th:text="${user.lastName}"></td>
+            <td class="col-lg-2" style="background:Khaki" th:if="${#strings.isEmpty(user.lastRoom)}"></td>
+            <td class="col-lg-2" style="background:Khaki" th:if="${!#strings.isEmpty(user.lastRoom)}"
+                th:text="${user.lastRoom.name}"></td>
+            <td class="col-lg-1" style="background:Khaki"
+                th:text="${#dates.format(user.lastActivity,'dd.MM.yyyy HH:mm')}"></td>
+            <td class="col-lg-1 text-center" style="background-color:LightCyan">
+                <a th:href="@{'/edit_user_admin/{id}'(id=${user.id})}">
+                    <i class="fa fa-edit" style="font-size:20px"></i></a>
             </td>
-            <td style="text-align: center"><a th:href="@{'/delete_user/{id}'(id=${user.id})}"><i class="fa fa-trash"
-                                                                                                 style="font-size:20px"></i></a>
+            <td class="col-lg-1 text-center" style="background-color:LightCyan">
+                <a th:href="@{'/delete_user/{id}'(id=${user.id})}">
+                    <i class="fa fa-trash" style="font-size:20px"></i></a>
             </td>
         </tr>
         </tbody>
@@ -55,32 +55,28 @@
     <form th:action="@{/new_user_admin}">
         <button type="submit" class="btn btn-primary">Add user</button>
     </form>
-</div>
 
-<br>
-<div class="container-fluid">
+    <br>
     <div class="text-center"><h5>Roles</h5></div>
     <table class="table table-sm table-bordered">
-        <colgroup>
-            <col span="1" style="background:Khaki">
-            <col span="2" style="background-color:LightCyan">
-        </colgroup>
         <thead class="thead-light text-center">
-        <tr>
-            <th>Role name</th>
-            <th class="col-1"></th>
-            <th class="col-1"></th>
+        <tr class="d-flex">
+            <th class="col-lg-10">Role name</th>
+            <th class="col-lg-1"></th>
+            <th class="col-lg-1"></th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="role : ${roles}">
-            <td th:hidden="${role.id}">roleId</td>
-            <td th:text="${role.name}">roleName</td>
-            <td style="text-align: center"><a th:href="@{'/edit_role/{id}'(id=${role.id})}"><i class="fa fa-edit"
-                                                                                               style="font-size:20px"></i></a>
+        <tr class="d-flex" th:each="role : ${roles}">
+            <td th:hidden="${role.id}"></td>
+            <td class="col-lg-10" style="background:Khaki" th:text="${role.name}"></td>
+            <td class="col-lg-1 text-center" style="background-color:LightCyan">
+                <a th:href="@{'/edit_role/{id}'(id=${role.id})}">
+                    <i class="fa fa-edit" style="font-size:20px"></i></a>
             </td>
-            <td style="text-align: center"><a th:href="@{'/delete_role/{id}'(id=${role.id})}"><i class="fa fa-trash"
-                                                                                                 style="font-size:20px"></i></a>
+            <td class="col-lg-1 text-center" style="background-color:LightCyan">
+                <a th:href="@{'/delete_role/{id}'(id=${role.id})}">
+                    <i class="fa fa-trash" style="font-size:20px"></i></a>
             </td>
         </tr>
         </tbody>
@@ -88,36 +84,30 @@
     <form th:action="@{/new_role}">
         <button type="submit" class="btn btn-primary">Add role</button>
     </form>
-</div>
 
-<br>
-<div class="container-fluid">
+    <br>
     <div class="text-center"><h5>Users and their roles</h5></div>
     <table class="table table-sm table-bordered">
-        <colgroup>
-            <col span="2" style="background:Khaki">
-            <col span="2" style="background-color:LightCyan">
-        </colgroup>
         <thead class="thead-light text-center">
-        <tr>
-            <th>User</th>
-            <th>His role</th>
-            <th class="col-1"></th>
-            <th class="col-1"></th>
+        <tr class="d-flex">
+            <th class="col-lg-5">User</th>
+            <th class="col-lg-5">His role</th>
+            <th class="col-lg-1"></th>
+            <th class="col-lg-1"></th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="userRole : ${usersRoles}">
-            <td th:hidden="${userRole.id}">id</td>
-            <td th:text="${userRole.user.userName}">User</td>
-            <td th:text="${userRole.role.name}">Role</td>
-            <td class="text-center"><a th:href="@{'/edit_userrole/{id}'(id=${userRole.id})}"><i
-                    class="fa fa-edit"
-                    style="font-size:20px"></i></a>
+        <tr class="d-flex" th:each="userRole : ${usersRoles}">
+            <td th:hidden="${userRole.id}"></td>
+            <td class="col-lg-5" style="background:Khaki" th:text="${userRole.user.userName}"></td>
+            <td class="col-lg-5" style="background:Khaki" th:text="${userRole.role.name}"></td>
+            <td class="col-lg-1 text-center" style="background-color:LightCyan">
+                <a th:href="@{'/edit_userrole/{id}'(id=${userRole.id})}">
+                    <i class="fa fa-edit" style="font-size:20px"></i></a>
             </td>
-            <td class="text-center"><a th:href="@{'/delete_userrole/{id}'(id=${userRole.id})}"><i
-                    class="fa fa-trash"
-                    style="font-size:20px"></i></a>
+            <td class="col-lg-1 text-center" style="background-color:LightCyan">
+                <a th:href="@{'/delete_userrole/{id}'(id=${userRole.id})}">
+                    <i class="fa fa-trash" style="font-size:20px"></i></a>
             </td>
         </tr>
         </tbody>
@@ -125,7 +115,7 @@
     <form th:action="@{/new_userrole}">
         <button type="submit" class="btn btn-primary">Add link</button>
     </form>
-</div>
 
+</div>
 </body>
 </html>

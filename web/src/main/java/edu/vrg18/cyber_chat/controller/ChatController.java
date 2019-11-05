@@ -33,7 +33,9 @@ public class ChatController {
     private final FamiliarizeService familiarizeService;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public ChatController(UserService userService, MessageService messageService, RoomService roomService, InterlocutorService interlocutorService, FamiliarizeService familiarizeService, SimpMessagingTemplate simpMessagingTemplate) {
+    public ChatController(UserService userService, MessageService messageService, RoomService roomService,
+                          InterlocutorService interlocutorService, FamiliarizeService familiarizeService,
+                          SimpMessagingTemplate simpMessagingTemplate) {
         this.userService = userService;
         this.messageService = messageService;
         this.roomService = roomService;
@@ -110,7 +112,8 @@ public class ChatController {
 
         messageService.createMessage(message);
 
-        simpMessagingTemplate.convertAndSend("/topic/" + message.getRoom().getId().toString(), message.getAuthor().getId().toString());
+        simpMessagingTemplate.convertAndSend("/topic/" + message.getRoom().getId().toString(),
+                message.getAuthor().getId().toString());
 
         String referer = request.getHeader("Referer");
         return "redirect:".concat(referer);

@@ -4,28 +4,23 @@ import edu.vrg18.cyber_chat.entity.AppUser;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
-import edu.vrg18.cyber_chat.repository.RoomRepository;
 import edu.vrg18.cyber_chat.service.InterlocutorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class InterlocutorServiceImpl implements InterlocutorService {
 
     private final InterlocutorRepository interlocutorRepository;
-    private final RoomRepository roomRepository;
 
     @Autowired
-    public InterlocutorServiceImpl(InterlocutorRepository interlocutorRepository, RoomRepository roomRepository) {
+    public InterlocutorServiceImpl(InterlocutorRepository interlocutorRepository) {
         this.interlocutorRepository = interlocutorRepository;
-        this.roomRepository = roomRepository;
     }
 
     @Override
@@ -61,7 +56,7 @@ public class InterlocutorServiceImpl implements InterlocutorService {
     @Override
     public boolean isUserInRoom(AppUser user, Room room) {
         return interlocutorRepository.findAllByRoomAndUser(room, user).size() > 0;
-    };
+    }
 
     @Override
     public List<Interlocutor> findAllInterlocutorsInRoomId(UUID id) {

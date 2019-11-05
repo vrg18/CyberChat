@@ -37,8 +37,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 
-        AppUser user = userRepository.findAppUserByUserName(userName)
-                .orElseThrow(() -> new UsernameNotFoundException("User " + userName + " was not found in the database"));
+        AppUser user = userRepository.findAppUserByUserName(userName).orElseThrow(()
+                -> new UsernameNotFoundException("User " + userName + " was not found in the database"));
 
         // [ROLE_USER, ROLE_ADMIN,..]
         List<String> roleNames = getRoleNames(user.getId());
@@ -57,8 +57,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private List<String> getRoleNames(UUID userId) {
 
-        String sql = "Select ur.role.name from " + UserRole.class.getName() + " ur " //
-                + " where ur.user.id = :userId ";
+        String sql = "Select ur.role.name from " + UserRole.class.getName() + " ur where ur.user.id = :userId ";
 
         Query query = this.entityManager.createQuery(sql, String.class);
         query.setParameter("userId", userId);

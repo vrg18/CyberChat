@@ -25,7 +25,8 @@ public class MessageServiceImpl implements MessageService {
     private final RoomRepository roomRepository;
 
     @Autowired
-    public MessageServiceImpl(MessageRepository messageRepository, FamiliarizeRepository familiarizeRepository, RoomRepository roomRepository) {
+    public MessageServiceImpl(MessageRepository messageRepository,
+                              FamiliarizeRepository familiarizeRepository, RoomRepository roomRepository) {
         this.messageRepository = messageRepository;
         this.familiarizeRepository = familiarizeRepository;
         this.roomRepository = roomRepository;
@@ -59,10 +60,11 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Message> findAllMessagesByRoomAndMarkAsRead(Room room, AppUser user) {
-        List<Message> allMessagesByRoom = messageRepository.findAllByRoom(room, new Sort(Sort.Direction.ASC, "date"));
+        List<Message> allMessagesByRoom = messageRepository
+                .findAllByRoom(room, new Sort(Sort.Direction.ASC, "date"));
         allMessagesByRoom
                 .forEach(m -> familiarizeRepository.findByMessageAndUser(m, user)
-                .orElseGet(() -> familiarizeRepository.save(new Familiarize(null, m, user))));
+                        .orElseGet(() -> familiarizeRepository.save(new Familiarize(null, m, user))));
         return allMessagesByRoom;
     }
 
@@ -75,7 +77,5 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public boolean wasThereSuchMessageInRoom(Room room, String messageText) {
         return messageRepository.getMessagesWithSuchText(room, messageText).size() != 0;
-    };
-
-
+    }
 }

@@ -59,13 +59,12 @@
                     <tbody>
                     <tr th:each="room : ${rooms}">
                         <td>
-                            <!--                    <td style="white-space: nowrap">-->
-                            <!--                        <div th:if="${!#strings.isEmpty(familiarizeService.numberOfUnreadInRoom(currentUser,room))}">-->
                             <img th:if="${!#strings.isEmpty(familiarizeService.numberOfUnreadMessagesInRoom(currentUser,room))}"
-                                 th:src="${'https://ui-avatars.com/api/?size=24&font-size=0.6&rounded=true&name='+familiarizeService.numberOfUnreadMessagesInRoom(currentUser,room)}">
-                            <!--                        </div>-->
+                                 th:src="${'https://ui-avatars.com/api/?size=24&font-size=0.6&rounded=true&name='+
+                                 familiarizeService.numberOfUnreadMessagesInRoom(currentUser,room)}">
                             <a th:href="@{'/room/{id}'(id=${room.id})}"
-                               th:text="${room.name+' ('+interlocutorService.getNumberInterlocutorsInRoomId(room.id)+')'}"></a>
+                               th:text="${room.name+' ('+interlocutorService.getNumberInterlocutorsInRoomId(room.id)+')'}">
+                            </a>
                         </td>
                         <div th:if="${room.confidential}">
                             <td style="text-align: center">
@@ -107,8 +106,12 @@
                     <tbody>
                     <tr class="d-flex" th:each="message : ${messages}">
                         <td class="col-lg-4">
-                            <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.55&rounded=true&name='+#strings.substring(message.author.firstName,0,1)+#strings.substring(#strings.defaultString(message.author.lastName,' '),0,1)}"
-                                 th:text="${' '+message.author.firstName+' '+#strings.defaultString(message.author.lastName,'')+' '+#dates.format(message.date,'dd.MM.yyyy HH:mm')}">
+                            <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.55&rounded=true&name='+
+                            #strings.substring(message.author.firstName,0,1)+
+                            #strings.substring(#strings.defaultString(message.author.lastName,' '),0,1)}"
+                                 th:text="${' '+message.author.firstName+' '+
+                                 #strings.defaultString(message.author.lastName,'')+' '+
+                                 #dates.format(message.date,'dd.MM.yyyy HH:mm')}">
                         </td>
                         <td class="col-lg-8" th:text="${message.text}"></td>
                     </tr>
@@ -132,7 +135,9 @@
                     <tbody>
                     <tr th:each="user : ${users}">
                         <td>
-                            <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.55&rounded=true&name='+#strings.substring(user.firstName,0,1)+#strings.substring(#strings.defaultString(user.lastName,' '),0,1)}">
+                            <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.55&rounded=true&name='+
+                            #strings.substring(user.firstName,0,1)+
+                            #strings.substring(#strings.defaultString(user.lastName,' '),0,1)}">
                             <div th:if="${user.bot}" class="fa fa-android" style="font-size: 15px"></div>
                             <a th:href="@{'/teteatete_room/{id}'(id=${user.id})}"
                                th:text="${user.firstName+' '+#strings.defaultString(user.lastName,'')}"></a>

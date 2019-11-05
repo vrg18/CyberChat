@@ -10,12 +10,18 @@ import java.util.UUID;
 public interface RoomService {
 
     Optional<Room> getRoomById(UUID id);
+
     Room createRoom(Room room);
+
     Room updateRoom(Room room);
+
     void deleteRoom(UUID id);
+
     List<Room> findAllRooms();
 
     List<Room> findAllRoomsOfUserAndAllOpenRooms(AppUser user);
+
     List<Room> findAllNonConfidentialRooms();
+
     Room findOrCreateTeteATeteRoom(AppUser user1, AppUser user2);
 }

@@ -9,8 +9,12 @@ import java.util.UUID;
 public interface UserRoleService {
 
     Optional<UserRole> getUserRoleById(UUID id);
+
     UserRole createUserRole(UserRole userRole);
+
     UserRole updateUserRole(UserRole userRole);
+
     void deleteUserRole(UUID id);
+
     List<UserRole> findAllUsersRoles();
 }

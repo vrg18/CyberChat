@@ -12,8 +12,10 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<AppUser, UUID> {
 
     Optional<AppUser> findAppUserByUserName(String userName);
+
     List<AppUser> findAppUsersByEnabled(boolean enabled, Sort sort);
 
-    @Query("SELECT i.user FROM Interlocutor i WHERE i.room.id = :roomId AND i.user.enabled = true ORDER BY i.user.firstName")
+    @Query("SELECT i.user FROM Interlocutor i WHERE i.room.id = :roomId " +
+            "AND i.user.enabled = true ORDER BY i.user.firstName")
     List<AppUser> findAllUsersByRoomId(UUID roomId);
 }

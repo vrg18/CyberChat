@@ -9,8 +9,12 @@ import java.util.UUID;
 public interface RoleService {
 
     Optional<Role> getRoleById(UUID id);
+
     Role createRole(Role role);
+
     Role updateRole(Role role);
+
     void deleteRole(UUID id);
+
     List<Role> findAllRoles();
 }

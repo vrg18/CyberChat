@@ -27,7 +27,8 @@
             <td class="col-lg-4" style="background:Khaki"
                 th:text="${room.name+' ('+interlocutorService.getNumberInterlocutorsInRoomId(room.id)+')'}"></td>
             <td class="col-lg-4" style="background:Khaki"
-                th:text="${room.owner.userName+' ('+room.owner.firstName+' '+#strings.defaultString(room.owner.lastName,'')+')'}"></td>
+                th:text="${room.owner.userName+' ('+room.owner.firstName+' '+
+                #strings.defaultString(room.owner.lastName,'')+')'}"></td>
             <td class="col-lg-1 text-center" style="background:Khaki">
                 <div th:if="${room.confidential}" class="fa fa-check" style="font-size:20px"></div>
             </td>
@@ -67,7 +68,8 @@
                 th:text="${interlocutor.room.name}">
             </td>
             <td class="col-lg-5" style="background:Khaki"
-                th:text="${interlocutor.user.userName+' ('+interlocutor.user.firstName+' '+#strings.defaultString(interlocutor.user.lastName,'')+')'}"></td>
+                th:text="${interlocutor.user.userName+' ('+interlocutor.user.firstName+' '+
+                #strings.defaultString(interlocutor.user.lastName,'')+')'}"></td>
             <td class="col-lg-1 text-center" style="background-color:LightCyan">
                 <a th:href="@{'/edit_interlocutor/{id}'(id=${interlocutor.id})}">
                     <i class="fa fa-edit" style="font-size:20px"></i></a>
@@ -103,7 +105,8 @@
                 th:text="${#dates.format(message.date,'dd.MM.yyyy HH:mm')}"></td>
             <td class="col-lg-2" style="background:Khaki" th:text="${message.room.name}"></td>
             <td class="col-lg-2" style="background:Khaki"
-                th:text="${message.author.userName+' ('+message.author.firstName+' '+#strings.defaultString(message.author.lastName,'')+')'}"></td>
+                th:text="${message.author.userName+' ('+message.author.firstName+' '+
+                #strings.defaultString(message.author.lastName,'')+')'}"></td>
             <td class="col-lg-5" style="background:Khaki" th:text="${message.text}"></td>
             <td class="col-lg-1 text-center" style="background-color:LightCyan">
                 <a th:href="@{'/edit_message/{id}'(id=${message.id})}">

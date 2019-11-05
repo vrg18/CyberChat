@@ -32,7 +32,8 @@ public class AdministratorController {
     private final UserRoleService userRoleService;
     private final RoomService roomService;
 
-    public AdministratorController(UserService userService, RoleService roleService, UserRoleService userRoleService, RoomService roomService) {
+    public AdministratorController(UserService userService, RoleService roleService,
+                                   UserRoleService userRoleService, RoomService roomService) {
         this.userService = userService;
         this.roleService = roleService;
         this.userRoleService = userRoleService;

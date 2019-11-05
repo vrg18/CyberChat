@@ -50,7 +50,8 @@
             <tr th:each="interlocutor : ${interlocutors}">
                 <td th:hidden="${interlocutor.id}">id</td>
                 <td style="background:Khaki"
-                    th:text="${interlocutor.user.firstName+' '+#strings.defaultString(interlocutor.user.lastName,'')}"></td>
+                    th:text="${interlocutor.user.firstName+' '+#strings.defaultString(interlocutor.user.lastName,'')}">
+                </td>
                 <td style="background-color:LightCyan" class="text-center">
                     <div th:if="${room.owner==interlocutor.user}" class="fa fa-trash"
                          style="font-size: 20px"></div>

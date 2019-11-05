@@ -33,7 +33,8 @@ public class ModeratorController {
     private final RoomService roomService;
     private final InterlocutorService interlocutorService;
 
-    public ModeratorController(UserService userService, MessageService messageService, RoomService roomService, InterlocutorService interlocutorService) {
+    public ModeratorController(UserService userService, MessageService messageService,
+                               RoomService roomService, InterlocutorService interlocutorService) {
         this.userService = userService;
         this.messageService = messageService;
         this.roomService = roomService;

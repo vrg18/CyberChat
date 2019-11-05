@@ -35,7 +35,6 @@ public class UserRestController {
                         .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    //    @GetMapping(value = "/name/{userName}", produces = "application/json")
     @GetMapping("/name/{userName}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<AppUser> oneUserByName(@PathVariable String userName) {

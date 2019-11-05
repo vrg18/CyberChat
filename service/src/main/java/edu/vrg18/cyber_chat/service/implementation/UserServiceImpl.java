@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,7 +32,9 @@ public class UserServiceImpl implements UserService {
     private static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, InterlocutorRepository interlocutorRepository, RoomRepository roomRepository, RoleRepository roleRepository, UserRoleRepository userRoleRepository) {
+    public UserServiceImpl(UserRepository userRepository, InterlocutorRepository interlocutorRepository,
+                           RoomRepository roomRepository, RoleRepository roleRepository,
+                           UserRoleRepository userRoleRepository) {
         this.userRepository = userRepository;
         this.interlocutorRepository = interlocutorRepository;
         this.roomRepository = roomRepository;
@@ -56,7 +57,8 @@ public class UserServiceImpl implements UserService {
 
         user.setEncryptedPassword(encoder.encode(user.getNewPassword()));
         user.setLastActivity(new Date());
-        Room bazaarRoom = roomRepository.findRoomByName("Bazaar").orElse(roomRepository.findAllByConfidential(false).get(0));
+        Room bazaarRoom = roomRepository.findRoomByName("Bazaar")
+                .orElse(roomRepository.findAllByConfidential(false).get(0));
         if (!user.isBot()) user.setLastRoom(bazaarRoom);
         user = userRepository.save(user);
         if (!user.isBot()) interlocutorRepository.save(new Interlocutor(null, bazaarRoom, user));

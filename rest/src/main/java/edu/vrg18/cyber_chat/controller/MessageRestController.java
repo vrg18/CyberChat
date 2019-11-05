@@ -28,7 +28,8 @@ public class MessageRestController {
     private final FamiliarizeService familiarizeService;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public MessageRestController(MessageService messageService, FamiliarizeService familiarizeService, SimpMessagingTemplate simpMessagingTemplate) {
+    public MessageRestController(MessageService messageService, FamiliarizeService familiarizeService,
+                                 SimpMessagingTemplate simpMessagingTemplate) {
         this.messageService = messageService;
         this.familiarizeService = familiarizeService;
         this.simpMessagingTemplate = simpMessagingTemplate;
@@ -52,7 +53,8 @@ public class MessageRestController {
         if (messageService.wasThereSuchMessageInRoom(message.getRoom(), message.getText())) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         } else {
-            simpMessagingTemplate.convertAndSend("/topic/" + message.getRoom().getId().toString(), message.getAuthor().getId().toString());
+            simpMessagingTemplate.convertAndSend("/topic/" + message.getRoom().getId().toString(),
+                    message.getAuthor().getId().toString());
             return new ResponseEntity<>(messageService.createMessage(message), HttpStatus.OK);
         }
     }

@@ -1,10 +1,12 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
 import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.Familiarize;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Role;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.entity.UserRole;
+import edu.vrg18.cyber_chat.repository.FamiliarizeRepository;
 import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
 import edu.vrg18.cyber_chat.repository.RoleRepository;
 import edu.vrg18.cyber_chat.repository.RoomRepository;
@@ -29,17 +31,19 @@ public class UserServiceImpl implements UserService {
     private final RoomRepository roomRepository;
     private final RoleRepository roleRepository;
     private final UserRoleRepository userRoleRepository;
+    private final FamiliarizeRepository familiarizeRepository;
     private static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, InterlocutorRepository interlocutorRepository,
                            RoomRepository roomRepository, RoleRepository roleRepository,
-                           UserRoleRepository userRoleRepository) {
+                           UserRoleRepository userRoleRepository, FamiliarizeRepository familiarizeRepository) {
         this.userRepository = userRepository;
         this.interlocutorRepository = interlocutorRepository;
         this.roomRepository = roomRepository;
         this.roleRepository = roleRepository;
         this.userRoleRepository = userRoleRepository;
+        this.familiarizeRepository = familiarizeRepository;
     }
 
     @Override
@@ -77,6 +81,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(UUID id) {
+        familiarizeRepository.deleteInBatch(familiarizeRepository.findAllByUserId(id));
         userRepository.deleteById(id);
     }
 

@@ -18,4 +18,8 @@ public interface FamiliarizeRepository extends JpaRepository<Familiarize, UUID> 
 
     @Query("SELECT f FROM Familiarize f WHERE f.message = :message AND f.user = :user")
     Optional<Familiarize> findByMessageAndUser(Message message, AppUser user);
+
+    List<Familiarize> findAllByUserId(UUID id);
+
+    List<Familiarize> findAllByMessageId(UUID id);
 }

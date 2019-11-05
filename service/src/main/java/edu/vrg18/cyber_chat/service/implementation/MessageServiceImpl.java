@@ -50,6 +50,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public void deleteMessage(UUID id) {
+        familiarizeRepository.deleteInBatch(familiarizeRepository.findAllByMessageId(id));
         messageRepository.deleteById(id);
     }
 

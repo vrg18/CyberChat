@@ -30,7 +30,7 @@ public class Room {
     private String name;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private AppUser owner;
 
     private boolean confidential;

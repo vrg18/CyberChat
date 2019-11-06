@@ -1,4 +1,4 @@
-# CyberChat project
+#CyberChat project
 ##Information:
 ####*The project involves creating a simple chat CyberChat in order to test skills.*
 
@@ -6,7 +6,8 @@ Chat is built on the principle of rooms. The room can be private (only participa
 
 The finished application is deployed at http://159.69.208.196:8080 and is available for use.  
 For testing purposes, you can log in as a user with administrative rights: simbirsoft/444  
-The bot is also presented, which in response to any message sends a link to a random article on Habré. Articles for one user are not repeated.
+
+The bot is also presented, which in response to any message sends a link to a random article on Habr. Articles for one user are not repeated.
 
 Assembly and launch environment requirements:  
 JDK version 8.212  

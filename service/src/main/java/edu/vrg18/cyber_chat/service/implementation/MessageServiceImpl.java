@@ -63,6 +63,11 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Page<Message> findAllMessagesByRoomAndMarkAsRead(Room room, AppUser user, int currentPage, int pageSize) {
+
+        if (currentPage < 0) {
+            int countAllByRoom = messageRepository.countAllByRoom(room);
+            currentPage = (countAllByRoom / pageSize) + ((countAllByRoom % pageSize) > 0 ? 1 : 0) - 1;
+        }
         Page<Message> allMessagesByRoom = messageRepository
                 .findAllByRoom(room, PageRequest.of
                         (currentPage, pageSize, new Sort(Sort.Direction.ASC, "date")));

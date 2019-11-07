@@ -105,7 +105,7 @@
                     </colgroup>
                     <tbody>
                     <tr class="d-flex" th:each="message : ${messagesPage.content}">
-                        <td class="col-lg-4">
+                        <td class="col-lg-3">
                             <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.55&rounded=true&name='+
                             #strings.substring(message.author.firstName,0,1)+
                             #strings.substring(#strings.defaultString(message.author.lastName,' '),0,1)}"
@@ -113,16 +113,20 @@
                                  #strings.defaultString(message.author.lastName,'')+' '+
                                  #temporals.format(message.date,'dd.MM.yyyy HH:mm')}">
                         </td>
-                        <td class="col-lg-8" th:text="${message.text}"></td>
+                        <td class="col-lg-9" th:text="${message.text}"></td>
                     </tr>
                     </tbody>
+                    <tr class="d-flex">
+                        <td class="col-lg-12 text-center" style="background-color:#E1E1E4">
+                            <div th:if="${messagesPage.totalPages > 0}" class="pagination" style="display:inline-block"
+                                 th:each="pageNumber : ${pageNumbers}">
+                                <a th:href="@{'/room/{id}?size={size}&page={page}'(id=${currentRoomId},size=${messagesPage.size},page=${pageNumber})}"
+                                   th:text="${pageNumber}"
+                                   th:style="${pageNumber==messagesPage.number+1}?'font-weight:bold'"></a>
+                            </div>
+                        </td>
+                    </tr>
                 </table>
-                <div th:if="${messagesPage.totalPages > 0}" class="pagination"
-                     th:each="pageNumber : ${pageNumbers}">
-                    <a th:href="@{'/room/{id}?size={size}&page={page}'(id=${currentRoomId},size=${messagesPage.size},page=${pageNumber})}"
-                       th:text="${pageNumber}"
-                       th:class="${pageNumber==messagesPage.number + 1} ? active"></a>
-                </div>
                 <form th:if="${isUserInRoom}" style="text-align: justify" th:object="${newMessage}"
                       th:action="@{/send_message}" method="post">
                     <input type="hidden" id="id" name="id"/>

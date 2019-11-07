@@ -9,7 +9,6 @@ import edu.vrg18.cyber_chat.service.MessageService;
 import edu.vrg18.cyber_chat.service.RoomService;
 import edu.vrg18.cyber_chat.service.UserService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -63,8 +62,8 @@ public class ChatController {
                            @RequestParam("page") Optional<Integer> page,
                            @RequestParam("size") Optional<Integer> size) {
 
-        int currentPage = page.orElse(1);
-        int pageSize = size.orElse(5);
+        int currentPage = page.orElse(0);   // 0 - show from the last page
+        int pageSize = size.orElse(10);
 
         AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
         if (!currentUser.getLastRoom().getId().equals(id)) {

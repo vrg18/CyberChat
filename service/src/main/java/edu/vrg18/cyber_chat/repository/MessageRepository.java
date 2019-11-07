@@ -13,6 +13,8 @@ import java.util.UUID;
 
 public interface MessageRepository extends JpaRepository<Message, UUID> {
 
+    int countAllByRoom(Room room);
+
     List<Message> findAllByRoom(Room room);
 
     Page<Message> findAllByRoom(Room room, Pageable page);

@@ -8,6 +8,8 @@ import edu.vrg18.cyber_chat.service.InterlocutorService;
 import edu.vrg18.cyber_chat.service.MessageService;
 import edu.vrg18.cyber_chat.service.RoomService;
 import edu.vrg18.cyber_chat.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,11 +18,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
@@ -53,7 +59,12 @@ public class ChatController {
     }
 
     @GetMapping("/room/{id}")
-    public String roomPage(@PathVariable UUID id, Model model, Principal principal) {
+    public String roomPage(@PathVariable UUID id, Model model, Principal principal,
+                           @RequestParam("page") Optional<Integer> page,
+                           @RequestParam("size") Optional<Integer> size) {
+
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(5);
 
         AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
         if (!currentUser.getLastRoom().getId().equals(id)) {
@@ -67,11 +78,20 @@ public class ChatController {
         model.addAttribute("rooms", rooms);
 
         Room currentRoom = roomService.getRoomById(id).get();
-        List<Message> messages = messageService.findAllMessagesByRoomAndMarkAsRead(currentRoom, currentUser);
-        model.addAttribute("messages", messages);
+        Page<Message> messagesPage = messageService.findAllMessagesByRoomAndMarkAsRead(currentRoom, currentUser,
+                currentPage - 1, pageSize);
+        model.addAttribute("messagesPage", messagesPage);
+        int totalPages = messagesPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+            model.addAttribute("currentPage", currentPage);
+        }
+
         Message newMessage = new Message(null, null, currentUser, currentRoom, null);
         model.addAttribute("newMessage", newMessage);
-        model.addAttribute("currentRoomId", currentRoom.getId().toString());
 
         List<AppUser> users = userService.findAllUsersWithoutDisabled();
         model.addAttribute("users", users);
@@ -86,6 +106,7 @@ public class ChatController {
         boolean isUserInRoom = interlocutorService.isUserInRoom(currentUser, currentRoom);
         model.addAttribute("isUserInRoom", isUserInRoom);
 
+        model.addAttribute("currentRoomId", id);
         model.addAttribute("interlocutorService", interlocutorService);
         model.addAttribute("familiarizeService", familiarizeService);
 

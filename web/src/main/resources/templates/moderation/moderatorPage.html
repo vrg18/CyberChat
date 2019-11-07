@@ -1,7 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="_head :: head"></head>
-<body>
 <div class="container-fluid">
     <!-- Include _menu.html -->
     <th:block th:include="/_menu"></th:block>
@@ -99,7 +98,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="d-flex" th:each="message : ${messages}">
+        <tr class="d-flex" th:each="message : ${messagesPage.content}">
             <td th:hidden="${message.id}"></td>
             <td class="col-lg-1" style="background:Khaki"
                 th:text="${#temporals.format(message.date,'dd.MM.yyyy HH:mm')}"></td>
@@ -118,10 +117,22 @@
             </td>
         </tr>
         </tbody>
+        <tr class="d-flex">
+            <td class="col-lg-1" style="background-color:#E1E1E4">
+                <form th:action="@{/new_message}">
+                    <button type="submit" class="btn btn-primary">Add message</button>
+                </form>
+            </td>
+            <td class="col-lg-11 text-center" style="background-color:#E1E1E4">
+                <div th:if="${messagesPage.totalPages > 0}" class="pagination" style="display:inline-block"
+                     th:each="pageNumber : ${pageNumbers}">
+                    <a th:href="@{'/moderator?size={size}&page={page}'(size=${messagesPage.size},page=${pageNumber})}"
+                       th:text="${pageNumber}"
+                       th:style="${pageNumber==messagesPage.number+1}?'font-weight:bold'"></a>
+                </div>
+            </td>
+        </tr>
     </table>
-    <form th:action="@{/new_message}">
-        <button type="submit" class="btn btn-primary">Add message</button>
-    </form>
 
 </div>
 </body>

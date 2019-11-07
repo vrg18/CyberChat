@@ -9,6 +9,7 @@ import edu.vrg18.cyber_chat.service.MessageService;
 import edu.vrg18.cyber_chat.service.RoomService;
 import edu.vrg18.cyber_chat.service.UserService;
 import edu.vrg18.cyber_chat.utils.WebUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -18,11 +19,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
@@ -42,14 +47,26 @@ public class ModeratorController {
     }
 
     @GetMapping("/moderator")
-    public String adminPage(Model model, Principal principal) {
+    public String adminPage(Model model, Principal principal,
+                            @RequestParam("page") Optional<Integer> page,
+                            @RequestParam("size") Optional<Integer> size) {
+
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(5);
 
         User loginedUser = (User) ((Authentication) principal).getPrincipal();
         String userInfo = WebUtils.userToString(loginedUser);
         model.addAttribute("userInfo", userInfo);
 
-        List<Message> messages = messageService.findAllMessages(false);
-        model.addAttribute("messages", messages);
+        Page<Message> messagesPage = messageService.findAllMessages(false, currentPage - 1, pageSize);
+        model.addAttribute("messagesPage", messagesPage);
+        int totalPages = messagesPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
 
         List<Room> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);

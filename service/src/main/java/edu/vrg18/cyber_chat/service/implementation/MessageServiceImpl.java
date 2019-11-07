@@ -9,6 +9,8 @@ import edu.vrg18.cyber_chat.repository.MessageRepository;
 import edu.vrg18.cyber_chat.repository.RoomRepository;
 import edu.vrg18.cyber_chat.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -55,15 +57,16 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> findAllMessages(Boolean increase) {
-        return messageRepository.findAll(new Sort(increase ? Sort.Direction.ASC : Sort.Direction.DESC, "date"));
+    public Page<Message> findAllMessages(Boolean increase, int currentPage, int pageSize) {
+        return messageRepository.findAll(PageRequest.of(currentPage, pageSize, new Sort(increase ? Sort.Direction.ASC : Sort.Direction.DESC, "date")));
     }
 
     @Override
-    public List<Message> findAllMessagesByRoomAndMarkAsRead(Room room, AppUser user) {
-        List<Message> allMessagesByRoom = messageRepository
-                .findAllByRoom(room, new Sort(Sort.Direction.ASC, "date"));
-        allMessagesByRoom
+    public Page<Message> findAllMessagesByRoomAndMarkAsRead(Room room, AppUser user, int currentPage, int pageSize) {
+        Page<Message> allMessagesByRoom = messageRepository
+                .findAllByRoom(room, PageRequest.of
+                        (currentPage, pageSize, new Sort(Sort.Direction.ASC, "date")));
+        allMessagesByRoom.getContent()
                 .forEach(m -> familiarizeRepository.findByMessageAndUser(m, user)
                         .orElseGet(() -> familiarizeRepository.save(new Familiarize(null, m, user))));
         return allMessagesByRoom;

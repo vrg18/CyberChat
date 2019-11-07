@@ -104,7 +104,7 @@
                         <col span="2" style="background:Moccasin">
                     </colgroup>
                     <tbody>
-                    <tr class="d-flex" th:each="message : ${messages}">
+                    <tr class="d-flex" th:each="message : ${messagesPage.content}">
                         <td class="col-lg-4">
                             <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.55&rounded=true&name='+
                             #strings.substring(message.author.firstName,0,1)+
@@ -117,6 +117,12 @@
                     </tr>
                     </tbody>
                 </table>
+                <div th:if="${messagesPage.totalPages > 0}" class="pagination"
+                     th:each="pageNumber : ${pageNumbers}">
+                    <a th:href="@{'/room/{id}?size={size}&page={page}'(id=${currentRoomId},size=${messagesPage.size},page=${pageNumber})}"
+                       th:text="${pageNumber}"
+                       th:class="${pageNumber==messagesPage.number + 1} ? active"></a>
+                </div>
                 <form th:if="${isUserInRoom}" style="text-align: justify" th:object="${newMessage}"
                       th:action="@{/send_message}" method="post">
                     <input type="hidden" id="id" name="id"/>

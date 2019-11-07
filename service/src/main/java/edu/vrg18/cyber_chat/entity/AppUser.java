@@ -13,7 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -49,7 +49,7 @@ public class AppUser {
 
     @Column(name = "last_activity", nullable = false)
     @DateTimeFormat(pattern ="dd.MM.yyyy HH:mm")
-    private Date lastActivity;
+    private LocalDateTime lastActivity;
 
     @Transient
     private String newPassword;

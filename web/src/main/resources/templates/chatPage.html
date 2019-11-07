@@ -111,7 +111,7 @@
                             #strings.substring(#strings.defaultString(message.author.lastName,' '),0,1)}"
                                  th:text="${' '+message.author.firstName+' '+
                                  #strings.defaultString(message.author.lastName,'')+' '+
-                                 #dates.format(message.date,'dd.MM.yyyy HH:mm')}">
+                                 #temporals.format(message.date,'dd.MM.yyyy HH:mm')}">
                         </td>
                         <td class="col-lg-8" th:text="${message.text}"></td>
                     </tr>

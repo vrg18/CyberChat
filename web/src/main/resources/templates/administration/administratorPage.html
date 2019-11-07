@@ -40,7 +40,7 @@
             <td class="col-lg-2" style="background:Khaki" th:if="${!#strings.isEmpty(user.lastRoom)}"
                 th:text="${user.lastRoom.name}"></td>
             <td class="col-lg-1" style="background:Khaki"
-                th:text="${#dates.format(user.lastActivity,'dd.MM.yyyy HH:mm')}"></td>
+                th:text="${#temporals.format(user.lastActivity,'dd.MM.yyyy HH:mm')}"></td>
             <td class="col-lg-1 text-center" style="background-color:LightCyan">
                 <a th:href="@{'/edit_user_admin/{id}'(id=${user.id})}">
                     <i class="fa fa-edit" style="font-size:20px"></i></a>

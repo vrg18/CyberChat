@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
     public AppUser createUser(AppUser user) {
 
         user.setEncryptedPassword(encoder.encode(user.getNewPassword()));
-        user.setLastActivity(new Date());
+        user.setLastActivity(LocalDateTime.now());
         Room bazaarRoom = roomRepository.findRoomByName("Bazaar")
                 .orElse(roomRepository.findAllByConfidential(false).get(0));
         if (!user.isBot()) user.setLastRoom(bazaarRoom);

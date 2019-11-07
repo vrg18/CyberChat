@@ -102,7 +102,7 @@
         <tr class="d-flex" th:each="message : ${messages}">
             <td th:hidden="${message.id}"></td>
             <td class="col-lg-1" style="background:Khaki"
-                th:text="${#dates.format(message.date,'dd.MM.yyyy HH:mm')}"></td>
+                th:text="${#temporals.format(message.date,'dd.MM.yyyy HH:mm')}"></td>
             <td class="col-lg-2" style="background:Khaki" th:text="${message.room.name}"></td>
             <td class="col-lg-2" style="background:Khaki"
                 th:text="${message.author.userName+' ('+message.author.firstName+' '+

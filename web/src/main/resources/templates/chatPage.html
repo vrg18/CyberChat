@@ -118,7 +118,8 @@
                     </tbody>
                     <tr class="d-flex">
                         <td class="col-lg-12 text-center" style="background-color:#E1E1E4">
-                            <div th:if="${messagesPage.totalPages > 0}" class="pagination" style="display:inline-block"
+                            <div th:if="${messagesPage.totalPages > 0}" class="pagination"
+                                 style="display:inline-block"
                                  th:each="pageMNumber : ${pageMNumbers}">
                                 <a th:href="@{'/room/{id}?mSize={mSize}&mPage={mPage}&uSize={uSize}&uPage={uPage}'
                                 (id=${currentRoomId},mSize=${messagesPage.size},mPage=${pageMNumber},
@@ -128,16 +129,22 @@
                             </div>
                         </td>
                     </tr>
+                    <tr class="d-flex">
+                        <form th:if="${isUserInRoom}" style="text-align: justify" th:object="${newMessage}"
+                              th:action="@{/send_message}" method="post">
+                            <input type="hidden" id="id" name="id"/>
+                            <input type="hidden" th:field="*{author}"/>
+                            <input type="hidden" th:field="*{room}"/>
+                            <td class="col-lg-10" style="background-color:#E1E1E4">
+                            <textarea class="form-control" id="text" name="text" placeholder="Text of new message"
+                                      maxlength="255"></textarea>
+                            </td>
+                            <td class="col-lg-2" style="background-color:#E1E1E4">
+                                <button type="submit" class="btn btn-primary">Send a message</button>
+                            </td>
+                        </form>
+                    </tr>
                 </table>
-                <form th:if="${isUserInRoom}" style="text-align: justify" th:object="${newMessage}"
-                      th:action="@{/send_message}" method="post">
-                    <input type="hidden" id="id" name="id"/>
-                    <input type="hidden" th:field="*{author}"/>
-                    <input type="hidden" th:field="*{room}"/>
-                    <textarea class="form-control" id="text" name="text" placeholder="Text of new message"
-                              maxlength="255"></textarea>
-                    <button type="submit" class="btn btn-primary">Send a message</button>
-                </form>
             </td>
             <td class="col-lg-2">
                 <table class="table table-sm">

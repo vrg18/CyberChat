@@ -51,10 +51,14 @@
             </td>
         </tr>
         </tbody>
+        <tr class="d-flex">
+            <td class="col-lg-12" style="background-color:#E1E1E4">
+                <form th:action="@{/new_user_admin}">
+                    <button type="submit" class="btn btn-primary">Add user</button>
+                </form>
+            </td>
+        </tr>
     </table>
-    <form th:action="@{/new_user_admin}">
-        <button type="submit" class="btn btn-primary">Add user</button>
-    </form>
 
     <br>
     <div class="text-center"><h5>Roles</h5></div>
@@ -80,10 +84,14 @@
             </td>
         </tr>
         </tbody>
+        <tr class="d-flex">
+            <td class="col-lg-12" style="background-color:#E1E1E4">
+                <form th:action="@{/new_role}">
+                    <button type="submit" class="btn btn-primary">Add role</button>
+                </form>
+            </td>
+        </tr>
     </table>
-    <form th:action="@{/new_role}">
-        <button type="submit" class="btn btn-primary">Add role</button>
-    </form>
 
     <br>
     <div class="text-center"><h5>Users and their roles</h5></div>
@@ -111,10 +119,14 @@
             </td>
         </tr>
         </tbody>
+        <tr class="d-flex">
+            <td class="col-lg-12" style="background-color:#E1E1E4">
+                <form th:action="@{/new_userrole}">
+                    <button type="submit" class="btn btn-primary">Add link</button>
+                </form>
+            </td>
+        </tr>
     </table>
-    <form th:action="@{/new_userrole}">
-        <button type="submit" class="btn btn-primary">Add link</button>
-    </form>
 
 </div>
 </body>

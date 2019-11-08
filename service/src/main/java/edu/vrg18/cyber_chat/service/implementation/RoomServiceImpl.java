@@ -10,6 +10,7 @@ import edu.vrg18.cyber_chat.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
+@Transactional
 public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
@@ -65,15 +67,12 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public List<Room> findAllRoomsOfUserAndAllOpenRooms(AppUser user) {
 
-        return Stream.concat(roomRepository.findAllRoomsOfUser(user).stream(),
-                roomRepository.findAllOpenRooms().stream()).distinct()
-                .sorted(Comparator.comparing(Room::getName)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Room> findAllNonConfidentialRooms() {
-
-        return roomRepository.findAllByConfidential(false);
+        return Stream.concat(
+                roomRepository.findAllRoomsOfUser(user).stream(),
+                roomRepository.findAllOpenRooms().stream())
+                .distinct()
+                .sorted(Comparator.comparing(Room::getName))
+                .collect(Collectors.toList());
     }
 
     @Override

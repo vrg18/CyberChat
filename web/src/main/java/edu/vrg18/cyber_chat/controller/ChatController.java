@@ -3,7 +3,6 @@ package edu.vrg18.cyber_chat.controller;
 import edu.vrg18.cyber_chat.entity.AppUser;
 import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.entity.Room;
-import edu.vrg18.cyber_chat.service.FamiliarizeService;
 import edu.vrg18.cyber_chat.service.InterlocutorService;
 import edu.vrg18.cyber_chat.service.MessageService;
 import edu.vrg18.cyber_chat.service.RoomService;
@@ -35,17 +34,14 @@ public class ChatController {
     private final MessageService messageService;
     private final RoomService roomService;
     private final InterlocutorService interlocutorService;
-    private final FamiliarizeService familiarizeService;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     public ChatController(UserService userService, MessageService messageService, RoomService roomService,
-                          InterlocutorService interlocutorService, FamiliarizeService familiarizeService,
-                          SimpMessagingTemplate simpMessagingTemplate) {
+                          InterlocutorService interlocutorService, SimpMessagingTemplate simpMessagingTemplate) {
         this.userService = userService;
         this.messageService = messageService;
         this.roomService = roomService;
         this.interlocutorService = interlocutorService;
-        this.familiarizeService = familiarizeService;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
@@ -62,16 +58,12 @@ public class ChatController {
                            @RequestParam("mPage") Optional<Integer> mPage,
                            @RequestParam("mSize") Optional<Integer> mSize,
                            @RequestParam("uPage") Optional<Integer> uPage,
-                           @RequestParam("uSize") Optional<Integer> uSize,
-                           @RequestParam("rPage") Optional<Integer> rPage,
-                           @RequestParam("rSize") Optional<Integer> rSize) {
+                           @RequestParam("uSize") Optional<Integer> uSize) {
 
         int currentMPage = mPage.orElse(0);   // 0 - show from the last page
         int pageMSize = mSize.orElse(8);
         int currentUPage = uPage.orElse(1);
         int pageUSize = uSize.orElse(10);
-        int currentRPage = rPage.orElse(1);
-        int pageRSize = rSize.orElse(10);
 
         AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
         if (!currentUser.getLastRoom().getId().equals(id)) {
@@ -121,7 +113,7 @@ public class ChatController {
 
         model.addAttribute("currentRoomId", id);
         model.addAttribute("interlocutorService", interlocutorService);
-        model.addAttribute("familiarizeService", familiarizeService);
+        model.addAttribute("messageService", messageService);
 
         model.addAttribute("title", "CyberChat");
 //        model.addAttribute("message", "Добро пожаловать в CyberChat!");

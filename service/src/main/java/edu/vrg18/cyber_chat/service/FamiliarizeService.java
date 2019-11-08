@@ -1,8 +1,6 @@
 package edu.vrg18.cyber_chat.service;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
 import edu.vrg18.cyber_chat.entity.Familiarize;
-import edu.vrg18.cyber_chat.entity.Room;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +17,4 @@ public interface FamiliarizeService {
     void deleteFamiliarize(UUID id);
 
     List<Familiarize> findAllFamiliarizes();
-
-    String numberOfUnreadMessagesInRoom(AppUser user, Room room);
 }

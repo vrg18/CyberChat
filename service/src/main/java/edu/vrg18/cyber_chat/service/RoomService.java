@@ -21,7 +21,5 @@ public interface RoomService {
 
     List<Room> findAllRoomsOfUserAndAllOpenRooms(AppUser user);
 
-    List<Room> findAllNonConfidentialRooms();
-
     Room findOrCreateTeteATeteRoom(AppUser user1, AppUser user2);
 }

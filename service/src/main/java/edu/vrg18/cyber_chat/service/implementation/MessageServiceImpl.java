@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository messageRepository;
@@ -86,5 +88,13 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public boolean wasThereSuchMessageInRoom(Room room, String messageText) {
         return messageRepository.getMessagesWithSuchText(room, messageText).size() != 0;
+    }
+
+    @Override
+    public String numberOfUnreadMessagesInRoom(AppUser user, Room room) {
+        int number = messageRepository.countOfUnreadMessagesInRoom(user, room);
+        if (number == 0) return "";
+        else if (number > 9) return "9%2B";
+        else return String.valueOf(number);
     }
 }

@@ -14,6 +14,8 @@ import edu.vrg18.cyber_chat.repository.UserRepository;
 import edu.vrg18.cyber_chat.repository.UserRoleRepository;
 import edu.vrg18.cyber_chat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -92,8 +94,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<AppUser> findAllUsersWithoutDisabled() {
-        return userRepository.findAppUsersByEnabled(true, new Sort(Sort.Direction.ASC, "userName"));
+    public Page<AppUser> findAllUsersWithoutDisabled(int currentPage, int pageSize) {
+        return userRepository.findAppUsersByEnabled(true, PageRequest.of(currentPage, pageSize, new Sort(Sort.Direction.ASC, "userName")));
     }
 
     @Override

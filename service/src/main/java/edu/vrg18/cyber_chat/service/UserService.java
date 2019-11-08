@@ -1,6 +1,7 @@
 package edu.vrg18.cyber_chat.service;
 
 import edu.vrg18.cyber_chat.entity.AppUser;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +21,7 @@ public interface UserService {
 
     List<AppUser> findAllUsers();
 
-    List<AppUser> findAllUsersWithoutDisabled();
+    Page<AppUser> findAllUsersWithoutDisabled(int currentPage, int pageSize);
 
     List<AppUser> findUsersInRoomId(UUID id);
 }

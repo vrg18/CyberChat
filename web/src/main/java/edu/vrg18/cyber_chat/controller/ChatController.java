@@ -59,11 +59,19 @@ public class ChatController {
 
     @GetMapping("/room/{id}")
     public String roomPage(@PathVariable UUID id, Model model, Principal principal,
-                           @RequestParam("page") Optional<Integer> page,
-                           @RequestParam("size") Optional<Integer> size) {
+                           @RequestParam("mPage") Optional<Integer> mPage,
+                           @RequestParam("mSize") Optional<Integer> mSize,
+                           @RequestParam("uPage") Optional<Integer> uPage,
+                           @RequestParam("uSize") Optional<Integer> uSize,
+                           @RequestParam("rPage") Optional<Integer> rPage,
+                           @RequestParam("rSize") Optional<Integer> rSize) {
 
-        int currentPage = page.orElse(0);   // 0 - show from the last page
-        int pageSize = size.orElse(10);
+        int currentMPage = mPage.orElse(0);   // 0 - show from the last page
+        int pageMSize = mSize.orElse(8);
+        int currentUPage = uPage.orElse(1);
+        int pageUSize = uSize.orElse(10);
+        int currentRPage = rPage.orElse(1);
+        int pageRSize = rSize.orElse(10);
 
         AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
         if (!currentUser.getLastRoom().getId().equals(id)) {
@@ -78,22 +86,28 @@ public class ChatController {
 
         Room currentRoom = roomService.getRoomById(id).get();
         Page<Message> messagesPage = messageService.findAllMessagesByRoomAndMarkAsRead(currentRoom, currentUser,
-                currentPage - 1, pageSize);
+                currentMPage - 1, pageMSize);
         model.addAttribute("messagesPage", messagesPage);
         int totalPages = messagesPage.getTotalPages();
         if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+            List<Integer> pageMNumbers = IntStream.rangeClosed(1, totalPages)
                     .boxed()
                     .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-            model.addAttribute("currentPage", currentPage);
+            model.addAttribute("pageMNumbers", pageMNumbers);
         }
 
         Message newMessage = new Message(null, null, currentUser, currentRoom, null);
         model.addAttribute("newMessage", newMessage);
 
-        List<AppUser> users = userService.findAllUsersWithoutDisabled();
-        model.addAttribute("users", users);
+        Page<AppUser> usersPage = userService.findAllUsersWithoutDisabled(currentUPage - 1, pageUSize);
+        model.addAttribute("usersPage", usersPage);
+        totalPages = usersPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageUNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageUNumbers", pageUNumbers);
+        }
 
         StringBuffer roomName = new StringBuffer(currentRoom.getName());
         roomName.append(" (");

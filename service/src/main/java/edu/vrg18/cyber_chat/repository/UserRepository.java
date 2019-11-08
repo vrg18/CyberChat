@@ -1,6 +1,8 @@
 package edu.vrg18.cyber_chat.repository;
 
 import edu.vrg18.cyber_chat.entity.AppUser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +15,7 @@ public interface UserRepository extends JpaRepository<AppUser, UUID> {
 
     Optional<AppUser> findAppUserByUserName(String userName);
 
-    List<AppUser> findAppUsersByEnabled(boolean enabled, Sort sort);
+    Page<AppUser> findAppUsersByEnabled(boolean enabled, Pageable page);
 
     @Query("SELECT i.user FROM Interlocutor i WHERE i.room.id = :roomId " +
             "AND i.user.enabled = true ORDER BY i.user.firstName")

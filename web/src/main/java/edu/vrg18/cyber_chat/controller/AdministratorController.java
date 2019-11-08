@@ -47,7 +47,7 @@ public class AdministratorController {
         String userInfo = WebUtils.userToString(loginedUser);
         model.addAttribute("userInfo", userInfo);
 
-        List<AppUser> users = userService.findAllUsersWithoutDisabled();
+        List<AppUser> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
         List<Role> roles = roleService.findAllRoles();
@@ -147,7 +147,7 @@ public class AdministratorController {
         UserRole userRole = userRoleService.getUserRoleById(id).get();
         model.addAttribute("userRole", userRole);
 
-        List<AppUser> users = userService.findAllUsersWithoutDisabled();
+        List<AppUser> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
         List<Role> roles = roleService.findAllRoles();
@@ -167,7 +167,7 @@ public class AdministratorController {
     @GetMapping("/new_userrole")
     public String newUserRole(Model model) {
 
-        List<AppUser> users = userService.findAllUsersWithoutDisabled();
+        List<AppUser> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
         List<Role> roles = roleService.findAllRoles();

@@ -21,6 +21,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.springframework.data.jpa.domain.Specification.where;
+import static edu.vrg18.cyber_chat.specification.RoomSpecifications.*;
+
 @Service
 @Transactional
 public class RoomServiceImpl implements RoomService {
@@ -68,8 +71,8 @@ public class RoomServiceImpl implements RoomService {
     public List<Room> findAllRoomsOfUserAndAllOpenRooms(AppUser user) {
 
         return Stream.concat(
-                roomRepository.findAllRoomsOfUser(user).stream(),
-                roomRepository.findAllOpenRooms().stream())
+                roomRepository.findAll(where(userRoom(user).and(openRoom()))).stream(),
+                roomRepository.findAll(where(publicRoom().and(openRoom()))).stream())
                 .distinct()
                 .sorted(Comparator.comparing(Room::getName))
                 .collect(Collectors.toList());

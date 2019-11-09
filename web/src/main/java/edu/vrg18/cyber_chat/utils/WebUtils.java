@@ -1,13 +1,12 @@
 package edu.vrg18.cyber_chat.utils;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
 public class WebUtils {
 
-    public static String userToString(User user) {
+    public static String userToString(org.springframework.security.core.userdetails.User user) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("Current user: ").append(user.getUsername());

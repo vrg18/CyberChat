@@ -1,6 +1,6 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Role;
 import edu.vrg18.cyber_chat.entity.Room;
@@ -50,17 +50,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<AppUser> getUserById(UUID id) {
+    public Optional<User> getUserById(UUID id) {
         return userRepository.findById(id);
     }
 
     @Override
-    public Optional<AppUser> getUserByUserName(String userName) {
-        return userRepository.findAppUserByUserName(userName);
+    public Optional<User> getUserByUserName(String userName) {
+        return userRepository.findUserByUserName(userName);
     }
 
     @Override
-    public AppUser createUser(AppUser user) {
+    public User createUser(User user) {
 
         user.setEncryptedPassword(encoder.encode(user.getNewPassword()));
         user.setLastActivity(LocalDateTime.now());
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AppUser updateUser(AppUser user) {
+    public User updateUser(User user) {
         if (!(user.getNewPassword() == null) && !user.getNewPassword().equals("8a38aeb0-0caa-49be-8f8b-f64b6ae2ce1e")) {
             user.setEncryptedPassword(encoder.encode(user.getNewPassword()));
         }
@@ -89,17 +89,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<AppUser> findAllUsers() {
+    public List<User> findAllUsers() {
         return userRepository.findAll(new Sort(Sort.Direction.ASC, "userName"));
     }
 
     @Override
-    public Page<AppUser> findAllUsersWithoutDisabled(int currentPage, int pageSize) {
-        return userRepository.findAppUsersByEnabled(true, PageRequest.of(currentPage, pageSize, new Sort(Sort.Direction.ASC, "userName")));
+    public Page<User> findAllUsersWithoutDisabled(int currentPage, int pageSize) {
+        return userRepository.findUsersByEnabled(true, PageRequest.of(currentPage, pageSize, new Sort(Sort.Direction.ASC, "userName")));
     }
 
     @Override
-    public List<AppUser> findUsersInRoomId(UUID id) {
+    public List<User> findUsersInRoomId(UUID id) {
         return userRepository.findAllUsersByRoomId(id);
     }
 }

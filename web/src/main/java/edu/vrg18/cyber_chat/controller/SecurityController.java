@@ -1,6 +1,6 @@
 package edu.vrg18.cyber_chat.controller;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.service.UserService;
 import edu.vrg18.cyber_chat.utils.WebUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -53,7 +53,8 @@ public class SecurityController {
     public String accessDenied(Model model, Principal principal) {
 
         if (principal != null) {
-            User loginedUser = (User) ((Authentication) principal).getPrincipal();
+            org.springframework.security.core.userdetails.User loginedUser =
+                    (org.springframework.security.core.userdetails.User) ((Authentication) principal).getPrincipal();
             String userInfo = WebUtils.userToString(loginedUser);
             model.addAttribute("userInfo", userInfo);
             String message = "You do not have permission!";
@@ -68,14 +69,14 @@ public class SecurityController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
     public String editUser(Model model, Principal principal) {
 
-        AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
+        User currentUser = userService.getUserByUserName(principal.getName()).get();
         model.addAttribute("user", currentUser);
         model.addAttribute("title", "EditUser");
         return "security/createOrEditUserOwn";
     }
 
     @PostMapping(value = "/save_user_own", params = "id!=")
-    public String updateUser(@ModelAttribute("user") AppUser user) {
+    public String updateUser(@ModelAttribute("user") User user) {
 
         userService.updateUser(user);
         return "redirect:/";
@@ -90,7 +91,7 @@ public class SecurityController {
     }
 
     @PostMapping(value = "/save_user_own", params = "id=")
-    public String createUser(@ModelAttribute("user") AppUser user) {
+    public String createUser(@ModelAttribute("user") User user) {
 
         userService.createUser(user);
         return "redirect:/";

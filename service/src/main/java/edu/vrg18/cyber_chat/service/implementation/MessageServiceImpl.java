@@ -1,6 +1,6 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Familiarize;
 import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.entity.Room;
@@ -64,7 +64,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Page<Message> findAllMessagesByRoomAndMarkAsRead(Room room, AppUser user, int currentPage, int pageSize) {
+    public Page<Message> findAllMessagesByRoomAndMarkAsRead(Room room, User user, int currentPage, int pageSize) {
 
         if (currentPage < 0) {
             int countAllByRoom = messageRepository.countAllByRoom(room);
@@ -91,7 +91,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public String numberOfUnreadMessagesInRoom(AppUser user, Room room) {
+    public String numberOfUnreadMessagesInRoom(User user, Room room) {
         int number = messageRepository.countOfUnreadMessagesInRoom(user, room);
         if (number == 0) return "";
         else if (number > 9) return "9%2B";

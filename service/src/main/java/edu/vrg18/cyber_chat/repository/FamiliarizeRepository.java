@@ -1,6 +1,6 @@
 package edu.vrg18.cyber_chat.repository;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Familiarize;
 import edu.vrg18.cyber_chat.entity.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface FamiliarizeRepository extends JpaRepository<Familiarize, UUID> {
 
     @Query("SELECT f FROM Familiarize f WHERE f.message = :message AND f.user = :user")
-    Optional<Familiarize> findByMessageAndUser(Message message, AppUser user);
+    Optional<Familiarize> findByMessageAndUser(Message message, User user);
 
     List<Familiarize> findAllByUserId(UUID id);
 

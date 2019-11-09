@@ -1,6 +1,6 @@
 package edu.vrg18.cyber_chat.service;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Room;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public interface RoomService {
 
     List<Room> findAllRooms();
 
-    List<Room> findAllRoomsOfUserAndAllOpenRooms(AppUser user);
+    List<Room> findAllRoomsOfUserAndAllOpenRooms(User user);
 
-    Room findOrCreateTeteATeteRoom(AppUser user1, AppUser user2);
+    Room findOrCreateTeteATeteRoom(User user1, User user2);
 }

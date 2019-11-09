@@ -1,6 +1,6 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
@@ -56,7 +56,7 @@ public class InterlocutorServiceImpl implements InterlocutorService {
     }
 
     @Override
-    public boolean isUserInRoom(AppUser user, Room room) {
+    public boolean isUserInRoom(User user, Room room) {
         return interlocutorRepository.findAllByRoomAndUser(room, user).size() > 0;
     }
 

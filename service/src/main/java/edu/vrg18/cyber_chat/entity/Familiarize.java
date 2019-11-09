@@ -31,5 +31,5 @@ public class Familiarize {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private AppUser user;
+    private User user;
 }

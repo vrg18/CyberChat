@@ -31,7 +31,7 @@ public class Room {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    private AppUser owner;
+    private User owner;
 
     private boolean confidential;
 

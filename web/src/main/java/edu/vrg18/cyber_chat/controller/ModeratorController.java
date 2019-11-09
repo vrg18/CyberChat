@@ -1,6 +1,6 @@
 package edu.vrg18.cyber_chat.controller;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.entity.Room;
@@ -88,7 +88,7 @@ public class ModeratorController {
         List<Room> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
 
-        List<AppUser> users = userService.findAllUsers();
+        List<User> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
         model.addAttribute("title", "EditMessage");
@@ -108,10 +108,10 @@ public class ModeratorController {
         List<Room> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
 
-        List<AppUser> users = userService.findAllUsers();
+        List<User> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
-        AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
+        User currentUser = userService.getUserByUserName(principal.getName()).get();
         model.addAttribute("currentUserId", currentUser.getId());
 
         model.addAttribute("newMessage", true);
@@ -139,7 +139,7 @@ public class ModeratorController {
         Room room = roomService.getRoomById(id).get();
         model.addAttribute("room", room);
 
-        List<AppUser> users = userService.findAllUsers();
+        List<User> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
         model.addAttribute("title", "EditRoom");
@@ -156,10 +156,10 @@ public class ModeratorController {
     @GetMapping("/new_room")
     public String newRoom(Model model, Principal principal) {
 
-        List<AppUser> users = userService.findAllUsers();
+        List<User> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
-        AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
+        User currentUser = userService.getUserByUserName(principal.getName()).get();
         model.addAttribute("currentUserId", currentUser.getId());
 
         model.addAttribute("newRoom", true);
@@ -187,7 +187,7 @@ public class ModeratorController {
         Interlocutor interlocutor = interlocutorService.getInterlocutorById(id).get();
         model.addAttribute("interlocutor", interlocutor);
 
-        List<AppUser> users = userService.findAllUsers();
+        List<User> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
         List<Room> rooms = roomService.findAllRooms();
@@ -207,7 +207,7 @@ public class ModeratorController {
     @GetMapping("/new_interlocutor")
     public String newInterlocutor(Model model) {
 
-        List<AppUser> users = userService.findAllUsers();
+        List<User> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
         List<Room> rooms = roomService.findAllRooms();
@@ -241,7 +241,7 @@ public class ModeratorController {
         Room room = roomService.getRoomById(id).get();
         model.addAttribute("room", room);
 
-        List<AppUser> users = userService.findAllUsers();
+        List<User> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
         List<Interlocutor> interlocutors = interlocutorService.findAllInterlocutorsInRoomId(id);
@@ -263,7 +263,7 @@ public class ModeratorController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
     public String newInterlocutorInRoom(@PathVariable UUID id, Model model) {
 
-        List<AppUser> users = userService.findAllUsers();
+        List<User> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
         Room room = roomService.getRoomById(id).get();

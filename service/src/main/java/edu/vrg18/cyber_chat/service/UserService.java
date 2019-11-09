@@ -1,6 +1,6 @@
 package edu.vrg18.cyber_chat.service;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.User;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -9,19 +9,19 @@ import java.util.UUID;
 
 public interface UserService {
 
-    Optional<AppUser> getUserById(UUID id);
+    Optional<User> getUserById(UUID id);
 
-    AppUser createUser(AppUser user);
+    User createUser(User user);
 
-    AppUser updateUser(AppUser user);
+    User updateUser(User user);
 
     void deleteUser(UUID id);
 
-    Optional<AppUser> getUserByUserName(String userName);
+    Optional<User> getUserByUserName(String userName);
 
-    List<AppUser> findAllUsers();
+    List<User> findAllUsers();
 
-    Page<AppUser> findAllUsersWithoutDisabled(int currentPage, int pageSize);
+    Page<User> findAllUsersWithoutDisabled(int currentPage, int pageSize);
 
-    List<AppUser> findUsersInRoomId(UUID id);
+    List<User> findUsersInRoomId(UUID id);
 }

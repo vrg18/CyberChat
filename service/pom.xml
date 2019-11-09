@@ -59,18 +59,34 @@
             </plugin>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <compilerVersion>1.8</compilerVersion>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <annotationProcessors>
+<!--                        <annotationProcessor>org.springframework.boot.configurationprocessor.ConfigurationMetadataAnnotationProcessor</annotationProcessor>-->
+                        <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</annotationProcessor>
+                        <annotationProcessor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</annotationProcessor>
+                    </annotationProcessors>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <version>3.5.5</version>
                 <configuration>
                     <propertyFile>
-                        ${project.basedir}/src/main/resources/liquibase-maven-plugin.properties
+                        ${project.basedir}/service/src/main/resources/liquibase-maven-plugin.properties
                     </propertyFile>
                     <changeLogFile>
-                        ${project.basedir}/src/main/resources/db/changelog/db.changelog-master.yaml
+                        ${project.basedir}/service/src/main/resources/db/changelog/db.changelog-master.yaml
                     </changeLogFile>
                     <diffChangeLogFile>
-                        ${project.basedir}/src/main/resources/db/changelog/db.changelog-${maven.build.timestamp}.yaml
+                        ${project.basedir}/service/src/main/resources/db/changelog/db.changelog-${maven.build.timestamp}.yaml
                     </diffChangeLogFile>
                     <systemProperties>
                         <user.name>vrg18</user.name>

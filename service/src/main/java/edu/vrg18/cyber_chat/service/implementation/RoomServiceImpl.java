@@ -1,6 +1,6 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
@@ -68,25 +68,27 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<Room> findAllRoomsOfUserAndAllOpenRooms(AppUser user) {
+    public List<Room> findAllRoomsOfUserAndAllOpenRooms(User user) {
 
-        return Stream.concat(
-                roomRepository.findAll(where(userRoom(user).and(openRoom()))).stream(),
-                roomRepository.findAll(where(publicRoom().and(openRoom()))).stream())
-                .distinct()
+        return
+//                Stream.concat(
+//                roomRepository.findAll(where(userRoom(user).and(openRoom()))).stream(),
+                roomRepository.findAll(where(publicRoom().and(openRoom()))).stream()
+//        )
+//                .distinct()
                 .sorted(Comparator.comparing(Room::getName))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Room findOrCreateTeteATeteRoom(AppUser initiatingUser, AppUser slaveUser) {
+    public Room findOrCreateTeteATeteRoom(User initiatingUser, User slaveUser) {
 
         List<Room> teteATeteRooms = roomRepository.findSharedRoomsOfTwoUsers(initiatingUser, slaveUser);
         return teteATeteRooms.stream().filter(r -> interlocutorRepository.findAllByRoomId(r.getId()).size() == 2)
                 .findFirst().orElseGet(() -> createNewTeteATeteRoom(initiatingUser, slaveUser));
     }
 
-    private Room createNewTeteATeteRoom(AppUser initiatingUser, AppUser slaveUser) {
+    private Room createNewTeteATeteRoom(User initiatingUser, User slaveUser) {
 
         Room teteATeteRoom = roomRepository.save(
                 new Room(null, nameOfNewTeteATeteRoom(initiatingUser, slaveUser), initiatingUser, true, false));
@@ -97,7 +99,7 @@ public class RoomServiceImpl implements RoomService {
         return teteATeteRoom;
     }
 
-    private String nameOfNewTeteATeteRoom(AppUser user1, AppUser user2) {
+    private String nameOfNewTeteATeteRoom(User user1, User user2) {
 
         return user1.getFirstName()
                 .concat(" & ")

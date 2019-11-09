@@ -1,6 +1,6 @@
 package edu.vrg18.cyber_chat.repository;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Room;
 import org.springframework.data.domain.Sort;
@@ -15,5 +15,5 @@ public interface InterlocutorRepository extends JpaRepository<Interlocutor, UUID
 
     List<Interlocutor> findAllByRoomId(UUID id, Sort sort);
 
-    List<Interlocutor> findAllByRoomAndUser(Room room, AppUser user);
+    List<Interlocutor> findAllByRoomAndUser(Room room, User user);
 }

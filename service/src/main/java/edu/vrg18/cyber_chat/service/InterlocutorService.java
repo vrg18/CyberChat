@@ -1,6 +1,6 @@
 package edu.vrg18.cyber_chat.service;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Room;
 
@@ -22,7 +22,7 @@ public interface InterlocutorService {
 
     int getNumberInterlocutorsInRoomId(UUID id);
 
-    boolean isUserInRoom(AppUser user, Room room);
+    boolean isUserInRoom(User user, Room room);
 
     List<Interlocutor> findAllInterlocutorsInRoomId(UUID id);
 }

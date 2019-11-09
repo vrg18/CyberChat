@@ -1,6 +1,6 @@
 package edu.vrg18.cyber_chat.security;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.UserRole;
 import edu.vrg18.cyber_chat.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 
-        AppUser user = userRepository.findAppUserByUserName(userName).orElseThrow(()
+        User user = userRepository.findUserByUserName(userName).orElseThrow(()
                 -> new UsernameNotFoundException("User " + userName + " was not found in the database"));
 
         // [ROLE_USER, ROLE_ADMIN,..]

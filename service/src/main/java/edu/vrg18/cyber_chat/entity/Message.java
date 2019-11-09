@@ -33,7 +33,7 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private AppUser author;
+    private User author;
 
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)

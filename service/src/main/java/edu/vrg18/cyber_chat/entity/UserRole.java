@@ -27,7 +27,7 @@ public class UserRole {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private AppUser user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)

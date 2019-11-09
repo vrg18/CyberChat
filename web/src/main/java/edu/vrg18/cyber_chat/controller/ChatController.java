@@ -1,6 +1,6 @@
 package edu.vrg18.cyber_chat.controller;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.service.InterlocutorService;
@@ -48,7 +48,7 @@ public class ChatController {
     @GetMapping("/")
     public String chatPage(Model model, Principal principal) {
 
-        AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
+        User currentUser = userService.getUserByUserName(principal.getName()).get();
         String lastRoomId = currentUser.getLastRoom().getId().toString();
         return "redirect:/room/".concat(lastRoomId);
     }
@@ -65,7 +65,7 @@ public class ChatController {
         int currentUPage = uPage.orElse(1);
         int pageUSize = uSize.orElse(10);
 
-        AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
+        User currentUser = userService.getUserByUserName(principal.getName()).get();
         if (!currentUser.getLastRoom().getId().equals(id)) {
             currentUser.setLastRoom(roomService.getRoomById(id).get());
             userService.updateUser(currentUser);
@@ -91,7 +91,7 @@ public class ChatController {
         Message newMessage = new Message(null, null, currentUser, currentRoom, null);
         model.addAttribute("newMessage", newMessage);
 
-        Page<AppUser> usersPage = userService.findAllUsersWithoutDisabled(currentUPage - 1, pageUSize);
+        Page<User> usersPage = userService.findAllUsersWithoutDisabled(currentUPage - 1, pageUSize);
         model.addAttribute("usersPage", usersPage);
         totalPages = usersPage.getTotalPages();
         if (totalPages > 0) {
@@ -123,7 +123,7 @@ public class ChatController {
     @GetMapping("/teteatete_room/{id}")
     public String newTeteATeteRoom(@PathVariable UUID id, Principal principal, HttpServletRequest request) {
 
-        AppUser currentUser = userService.getUserByUserName(principal.getName()).get();
+        User currentUser = userService.getUserByUserName(principal.getName()).get();
         if (currentUser.getId().equals(id)) {
             String referer = request.getHeader("Referer");
             return "redirect:".concat(referer);

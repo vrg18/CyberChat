@@ -1,6 +1,7 @@
 package edu.vrg18.cyber_chat.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,9 +19,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
-public class AppUser {
+@Data
+public class User {
 
     @Id
     @GeneratedValue

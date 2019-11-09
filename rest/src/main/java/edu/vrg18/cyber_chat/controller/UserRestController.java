@@ -1,6 +1,6 @@
 package edu.vrg18.cyber_chat.controller;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +29,7 @@ public class UserRestController {
 
     @GetMapping("/{id}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<AppUser> oneUser(@PathVariable UUID id) {
+    public ResponseEntity<User> oneUser(@PathVariable UUID id) {
         return
                 userService.getUserById(id).map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                         .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -37,7 +37,7 @@ public class UserRestController {
 
     @GetMapping("/name/{userName}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<AppUser> oneUserByName(@PathVariable String userName) {
+    public ResponseEntity<User> oneUserByName(@PathVariable String userName) {
         return
                 userService.getUserByUserName(userName).map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                         .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -45,13 +45,13 @@ public class UserRestController {
 
     @PostMapping
     @PreAuthorize("permitAll()")
-    public AppUser createUser(@RequestBody @Valid AppUser user) {
+    public User createUser(@RequestBody @Valid User user) {
         user.setBot(true);
         return userService.createUser(user);
     }
 
     @PutMapping
-    public AppUser updateUser(@RequestBody @Valid AppUser user) {
+    public User updateUser(@RequestBody @Valid User user) {
         user.setBot(true);
         return userService.updateUser(user);
     }

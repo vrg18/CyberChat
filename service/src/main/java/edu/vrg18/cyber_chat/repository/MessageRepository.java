@@ -1,6 +1,6 @@
 package edu.vrg18.cyber_chat.repository;
 
-import edu.vrg18.cyber_chat.entity.AppUser;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.entity.Room;
 import org.springframework.data.domain.Page;
@@ -25,5 +25,5 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
     List<Message> getMessagesWithSuchText(Room room, String messageText);
 
     @Query("SELECT COUNT(m) FROM Message m WHERE m.room = :room AND m NOT IN (SELECT f.message FROM Familiarize f WHERE f.user = :user AND f.message.room = :room)")
-    int countOfUnreadMessagesInRoom(AppUser user, Room room);
+    int countOfUnreadMessagesInRoom(User user, Room room);
 }

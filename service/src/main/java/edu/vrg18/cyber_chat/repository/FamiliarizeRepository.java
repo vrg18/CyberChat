@@ -1,8 +1,8 @@
 package edu.vrg18.cyber_chat.repository;
 
-import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Familiarize;
 import edu.vrg18.cyber_chat.entity.Message;
+import edu.vrg18.cyber_chat.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

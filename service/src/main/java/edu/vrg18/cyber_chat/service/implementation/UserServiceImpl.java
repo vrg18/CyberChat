@@ -1,9 +1,9 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
-import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Role;
 import edu.vrg18.cyber_chat.entity.Room;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.UserRole;
 import edu.vrg18.cyber_chat.entity.User_;
 import edu.vrg18.cyber_chat.repository.FamiliarizeRepository;
@@ -80,12 +80,14 @@ public class UserServiceImpl implements UserService {
         if (!(user.getNewPassword() == null) && !user.getNewPassword().equals("8a38aeb0-0caa-49be-8f8b-f64b6ae2ce1e")) {
             user.setEncryptedPassword(encoder.encode(user.getNewPassword()));
         }
+        if (user.getLastActivity() == null) user.setLastActivity(LocalDateTime.now());
         return userRepository.save(user);
     }
 
     @Override
     public void deleteUser(UUID id) {
         familiarizeRepository.deleteInBatch(familiarizeRepository.findAllByUserId(id));
+        userRoleRepository.deleteInBatch(userRoleRepository.findAllByUserId(id));
         userRepository.deleteById(id);
     }
 

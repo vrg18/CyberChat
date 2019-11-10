@@ -1,9 +1,8 @@
 package edu.vrg18.cyber_chat.controller;
 
 import edu.vrg18.cyber_chat.dto.RoomDto;
-import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Role;
-import edu.vrg18.cyber_chat.entity.Room;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.UserRole;
 import edu.vrg18.cyber_chat.service.RoleService;
 import edu.vrg18.cyber_chat.service.RoomService;

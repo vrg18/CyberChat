@@ -7,13 +7,8 @@ import edu.vrg18.cyber_chat.entity.Room_;
 import edu.vrg18.cyber_chat.entity.User;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
-import javax.persistence.criteria.Subquery;
 
 public class RoomSpecifications {
 

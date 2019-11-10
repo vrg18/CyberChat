@@ -1,8 +1,9 @@
 package edu.vrg18.cyber_chat.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -19,7 +20,10 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -48,7 +52,7 @@ public class User {
     private Room lastRoom;
 
     @Column(name = "last_activity", nullable = false)
-    @DateTimeFormat(pattern ="dd.MM.yyyy HH:mm")
+    @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm")
     private LocalDateTime lastActivity;
 
     @Transient

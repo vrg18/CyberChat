@@ -1,11 +1,10 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
-import edu.vrg18.cyber_chat.dto.RoomDto;
-import edu.vrg18.cyber_chat.entity.Message_;
-import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Familiarize;
 import edu.vrg18.cyber_chat.entity.Message;
+import edu.vrg18.cyber_chat.entity.Message_;
 import edu.vrg18.cyber_chat.entity.Room;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.repository.FamiliarizeRepository;
 import edu.vrg18.cyber_chat.repository.MessageRepository;
 import edu.vrg18.cyber_chat.repository.RoomRepository;
@@ -62,7 +61,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Page<Message> findAllMessages(Boolean increase, int currentPage, int pageSize) {
-        return messageRepository.findAll(PageRequest.of(currentPage, pageSize, new Sort(increase ? Sort.Direction.ASC : Sort.Direction.DESC, Message_.DATE)));
+        return messageRepository.findAll(PageRequest.of(currentPage, pageSize,
+                new Sort(increase ? Sort.Direction.ASC : Sort.Direction.DESC, Message_.DATE)));
     }
 
     @Override

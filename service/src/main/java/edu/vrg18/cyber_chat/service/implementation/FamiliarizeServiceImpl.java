@@ -1,13 +1,9 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
 import edu.vrg18.cyber_chat.entity.Familiarize;
-import edu.vrg18.cyber_chat.entity.Familiarize_;
-import edu.vrg18.cyber_chat.entity.UserRole_;
-import edu.vrg18.cyber_chat.entity.User_;
 import edu.vrg18.cyber_chat.repository.FamiliarizeRepository;
 import edu.vrg18.cyber_chat.service.FamiliarizeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

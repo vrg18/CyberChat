@@ -1,8 +1,8 @@
 package edu.vrg18.cyber_chat.service;
 
-import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Room;
+import edu.vrg18.cyber_chat.entity.User;
 
 import java.util.List;
 import java.util.Optional;

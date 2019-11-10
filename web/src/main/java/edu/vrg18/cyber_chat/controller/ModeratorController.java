@@ -1,10 +1,9 @@
 package edu.vrg18.cyber_chat.controller;
 
 import edu.vrg18.cyber_chat.dto.RoomDto;
-import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Message;
-import edu.vrg18.cyber_chat.entity.Room;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.service.InterlocutorService;
 import edu.vrg18.cyber_chat.service.MessageService;
 import edu.vrg18.cyber_chat.service.RoomService;
@@ -74,7 +73,6 @@ public class ModeratorController {
 
         List<Interlocutor> interlocutors = interlocutorService.findAllInterlocutors();
         model.addAttribute("interlocutors", interlocutors);
-        model.addAttribute("interlocutorService", interlocutorService);
 
         model.addAttribute("title", "ModeratorPage");
         return "moderation/moderatorPage";

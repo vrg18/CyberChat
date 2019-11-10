@@ -17,5 +17,5 @@ public class RoomDto {
     private boolean closed;
 
     private int numberInterlocutors;
-    private int unreadMessages;
+    private String unreadMessages;
 }

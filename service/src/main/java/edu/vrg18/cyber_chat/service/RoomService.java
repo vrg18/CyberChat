@@ -1,5 +1,6 @@
 package edu.vrg18.cyber_chat.service;
 
+import edu.vrg18.cyber_chat.dto.RoomDto;
 import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Room;
 
@@ -9,17 +10,20 @@ import java.util.UUID;
 
 public interface RoomService {
 
-    Optional<Room> getRoomById(UUID id);
+    RoomDto getRoomById(UUID id);
 
-    Room createRoom(Room room);
+    RoomDto createRoom(RoomDto roomDto);
 
-    Room updateRoom(Room room);
+    RoomDto updateRoom(RoomDto roomDto);
 
     void deleteRoom(UUID id);
 
-    List<Room> findAllRooms();
+    List<RoomDto> findAllRooms();
 
-    List<Room> findAllRoomsOfUserAndAllOpenRooms(User user);
+    List<RoomDto> findAllRoomsOfUserAndAllOpenRooms(User user);
 
-    Room findOrCreateTeteATeteRoom(User user1, User user2);
+    RoomDto findOrCreateTeteATeteRoom(User user1, User user2);
+
+    Room getRealRoomById(UUID id);
+
 }

@@ -1,5 +1,6 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
+import edu.vrg18.cyber_chat.dto.RoomDto;
 import edu.vrg18.cyber_chat.entity.Message_;
 import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Familiarize;
@@ -89,13 +90,5 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public boolean wasThereSuchMessageInRoom(Room room, String messageText) {
         return messageRepository.getMessagesWithSuchText(room, messageText).size() != 0;
-    }
-
-    @Override
-    public String numberOfUnreadMessagesInRoom(User user, Room room) {
-        int number = messageRepository.countOfUnreadMessagesInRoom(user, room);
-        if (number == 0) return "";
-        else if (number > 9) return "9%2B";
-        else return String.valueOf(number);
     }
 }

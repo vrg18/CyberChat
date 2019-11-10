@@ -56,11 +56,6 @@ public class InterlocutorServiceImpl implements InterlocutorService {
     }
 
     @Override
-    public int getNumberInterlocutorsInRoomId(UUID id) {
-        return interlocutorRepository.findAllByRoomId(id).size();
-    }
-
-    @Override
     public boolean isUserInRoom(User user, Room room) {
         return interlocutorRepository.findAllByRoomAndUser(room, user).size() > 0;
     }

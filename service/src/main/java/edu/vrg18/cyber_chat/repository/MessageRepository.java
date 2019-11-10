@@ -24,6 +24,6 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
     @Query("SELECT m FROM Message m WHERE m.room = :room AND m.text = :messageText")
     List<Message> getMessagesWithSuchText(Room room, String messageText);
 
-    @Query("SELECT COUNT(m) FROM Message m WHERE m.room = :room AND m NOT IN (SELECT f.message FROM Familiarize f WHERE f.user = :user AND f.message.room = :room)")
-    int countOfUnreadMessagesInRoom(User user, Room room);
+    @Query("SELECT COUNT(m) FROM Message m WHERE m.room.id = :roomId AND m NOT IN (SELECT f.message FROM Familiarize f WHERE f.user.id = :userId AND f.message.room.id = :roomId)")
+    int countOfUnreadMessagesInRoom(UUID userId, UUID roomId);
 }

@@ -1,5 +1,6 @@
 package edu.vrg18.cyber_chat.controller;
 
+import edu.vrg18.cyber_chat.dto.RoomDto;
 import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Message;
@@ -68,7 +69,7 @@ public class ModeratorController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
-        List<Room> rooms = roomService.findAllRooms();
+        List<RoomDto> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
 
         List<Interlocutor> interlocutors = interlocutorService.findAllInterlocutors();
@@ -85,7 +86,7 @@ public class ModeratorController {
         Message message = messageService.getMessageById(id).get();
         model.addAttribute("message", message);
 
-        List<Room> rooms = roomService.findAllRooms();
+        List<RoomDto> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
 
         List<User> users = userService.findAllUsers();
@@ -105,7 +106,7 @@ public class ModeratorController {
     @GetMapping("/new_message")
     public String newMessage(Model model, Principal principal) {
 
-        List<Room> rooms = roomService.findAllRooms();
+        List<RoomDto> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
 
         List<User> users = userService.findAllUsers();
@@ -136,7 +137,7 @@ public class ModeratorController {
     @GetMapping("/edit_room/{id}")
     public String editRoom(@PathVariable UUID id, Model model) {
 
-        Room room = roomService.getRoomById(id).get();
+        RoomDto room = roomService.getRoomById(id);
         model.addAttribute("room", room);
 
         List<User> users = userService.findAllUsers();
@@ -147,7 +148,7 @@ public class ModeratorController {
     }
 
     @PostMapping(value = "/save_room", params = "id!=")
-    public String updateRoom(@ModelAttribute("room") Room room) {
+    public String updateRoom(@ModelAttribute("room") RoomDto room) {
 
         roomService.updateRoom(room);
         return "redirect:/moderator";
@@ -168,7 +169,7 @@ public class ModeratorController {
     }
 
     @PostMapping(value = "/save_room", params = "id=")
-    public String createRoom(@ModelAttribute("room") Room room) {
+    public String createRoom(@ModelAttribute("room") RoomDto room) {
 
         roomService.createRoom(room);
         return "redirect:/moderator";
@@ -190,7 +191,7 @@ public class ModeratorController {
         List<User> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
-        List<Room> rooms = roomService.findAllRooms();
+        List<RoomDto> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
 
         model.addAttribute("title", "EditInterlocutor");
@@ -210,7 +211,7 @@ public class ModeratorController {
         List<User> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
-        List<Room> rooms = roomService.findAllRooms();
+        List<RoomDto> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
 
         model.addAttribute("newInterlocutor", true);
@@ -238,7 +239,7 @@ public class ModeratorController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
     public String editAndListRoom(@PathVariable UUID id, Model model) {
 
-        Room room = roomService.getRoomById(id).get();
+        RoomDto room = roomService.getRoomById(id);
         model.addAttribute("room", room);
 
         List<User> users = userService.findAllUsers();
@@ -253,7 +254,7 @@ public class ModeratorController {
 
     @PostMapping("/update_room")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
-    public String updateRoom2(@ModelAttribute("room") Room room) {
+    public String updateRoom2(@ModelAttribute("room") RoomDto room) {
 
         roomService.updateRoom(room);
         return "redirect:/";
@@ -266,7 +267,7 @@ public class ModeratorController {
         List<User> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
-        Room room = roomService.getRoomById(id).get();
+        RoomDto room = roomService.getRoomById(id);
         model.addAttribute("room", room);
 
         model.addAttribute("title", "NewInterlocutorInRoom");

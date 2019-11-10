@@ -1,5 +1,6 @@
 package edu.vrg18.cyber_chat.controller;
 
+import edu.vrg18.cyber_chat.dto.RoomDto;
 import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Role;
 import edu.vrg18.cyber_chat.entity.Room;
@@ -66,7 +67,7 @@ public class AdministratorController {
         User user = userService.getUserById(id).get();
         model.addAttribute("user", user);
 
-        List<Room> rooms = roomService.findAllRooms();
+        List<RoomDto> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
 
         model.addAttribute("title", "EditUser");

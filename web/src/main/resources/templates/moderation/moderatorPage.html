@@ -24,7 +24,7 @@
         <tr class="d-flex" th:each="room : ${rooms}">
             <td th:hidden="${room.id}"></td>
             <td class="col-lg-4" style="background:Khaki"
-                th:text="${room.name+' ('+interlocutorService.getNumberInterlocutorsInRoomId(room.id)+')'}"></td>
+                th:text="${room.name+' ('+room.numberInterlocutors+')'}"></td>
             <td class="col-lg-4" style="background:Khaki"
                 th:text="${room.owner.userName+' ('+room.owner.firstName+' '+
                 #strings.defaultString(room.owner.lastName,'')+')'}"></td>

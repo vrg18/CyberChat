@@ -1,5 +1,6 @@
 package edu.vrg18.cyber_chat.controller;
 
+import edu.vrg18.cyber_chat.dto.RoomDto;
 import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.entity.Room;
@@ -66,17 +67,19 @@ public class ChatController {
         int pageUSize = uSize.orElse(10);
 
         User currentUser = userService.getUserByUserName(principal.getName()).get();
+        Room currentRoom = roomService.getRealRoomById(id);
+
         if (!currentUser.getLastRoom().getId().equals(id)) {
-            currentUser.setLastRoom(roomService.getRoomById(id).get());
+            currentUser.setLastRoom(currentRoom);
             userService.updateUser(currentUser);
         }
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("currentUserId", currentUser.getId().toString());
+        model.addAttribute("currentRoomId", id);
 
-        List<Room> rooms = roomService.findAllRoomsOfUserAndAllOpenRooms(currentUser);
+        List<RoomDto> rooms = roomService.findAllRoomsOfUserAndAllOpenRooms(currentUser);
         model.addAttribute("rooms", rooms);
 
-        Room currentRoom = roomService.getRoomById(id).get();
         Page<Message> messagesPage = messageService.findAllMessagesByRoomAndMarkAsRead(currentRoom, currentUser,
                 currentMPage - 1, pageMSize);
         model.addAttribute("messagesPage", messagesPage);
@@ -111,10 +114,6 @@ public class ChatController {
         boolean isUserInRoom = interlocutorService.isUserInRoom(currentUser, currentRoom);
         model.addAttribute("isUserInRoom", isUserInRoom);
 
-        model.addAttribute("currentRoomId", id);
-        model.addAttribute("interlocutorService", interlocutorService);
-        model.addAttribute("messageService", messageService);
-
         model.addAttribute("title", "CyberChat");
 //        model.addAttribute("message", "Добро пожаловать в CyberChat!");
         return "chatPage";
@@ -128,7 +127,7 @@ public class ChatController {
             String referer = request.getHeader("Referer");
             return "redirect:".concat(referer);
         } else {
-            Room teteATeteRoom = roomService.findOrCreateTeteATeteRoom(currentUser, userService.getUserById(id).get());
+            RoomDto teteATeteRoom = roomService.findOrCreateTeteATeteRoom(currentUser, userService.getUserById(id).get());
             return "redirect:/room/".concat(teteATeteRoom.getId().toString());
         }
     }
@@ -148,7 +147,7 @@ public class ChatController {
     @GetMapping("/lock_unlock_room/{id}")
     public String lockUnlockRoom(@PathVariable UUID id, HttpServletRequest request) {
 
-        Room room = roomService.getRoomById(id).get();
+        RoomDto room = roomService.getRoomById(id);
         room.setConfidential(!room.isConfidential());
         roomService.updateRoom(room);
         String referer = request.getHeader("Referer");

@@ -59,11 +59,11 @@
                     <tbody>
                     <tr th:each="room : ${rooms}">
                         <td>
-                            <img th:if="${!#strings.isEmpty(messageService.numberOfUnreadMessagesInRoom(currentUser,room))}"
+                            <img th:if="${!#strings.isEmpty(room.unreadMessages)}"
                                  th:src="${'https://ui-avatars.com/api/?size=24&font-size=0.6&rounded=true&name='+
-                                 messageService.numberOfUnreadMessagesInRoom(currentUser,room)}">
+                                 room.unreadMessages}">
                             <a th:href="@{'/room/{id}'(id=${room.id})}"
-                               th:text="${room.name+' ('+interlocutorService.getNumberInterlocutorsInRoomId(room.id)+')'}">
+                               th:text="${room.name+' ('+room.numberInterlocutors+')'}">
                             </a>
                         </td>
                         <div th:if="${room.confidential}">

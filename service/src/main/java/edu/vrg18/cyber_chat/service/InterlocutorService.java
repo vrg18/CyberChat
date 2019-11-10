@@ -20,8 +20,6 @@ public interface InterlocutorService {
 
     List<Interlocutor> findAllInterlocutors();
 
-    int getNumberInterlocutorsInRoomId(UUID id);
-
     boolean isUserInRoom(User user, Room room);
 
     List<Interlocutor> findAllInterlocutorsInRoomId(UUID id);

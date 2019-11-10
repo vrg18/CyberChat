@@ -26,6 +26,4 @@ public interface MessageService {
     List<Message> getUnreadMessagesByUserId(UUID id);
 
     boolean wasThereSuchMessageInRoom(Room room, String messageText);
-
-    String numberOfUnreadMessagesInRoom(User user, Room room);
 }

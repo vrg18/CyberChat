@@ -1,6 +1,9 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
+import edu.vrg18.cyber_chat.entity.Role_;
 import edu.vrg18.cyber_chat.entity.UserRole;
+import edu.vrg18.cyber_chat.entity.UserRole_;
+import edu.vrg18.cyber_chat.entity.User_;
 import edu.vrg18.cyber_chat.repository.UserRoleRepository;
 import edu.vrg18.cyber_chat.service.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +48,8 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public List<UserRole> findAllUsersRoles() {
-        return userRoleRepository.findAll(new Sort(Sort.Direction.ASC, "user.userName", "role.name"));
+        return userRoleRepository.findAll(new Sort(Sort.Direction.ASC,
+                UserRole_.USER.concat(".").concat(User_.USER_NAME),
+                UserRole_.ROLE.concat(".").concat(Role_.NAME)));
     }
 }

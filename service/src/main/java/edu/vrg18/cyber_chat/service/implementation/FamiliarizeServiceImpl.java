@@ -1,6 +1,9 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
 import edu.vrg18.cyber_chat.entity.Familiarize;
+import edu.vrg18.cyber_chat.entity.Familiarize_;
+import edu.vrg18.cyber_chat.entity.UserRole_;
+import edu.vrg18.cyber_chat.entity.User_;
 import edu.vrg18.cyber_chat.repository.FamiliarizeRepository;
 import edu.vrg18.cyber_chat.service.FamiliarizeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +48,6 @@ public class FamiliarizeServiceImpl implements FamiliarizeService {
 
     @Override
     public List<Familiarize> findAllFamiliarizes() {
-        return familiarizeRepository.findAll(new Sort(Sort.Direction.ASC, "room.name", "user.userName"));
+        return familiarizeRepository.findAll();
     }
 }

@@ -1,8 +1,9 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
-import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Room;
+import edu.vrg18.cyber_chat.entity.Room_;
+import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
 import edu.vrg18.cyber_chat.repository.RoomRepository;
 import edu.vrg18.cyber_chat.repository.UserRepository;
@@ -21,8 +22,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.springframework.data.jpa.domain.Specification.where;
+import static edu.vrg18.cyber_chat.specification.InterlocutorSpecifications.*;
 import static edu.vrg18.cyber_chat.specification.RoomSpecifications.*;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
 @Transactional
@@ -64,20 +66,22 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<Room> findAllRooms() {
-        return roomRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+        return roomRepository.findAll(new Sort(Sort.Direction.ASC, Room_.NAME));
     }
 
     @Override
     public List<Room> findAllRoomsOfUserAndAllOpenRooms(User user) {
 
+//        List<Room> r1 = roomRepository.findAll(openRoom());
+//        List<Room> r2 = roomRepository.findAll(publicRoom());
+//        List<Room> r3 = roomRepository.findAll(userRoom(user));
         return
-//                Stream.concat(
-//                roomRepository.findAll(where(userRoom(user).and(openRoom()))).stream(),
-                roomRepository.findAll(where(publicRoom().and(openRoom()))).stream()
-//        )
-//                .distinct()
-                .sorted(Comparator.comparing(Room::getName))
-                .collect(Collectors.toList());
+                Stream.concat(
+                        interlocutorRepository.findAll(userInterlocutor(user)).stream().map(Interlocutor::getRoom),
+                        roomRepository.findAll(where(publicRoom().and(openRoom()))).stream()
+                ).distinct()
+                        .sorted(Comparator.comparing(Room::getName))
+                        .collect(Collectors.toList());
     }
 
     @Override

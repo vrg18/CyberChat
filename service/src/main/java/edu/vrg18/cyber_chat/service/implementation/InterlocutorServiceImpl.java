@@ -1,8 +1,11 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
+import edu.vrg18.cyber_chat.entity.Interlocutor_;
+import edu.vrg18.cyber_chat.entity.Room_;
 import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Room;
+import edu.vrg18.cyber_chat.entity.User_;
 import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
 import edu.vrg18.cyber_chat.service.InterlocutorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +50,9 @@ public class InterlocutorServiceImpl implements InterlocutorService {
 
     @Override
     public List<Interlocutor> findAllInterlocutors() {
-        return interlocutorRepository.findAll(new Sort(Sort.Direction.ASC, "room.name", "user.userName"));
+        return interlocutorRepository.findAll(new Sort(Sort.Direction.ASC,
+                Interlocutor_.ROOM.concat(".").concat(Room_.NAME),
+                Interlocutor_.USER.concat(".").concat(User_.USER_NAME)));
     }
 
     @Override
@@ -62,7 +67,8 @@ public class InterlocutorServiceImpl implements InterlocutorService {
 
     @Override
     public List<Interlocutor> findAllInterlocutorsInRoomId(UUID id) {
-        return interlocutorRepository.findAllByRoomId(id, new Sort(Sort.Direction.ASC, "user.userName"));
+        return interlocutorRepository.findAllByRoomId(id, new Sort(Sort.Direction.ASC,
+                Interlocutor_.USER.concat(".").concat(User_.USER_NAME)));
     }
 
 }

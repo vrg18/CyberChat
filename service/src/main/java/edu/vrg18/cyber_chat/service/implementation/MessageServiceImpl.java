@@ -1,5 +1,6 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
+import edu.vrg18.cyber_chat.entity.Message_;
 import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Familiarize;
 import edu.vrg18.cyber_chat.entity.Message;
@@ -60,7 +61,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Page<Message> findAllMessages(Boolean increase, int currentPage, int pageSize) {
-        return messageRepository.findAll(PageRequest.of(currentPage, pageSize, new Sort(increase ? Sort.Direction.ASC : Sort.Direction.DESC, "date")));
+        return messageRepository.findAll(PageRequest.of(currentPage, pageSize, new Sort(increase ? Sort.Direction.ASC : Sort.Direction.DESC, Message_.DATE)));
     }
 
     @Override
@@ -72,7 +73,7 @@ public class MessageServiceImpl implements MessageService {
         }
         Page<Message> allMessagesByRoom = messageRepository
                 .findAllByRoom(room, PageRequest.of
-                        (currentPage, pageSize, new Sort(Sort.Direction.ASC, "date")));
+                        (currentPage, pageSize, new Sort(Sort.Direction.ASC, Message_.DATE)));
         allMessagesByRoom.getContent()
                 .forEach(m -> familiarizeRepository.findByMessageAndUser(m, user)
                         .orElseGet(() -> familiarizeRepository.save(new Familiarize(null, m, user))));

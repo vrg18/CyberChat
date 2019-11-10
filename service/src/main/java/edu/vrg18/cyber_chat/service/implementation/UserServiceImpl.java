@@ -5,6 +5,7 @@ import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Role;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.entity.UserRole;
+import edu.vrg18.cyber_chat.entity.User_;
 import edu.vrg18.cyber_chat.repository.FamiliarizeRepository;
 import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
 import edu.vrg18.cyber_chat.repository.RoleRepository;
@@ -90,12 +91,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAllUsers() {
-        return userRepository.findAll(new Sort(Sort.Direction.ASC, "userName"));
+        return userRepository.findAll(new Sort(Sort.Direction.ASC, User_.USER_NAME));
     }
 
     @Override
     public Page<User> findAllUsersWithoutDisabled(int currentPage, int pageSize) {
-        return userRepository.findUsersByEnabled(true, PageRequest.of(currentPage, pageSize, new Sort(Sort.Direction.ASC, "userName")));
+        return userRepository.findUsersByEnabled(true, PageRequest.of(currentPage, pageSize, new Sort(Sort.Direction.ASC, User_.USER_NAME)));
     }
 
     @Override

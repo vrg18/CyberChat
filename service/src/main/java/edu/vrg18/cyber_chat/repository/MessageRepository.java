@@ -17,12 +17,18 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
 
     Page<Message> findAllByRoom(Room room, Pageable page);
 
+    /**
+     * Used by the bot to get a list of new messages.
+     * Pagination is not needed.
+     */
     @Query("SELECT m FROM Message m WHERE m.room IN (:rooms) " +
             "AND m NOT IN (SELECT f.message FROM Familiarize f WHERE f.user.id = :userId)")
     List<Message> getUserUnreadMessagesInRooms(UUID userId, List<Room> rooms);
 
-    @Query("SELECT m FROM Message m WHERE m.room = :room AND m.text = :messageText")
-    List<Message> getMessagesWithSuchText(Room room, String messageText);
+    /**
+     * Used by the bot to check for message repeatability.
+     */
+    int countAllByRoomAndText(Room room, String messageText);
 
     @Query("SELECT COUNT(m) FROM Message m WHERE m.room.id = :roomId AND m NOT IN (SELECT f.message FROM Familiarize f WHERE f.user.id = :userId AND f.message.room.id = :roomId)")
     int countOfUnreadMessagesInRoom(UUID userId, UUID roomId);

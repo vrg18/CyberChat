@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -84,11 +85,15 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> getUnreadMessagesByUserId(UUID userId) {
         List<Room> roomsByUser = roomRepository.findAllRoomByUserId(userId);
-        return messageRepository.getUserUnreadMessagesInRooms(userId, roomsByUser);
+        if (roomsByUser.isEmpty()) {
+            return new ArrayList<Message>();
+        } else {
+            return messageRepository.getUserUnreadMessagesInRooms(userId, roomsByUser);
+        }
     }
 
     @Override
     public boolean wasThereSuchMessageInRoom(Room room, String messageText) {
-        return messageRepository.getMessagesWithSuchText(room, messageText).size() != 0;
+        return messageRepository.countAllByRoomAndText(room, messageText) != 0;
     }
 }

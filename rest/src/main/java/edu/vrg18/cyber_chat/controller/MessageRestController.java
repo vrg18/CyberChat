@@ -1,5 +1,6 @@
 package edu.vrg18.cyber_chat.controller;
 
+import edu.vrg18.cyber_chat.dto.MessageDto;
 import edu.vrg18.cyber_chat.entity.Familiarize;
 import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.service.FamiliarizeService;
@@ -36,19 +37,19 @@ public class MessageRestController {
     }
 
     @GetMapping(value = "/user/{id}", produces = "application/json")
-    public List<Message> getUnreadMessagesForUser(@PathVariable UUID id) {
+    public List<MessageDto> getUnreadMessagesForUser(@PathVariable UUID id) {
         return messageService.getUnreadMessagesByUserId(id);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Message> oneMessage(@PathVariable UUID id) {
+    public ResponseEntity<MessageDto> oneMessage(@PathVariable UUID id) {
         return
                 messageService.getMessageById(id).map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                         .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
-    public ResponseEntity<Message> createMessage(@RequestBody @Valid Message message) {
+    public ResponseEntity<MessageDto> createMessage(@RequestBody @Valid MessageDto message) {
 
         if (messageService.wasThereSuchMessageInRoom(message.getRoom(), message.getText())) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);

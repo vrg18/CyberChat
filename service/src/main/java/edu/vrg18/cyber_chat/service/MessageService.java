@@ -1,8 +1,12 @@
 package edu.vrg18.cyber_chat.service;
 
+import edu.vrg18.cyber_chat.dto.MessageDto;
+import edu.vrg18.cyber_chat.dto.RoomDto;
+import edu.vrg18.cyber_chat.dto.UserDto;
 import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.entity.User;
+import edu.vrg18.cyber_chat.util.Triple;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -11,19 +15,24 @@ import java.util.UUID;
 
 public interface MessageService {
 
-    Optional<Message> getMessageById(UUID id);
+    Optional<MessageDto> getMessageById(UUID id);
 
-    Message createMessage(Message message);
+    MessageDto createMessage(MessageDto messageDto);
 
-    Message updateMessage(Message message);
+    MessageDto updateMessage(MessageDto messageDto);
 
     void deleteMessage(UUID id);
 
-    Page<Message> findAllMessages(Boolean increase, int currentPage, int pageSize);
+    Triple<List<MessageDto>, Integer, Integer> findAllMessages(Boolean increase, int currentPage, int pageSize);
 
-    Page<Message> findAllMessagesByRoomAndMarkAsRead(Room room, User user, int currentPage, int pageSize);
+    Triple<List<MessageDto>, Integer, Integer> findAllMessagesByRoomAndMarkAsRead(RoomDto roomDto,
+                                                                                  UserDto userDto,
+                                                                                  int currentPage,
+                                                                                  int pageSize);
 
-    List<Message> getUnreadMessagesByUserId(UUID id);
+    List<MessageDto> getUnreadMessagesByUserId(UUID id);
 
-    boolean wasThereSuchMessageInRoom(Room room, String messageText);
+    boolean wasThereSuchMessageInRoom(RoomDto roomDto, String messageText);
+
+    MessageDto newMessage(UserDto userDto, RoomDto roomDto);
 }

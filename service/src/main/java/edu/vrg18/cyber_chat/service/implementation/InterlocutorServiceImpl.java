@@ -1,5 +1,7 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
+import edu.vrg18.cyber_chat.dto.RoomDto;
+import edu.vrg18.cyber_chat.dto.UserDto;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Interlocutor_;
 import edu.vrg18.cyber_chat.entity.Room;
@@ -8,6 +10,7 @@ import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.User_;
 import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
 import edu.vrg18.cyber_chat.service.InterlocutorService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -22,10 +25,12 @@ import java.util.UUID;
 public class InterlocutorServiceImpl implements InterlocutorService {
 
     private final InterlocutorRepository interlocutorRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public InterlocutorServiceImpl(InterlocutorRepository interlocutorRepository) {
+    public InterlocutorServiceImpl(InterlocutorRepository interlocutorRepository, ModelMapper modelMapper) {
         this.interlocutorRepository = interlocutorRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -56,8 +61,11 @@ public class InterlocutorServiceImpl implements InterlocutorService {
     }
 
     @Override
-    public boolean isUserInRoom(User user, Room room) {
-        return interlocutorRepository.findAllByRoomAndUser(room, user).size() > 0;
+    public boolean isUserInRoom(UserDto userDto, RoomDto roomDto) {
+        return interlocutorRepository.findAllByRoomAndUser(
+                modelMapper.map(roomDto, Room.class),
+                modelMapper.map(userDto, User.class))
+                .size() > 0;
     }
 
     @Override

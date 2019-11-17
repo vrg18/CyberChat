@@ -9,7 +9,7 @@
 
     <br>
     <div class="text-center"><h5>Rooms</h5></div>
-    <table class="table table-sm table-bordered">
+    <table class="table table-sm table-bordered" style="word-break:break-word">
         <thead class="thead-light text-center">
         <tr class="d-flex">
             <th class="col-lg-4">Name (members)</th>
@@ -55,7 +55,7 @@
 
     <br>
     <div class="text-center"><h5>Messages</h5></div>
-    <table class="table table-sm table-bordered">
+    <table class="table table-sm table-bordered" style="word-break:break-word">
         <thead class="thead-light text-center">
         <tr class="d-flex">
             <th class="col-lg-1">Date</th>
@@ -67,7 +67,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="d-flex" th:each="message : ${messagesPage.content}">
+        <tr class="d-flex" th:each="message : ${messages}">
             <td th:hidden="${message.id}"></td>
             <td class="col-lg-1" style="background:Khaki"
                 th:text="${#temporals.format(message.date,'dd.MM.yyyy HH:mm')}"></td>
@@ -93,11 +93,11 @@
                 </form>
             </td>
             <td class="col-lg-10 text-center" style="background-color:#E1E1E4">
-                <div th:if="${messagesPage.totalPages > 0}" class="pagination" style="display:inline-block"
-                     th:each="pageNumber : ${pageNumbers}">
-                    <a th:href="@{'/moderator?size={size}&page={page}'(size=${messagesPage.size},page=${pageNumber})}"
-                       th:text="${pageNumber}"
-                       th:style="${pageNumber==messagesPage.number+1}?'font-weight:bold'"></a>
+                <div th:if="${mTotalPages > 0}" class="pagination" style="display:inline-block"
+                     th:each="mNumber : ${mPageNumbers}">
+                    <a th:href="@{'/moderator?size={size}&page={page}'(size=${mPageSize},page=${mNumber})}"
+                       th:text="${mNumber}"
+                       th:style="${mNumber==mCurrentPage}?'font-weight:bold'"></a>
                 </div>
             </td>
         </tr>
@@ -105,7 +105,7 @@
 
     <br>
     <div class="text-center"><h5>Interlocutors in rooms</h5></div>
-    <table class="table table-sm table-bordered">
+    <table class="table table-sm table-bordered" style="word-break:break-word">
         <thead class="thead-light text-center">
         <tr class="d-flex">
             <th class="col-lg-5">Room</th>

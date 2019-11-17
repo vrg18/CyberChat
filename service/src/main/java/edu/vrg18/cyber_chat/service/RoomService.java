@@ -1,6 +1,7 @@
 package edu.vrg18.cyber_chat.service;
 
 import edu.vrg18.cyber_chat.dto.RoomDto;
+import edu.vrg18.cyber_chat.dto.UserDto;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.entity.User;
 
@@ -19,9 +20,9 @@ public interface RoomService {
 
     List<RoomDto> findAllRooms();
 
-    List<RoomDto> findAllRoomsOfUserAndAllOpenRooms(User user);
+    List<RoomDto> findAllRoomsOfUserAndAllOpenRooms(UserDto userDto);
 
-    RoomDto findOrCreateTeteATeteRoom(User user1, User user2);
+    RoomDto findOrCreateTeteATeteRoom(UserDto initiatingUserDto, UserDto slaveUserDto);
 
     Room getRealRoomById(UUID id);
 

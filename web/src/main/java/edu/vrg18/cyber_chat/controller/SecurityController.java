@@ -1,5 +1,6 @@
 package edu.vrg18.cyber_chat.controller;
 
+import edu.vrg18.cyber_chat.dto.UserDto;
 import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.service.UserService;
 import edu.vrg18.cyber_chat.utils.WebUtils;
@@ -69,14 +70,14 @@ public class SecurityController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
     public String editUser(Model model, Principal principal) {
 
-        User currentUser = userService.getUserByUserName(principal.getName()).get();
+        UserDto currentUser = userService.getUserByUserName(principal.getName()).get();
         model.addAttribute("user", currentUser);
         model.addAttribute("title", "EditUser");
         return "security/createOrEditUserOwn";
     }
 
     @PostMapping(value = "/save_user_own", params = "id!=")
-    public String updateUser(@ModelAttribute("user") User user) {
+    public String updateUser(@ModelAttribute("user") UserDto user) {
 
         userService.updateUser(user);
         return "redirect:/";
@@ -91,7 +92,7 @@ public class SecurityController {
     }
 
     @PostMapping(value = "/save_user_own", params = "id=")
-    public String createUser(@ModelAttribute("user") User user) {
+    public String createUser(@ModelAttribute("user") UserDto user) {
 
         userService.createUser(user);
         return "redirect:/";

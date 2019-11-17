@@ -53,8 +53,8 @@
             </div>
             <div th:unless="${newUser}">
                 <input type="hidden" th:field="*{id}"/>
-                <input type="hidden" th:field="*{encryptedPassword}"/>
-                <input type="hidden" th:field="*{lastRoom}"/>
+<!--                <input type="hidden" th:field="*{encryptedPassword}"/>-->
+                <input type="hidden" th:field="*{lastRoomId}"/>
                 <input type="hidden" th:field="*{lastActivity}"/>
                 <tr class="d-flex">
                     <td class="col-lg-5 text-right">Username</td>

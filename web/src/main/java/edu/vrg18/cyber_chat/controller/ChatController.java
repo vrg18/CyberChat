@@ -1,6 +1,8 @@
 package edu.vrg18.cyber_chat.controller;
 
+import edu.vrg18.cyber_chat.dto.MessageDto;
 import edu.vrg18.cyber_chat.dto.RoomDto;
+import edu.vrg18.cyber_chat.dto.UserDto;
 import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.entity.User;
@@ -8,6 +10,8 @@ import edu.vrg18.cyber_chat.service.InterlocutorService;
 import edu.vrg18.cyber_chat.service.MessageService;
 import edu.vrg18.cyber_chat.service.RoomService;
 import edu.vrg18.cyber_chat.service.UserService;
+import edu.vrg18.cyber_chat.util.Triple;
+import javafx.util.Pair;
 import org.springframework.data.domain.Page;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,8 +53,8 @@ public class ChatController {
     @GetMapping("/")
     public String chatPage(Model model, Principal principal) {
 
-        User currentUser = userService.getUserByUserName(principal.getName()).get();
-        String lastRoomId = currentUser.getLastRoom().getId().toString();
+        UserDto currentUser = userService.getUserByUserName(principal.getName()).get();
+        String lastRoomId = currentUser.getLastRoomId().toString();
         return "redirect:/room/".concat(lastRoomId);
     }
 
@@ -61,16 +65,16 @@ public class ChatController {
                            @RequestParam("uPage") Optional<Integer> uPage,
                            @RequestParam("uSize") Optional<Integer> uSize) {
 
-        int currentMPage = mPage.orElse(0);   // 0 - show from the last page
-        int pageMSize = mSize.orElse(8);
-        int currentUPage = uPage.orElse(1);
-        int pageUSize = uSize.orElse(10);
+        int mCurrentPage = mPage.orElse(0);   // 0 - show from the last page
+        int mPageSize = mSize.orElse(8);
+        int uCurrentPage = uPage.orElse(1);
+        int uPageSize = uSize.orElse(10);
 
-        User currentUser = userService.getUserByUserName(principal.getName()).get();
-        Room currentRoom = roomService.getRealRoomById(id);
+        UserDto currentUser = userService.getUserByUserName(principal.getName()).get();
+        RoomDto currentRoom = roomService.getRoomById(id);
 
-        if (!currentUser.getLastRoom().getId().equals(id)) {
-            currentUser.setLastRoom(currentRoom);
+        if (!currentUser.getLastRoomId().equals(id)) {
+            currentUser.setLastRoomId(id);
             userService.updateUser(currentUser);
         }
         model.addAttribute("currentUser", currentUser);
@@ -80,28 +84,35 @@ public class ChatController {
         List<RoomDto> rooms = roomService.findAllRoomsOfUserAndAllOpenRooms(currentUser);
         model.addAttribute("rooms", rooms);
 
-        Page<Message> messagesPage = messageService.findAllMessagesByRoomAndMarkAsRead(currentRoom, currentUser,
-                currentMPage - 1, pageMSize);
-        model.addAttribute("messagesPage", messagesPage);
-        int totalPages = messagesPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageMNumbers = IntStream.rangeClosed(1, totalPages)
+        Triple<List<MessageDto>, Integer, Integer> messagesPage = messageService.findAllMessagesByRoomAndMarkAsRead(currentRoom, currentUser,
+                mCurrentPage - 1, mPageSize);
+        model.addAttribute("messages", messagesPage.getValue1());
+        int mTotalPages = messagesPage.getValue2();
+        mCurrentPage = messagesPage.getValue3() + 1;
+        if (mTotalPages > 0) {
+            List<Integer> mPageNumbers = IntStream.rangeClosed(1, mTotalPages)
                     .boxed()
                     .collect(Collectors.toList());
-            model.addAttribute("pageMNumbers", pageMNumbers);
+            model.addAttribute("mPageNumbers", mPageNumbers);
+            model.addAttribute("mTotalPages", mTotalPages);
+            model.addAttribute("mPageSize", mPageSize);
+            model.addAttribute("mCurrentPage", mCurrentPage);
         }
 
-        Message newMessage = new Message(null, null, currentUser, currentRoom, null);
-        model.addAttribute("newMessage", newMessage);
+        model.addAttribute("newMessage", messageService.newMessage(currentUser, currentRoom));
 
-        Page<User> usersPage = userService.findAllUsersWithoutDisabled(currentUPage - 1, pageUSize);
-        model.addAttribute("usersPage", usersPage);
-        totalPages = usersPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageUNumbers = IntStream.rangeClosed(1, totalPages)
+        Triple<List<UserDto>, Integer, Integer> usersPage = userService.findAllUsersWithoutDisabled(uCurrentPage - 1, uPageSize);
+        model.addAttribute("users", usersPage.getValue1());
+        int uTotalPages = usersPage.getValue2();
+        uCurrentPage = usersPage.getValue3() + 1;
+        if (uTotalPages > 0) {
+            List<Integer> uPageNumbers = IntStream.rangeClosed(1, uTotalPages)
                     .boxed()
                     .collect(Collectors.toList());
-            model.addAttribute("pageUNumbers", pageUNumbers);
+            model.addAttribute("uPageNumbers", uPageNumbers);
+            model.addAttribute("uTotalPages", uTotalPages);
+            model.addAttribute("uPageSize", uPageSize);
+            model.addAttribute("uCurrentPage", uCurrentPage);
         }
 
         StringBuffer roomName = new StringBuffer(currentRoom.getName());
@@ -122,7 +133,7 @@ public class ChatController {
     @GetMapping("/teteatete_room/{id}")
     public String newTeteATeteRoom(@PathVariable UUID id, Principal principal, HttpServletRequest request) {
 
-        User currentUser = userService.getUserByUserName(principal.getName()).get();
+        UserDto currentUser = userService.getUserByUserName(principal.getName()).get();
         if (currentUser.getId().equals(id)) {
             String referer = request.getHeader("Referer");
             return "redirect:".concat(referer);
@@ -133,7 +144,7 @@ public class ChatController {
     }
 
     @PostMapping("/send_message")
-    public String sendMessage(@ModelAttribute("message") Message message, HttpServletRequest request) {
+    public String sendMessage(@ModelAttribute("message") MessageDto message, HttpServletRequest request) {
 
         messageService.createMessage(message);
 

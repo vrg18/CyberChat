@@ -1,6 +1,7 @@
 package edu.vrg18.cyber_chat.controller;
 
 import edu.vrg18.cyber_chat.dto.RoomDto;
+import edu.vrg18.cyber_chat.dto.UserDto;
 import edu.vrg18.cyber_chat.entity.Role;
 import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.UserRole;
@@ -47,7 +48,7 @@ public class AdministratorController {
         String userInfo = WebUtils.userToString(loginedUser);
         model.addAttribute("userInfo", userInfo);
 
-        List<User> users = userService.findAllUsers();
+        List<UserDto> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
         List<Role> roles = roleService.findAllRoles();
@@ -63,7 +64,7 @@ public class AdministratorController {
     @GetMapping("/edit_user_admin/{id}")
     public String editUser(@PathVariable UUID id, Model model) {
 
-        User user = userService.getUserById(id).get();
+        UserDto user = userService.getUserById(id).get();
         model.addAttribute("user", user);
 
         List<RoomDto> rooms = roomService.findAllRooms();
@@ -74,7 +75,7 @@ public class AdministratorController {
     }
 
     @PostMapping(value = "/save_user_admin", params = "id!=")
-    public String updateUser(@ModelAttribute("user") User user) {
+    public String updateUser(@ModelAttribute("user") UserDto user) {
 
         userService.updateUser(user);
         return "redirect:/administrator";
@@ -89,7 +90,7 @@ public class AdministratorController {
     }
 
     @PostMapping(value = "/save_user_admin", params = "id=")
-    public String createUser(@ModelAttribute("user") User user) {
+    public String createUser(@ModelAttribute("user") UserDto user) {
 
         userService.createUser(user);
         return "redirect:/administrator";
@@ -147,7 +148,7 @@ public class AdministratorController {
         UserRole userRole = userRoleService.getUserRoleById(id).get();
         model.addAttribute("userRole", userRole);
 
-        List<User> users = userService.findAllUsers();
+        List<UserDto> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
         List<Role> roles = roleService.findAllRoles();
@@ -167,7 +168,7 @@ public class AdministratorController {
     @GetMapping("/new_userrole")
     public String newUserRole(Model model) {
 
-        List<User> users = userService.findAllUsers();
+        List<UserDto> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
         List<Role> roles = roleService.findAllRoles();

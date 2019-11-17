@@ -2,9 +2,9 @@ package edu.vrg18.cyber_chat;
 
 //import org.junit.jupiter.api.Test;
 
-import edu.vrg18.cyber_chat.entity.Message;
-import edu.vrg18.cyber_chat.entity.Room;
-import edu.vrg18.cyber_chat.entity.User;
+import edu.vrg18.cyber_chat.dto.MessageDto;
+import edu.vrg18.cyber_chat.dto.RoomDto;
+import edu.vrg18.cyber_chat.dto.UserDto;
 import edu.vrg18.cyber_chat.service.MessageService;
 import edu.vrg18.cyber_chat.service.RoomService;
 import edu.vrg18.cyber_chat.service.UserService;
@@ -52,11 +52,9 @@ public class RestApplicationTests {
     private ModelMapper roomMapper;
     private List<UUID> userIdListForRemoteAfterTest = new ArrayList<>();
     private List<UUID> messageIdListForRemoteAfterTest = new ArrayList<>();
-    private User testUser1;
-    private User testUser2;
-    private String testEncryptedPassword1;
-    private String testEncryptedPassword2;
-    private Room testRoom;
+    private UserDto testUser1;
+    private UserDto testUser2;
+    private RoomDto testRoom;
 
     @Autowired
     private void setService(UserService userService, MessageService messageService, RoomService roomService) {
@@ -77,18 +75,14 @@ public class RestApplicationTests {
 
         testUser1 = userService.getUserByUserName(USERNAME_1)
                 .orElseGet(() -> userService.createUser(
-                        new User(null, USERNAME_1, null, true, true,
+                        new UserDto(null, USERNAME_1, true, true,
                                 FIRSTNAME_1, null, null, null, PASSWORD)));
-
-        testEncryptedPassword1 = testUser1.getEncryptedPassword();
         userIdListForRemoteAfterTest.add(testUser1.getId());
 
         testUser2 = userService.getUserByUserName(USERNAME_2)
                 .orElseGet(() -> userService.createUser(
-                        new User(null, USERNAME_2, null, true, true,
+                        new UserDto(null, USERNAME_2, true, true,
                                 FIRSTNAME_2, null, null, null, PASSWORD)));
-
-        testEncryptedPassword2 = testUser2.getEncryptedPassword();
         userIdListForRemoteAfterTest.add(testUser2.getId());
     }
 
@@ -106,11 +100,11 @@ public class RestApplicationTests {
     @Test
     public void whenCreateUser_thenStatus200() {
 
-        User user = new User(null, USERNAME_3, null, true, true, FIRSTNAME_3, null, null, null, PASSWORD);
+        UserDto userDto = new UserDto(null, USERNAME_3, true, true, FIRSTNAME_3, null, null, null, PASSWORD);
 
         userIdListForRemoteAfterTest.add(UUID.fromString(
                 given().log().body()
-                        .contentType(ContentType.JSON).body(user)
+                        .contentType(ContentType.JSON).body(userDto)
                         .when().post(BASE_PATH + "users")
                         .then().log().body()
                         .statusCode(HttpStatus.OK.value())
@@ -121,10 +115,10 @@ public class RestApplicationTests {
     @Test
     public void whenUpdateUser_thenStatus200() {
 
-        User user = new User(testUser1.getId(), USERNAME_1, testEncryptedPassword1, true, true, FIRSTNAME_1, LASTNAME_1, null, null, null);
+        UserDto userDto = new UserDto(testUser1.getId(), USERNAME_1, true, true, FIRSTNAME_1, LASTNAME_1, null, null, null);
 
         given().log().body()
-                .contentType(ContentType.JSON).body(user)
+                .contentType(ContentType.JSON).body(userDto)
                 .auth().preemptive().basic(USERNAME_1, PASSWORD)
                 .when().put(BASE_PATH + "users")
                 .then().log().body()
@@ -165,12 +159,12 @@ public class RestApplicationTests {
     @Test
     public void whenCreateMessage_thenStatus200() {
 
-        Room testRoom = roomMapper.map(roomService.findAllRoomsOfUserAndAllOpenRooms(testUser1).get(0), Room.class);
-        Message message = new Message(null, null, testUser1, testRoom, MESSAGE_TEXT);
+        RoomDto testRoom = roomService.findAllRoomsOfUserAndAllOpenRooms(testUser1).get(0);
+        MessageDto messageDto = new MessageDto(null, null, testUser1, testRoom, MESSAGE_TEXT);
 
         messageIdListForRemoteAfterTest.add(UUID.fromString(
                 given().log().body()
-                        .contentType(ContentType.JSON).body(message)
+                        .contentType(ContentType.JSON).body(messageDto)
                         .auth().preemptive().basic(USERNAME_1, PASSWORD)
                         .when().post(BASE_PATH + "messages")
                         .then().log().body()

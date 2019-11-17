@@ -1,6 +1,9 @@
 package edu.vrg18.cyber_chat.service;
 
+import edu.vrg18.cyber_chat.dto.UserDto;
 import edu.vrg18.cyber_chat.entity.User;
+import edu.vrg18.cyber_chat.util.Triple;
+import javafx.util.Pair;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -9,19 +12,19 @@ import java.util.UUID;
 
 public interface UserService {
 
-    Optional<User> getUserById(UUID id);
+    Optional<UserDto> getUserById(UUID id);
 
-    User createUser(User user);
+    UserDto createUser(UserDto userDto);
 
-    User updateUser(User user);
+    UserDto updateUser(UserDto userDto);
 
     void deleteUser(UUID id);
 
-    Optional<User> getUserByUserName(String userName);
+    Optional<UserDto> getUserByUserName(String userName);
 
-    List<User> findAllUsers();
+    List<UserDto> findAllUsers();
 
-    Page<User> findAllUsersWithoutDisabled(int currentPage, int pageSize);
+    Triple<List<UserDto>, Integer, Integer> findAllUsersWithoutDisabled(int currentPage, int pageSize);
 
-    List<User> findUsersInRoomId(UUID id);
+    List<UserDto> findUsersInRoomId(UUID id);
 }

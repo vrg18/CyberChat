@@ -159,7 +159,7 @@ public class RestApplicationTests {
     @Test
     public void whenCreateMessage_thenStatus200() {
 
-        RoomDto testRoom = roomService.findAllRoomsOfUserAndAllOpenRooms(testUser1).get(0);
+        RoomDto testRoom = roomService.findAllRoomsOfUserAndAllPublicRooms(testUser1).get(0);
         MessageDto messageDto = new MessageDto(null, null, testUser1, testRoom, MESSAGE_TEXT);
 
         messageIdListForRemoteAfterTest.add(UUID.fromString(

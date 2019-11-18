@@ -20,7 +20,9 @@ public interface RoomService {
 
     List<RoomDto> findAllRooms();
 
-    List<RoomDto> findAllRoomsOfUserAndAllOpenRooms(UserDto userDto);
+    public List<RoomDto> findAllPublicRooms();
+
+    List<RoomDto> findAllRoomsOfUserAndAllPublicRooms(UserDto userDto);
 
     RoomDto findOrCreateTeteATeteRoom(UserDto initiatingUserDto, UserDto slaveUserDto);
 

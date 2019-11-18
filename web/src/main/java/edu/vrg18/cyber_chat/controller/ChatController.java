@@ -3,15 +3,10 @@ package edu.vrg18.cyber_chat.controller;
 import edu.vrg18.cyber_chat.dto.MessageDto;
 import edu.vrg18.cyber_chat.dto.RoomDto;
 import edu.vrg18.cyber_chat.dto.UserDto;
-import edu.vrg18.cyber_chat.entity.Message;
-import edu.vrg18.cyber_chat.entity.Room;
-import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.service.InterlocutorService;
 import edu.vrg18.cyber_chat.service.MessageService;
 import edu.vrg18.cyber_chat.service.RoomService;
 import edu.vrg18.cyber_chat.service.UserService;
-import edu.vrg18.cyber_chat.util.Triple;
-import javafx.util.Pair;
 import org.springframework.data.domain.Page;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,12 +46,10 @@ public class ChatController {
     }
 
     @GetMapping("/")
-    public String chatPage(Model model, Principal principal) {
+    public String chatPage(Principal principal) {
 
-        UserDto currentUser = userService.getUserByUserName(principal.getName()).get();
-        String lastRoomId = currentUser.getLastRoomId().toString();
-        return "redirect:/room/".concat(lastRoomId);
-    }
+        return "redirect:/room/".concat(userService.getLastUserRoomId(principal.getName()));
+   }
 
     @GetMapping("/room/{id}")
     public String roomPage(@PathVariable UUID id, Model model, Principal principal,
@@ -81,14 +74,13 @@ public class ChatController {
         model.addAttribute("currentUserId", currentUser.getId().toString());
         model.addAttribute("currentRoomId", id);
 
-        List<RoomDto> rooms = roomService.findAllRoomsOfUserAndAllOpenRooms(currentUser);
+        List<RoomDto> rooms = roomService.findAllRoomsOfUserAndAllPublicRooms(currentUser);
         model.addAttribute("rooms", rooms);
 
-        Triple<List<MessageDto>, Integer, Integer> messagesPage = messageService.findAllMessagesByRoomAndMarkAsRead(currentRoom, currentUser,
+        Page<MessageDto> messagesPage = messageService.findAllMessagesByRoomAndMarkAsRead(currentRoom, currentUser,
                 mCurrentPage - 1, mPageSize);
-        model.addAttribute("messages", messagesPage.getValue1());
-        int mTotalPages = messagesPage.getValue2();
-        mCurrentPage = messagesPage.getValue3() + 1;
+        model.addAttribute("messages", messagesPage.getContent());
+        int mTotalPages = messagesPage.getTotalPages();
         if (mTotalPages > 0) {
             List<Integer> mPageNumbers = IntStream.rangeClosed(1, mTotalPages)
                     .boxed()
@@ -96,15 +88,14 @@ public class ChatController {
             model.addAttribute("mPageNumbers", mPageNumbers);
             model.addAttribute("mTotalPages", mTotalPages);
             model.addAttribute("mPageSize", mPageSize);
-            model.addAttribute("mCurrentPage", mCurrentPage);
+            model.addAttribute("mCurrentPage", messagesPage.getNumber() + 1);
         }
 
         model.addAttribute("newMessage", messageService.newMessage(currentUser, currentRoom));
 
-        Triple<List<UserDto>, Integer, Integer> usersPage = userService.findAllUsersWithoutDisabled(uCurrentPage - 1, uPageSize);
-        model.addAttribute("users", usersPage.getValue1());
-        int uTotalPages = usersPage.getValue2();
-        uCurrentPage = usersPage.getValue3() + 1;
+        Page<UserDto> usersPage = userService.findAllUsersWithoutDisabled(uCurrentPage - 1, uPageSize);
+        model.addAttribute("users", usersPage.getContent());
+        int uTotalPages = usersPage.getTotalPages();
         if (uTotalPages > 0) {
             List<Integer> uPageNumbers = IntStream.rangeClosed(1, uTotalPages)
                     .boxed()
@@ -112,7 +103,7 @@ public class ChatController {
             model.addAttribute("uPageNumbers", uPageNumbers);
             model.addAttribute("uTotalPages", uTotalPages);
             model.addAttribute("uPageSize", uPageSize);
-            model.addAttribute("uCurrentPage", uCurrentPage);
+            model.addAttribute("uCurrentPage", usersPage.getNumber() + 1);
         }
 
         StringBuffer roomName = new StringBuffer(currentRoom.getName());

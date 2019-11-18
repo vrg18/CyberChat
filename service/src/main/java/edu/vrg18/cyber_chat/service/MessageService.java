@@ -3,10 +3,6 @@ package edu.vrg18.cyber_chat.service;
 import edu.vrg18.cyber_chat.dto.MessageDto;
 import edu.vrg18.cyber_chat.dto.RoomDto;
 import edu.vrg18.cyber_chat.dto.UserDto;
-import edu.vrg18.cyber_chat.entity.Message;
-import edu.vrg18.cyber_chat.entity.Room;
-import edu.vrg18.cyber_chat.entity.User;
-import edu.vrg18.cyber_chat.util.Triple;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -23,12 +19,9 @@ public interface MessageService {
 
     void deleteMessage(UUID id);
 
-    Triple<List<MessageDto>, Integer, Integer> findAllMessages(Boolean increase, int currentPage, int pageSize);
+    Page<MessageDto> findAllMessages(Boolean increase, int currentPage, int pageSize);
 
-    Triple<List<MessageDto>, Integer, Integer> findAllMessagesByRoomAndMarkAsRead(RoomDto roomDto,
-                                                                                  UserDto userDto,
-                                                                                  int currentPage,
-                                                                                  int pageSize);
+    Page<MessageDto> findAllMessagesByRoomAndMarkAsRead(RoomDto roomDto, UserDto userDto, int currentPage, int pageSize);
 
     List<MessageDto> getUnreadMessagesByUserId(UUID id);
 

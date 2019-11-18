@@ -14,8 +14,6 @@ public interface RoomRepository extends JpaRepository<Room, UUID>, JpaSpecificat
 
     Optional<Room> findRoomByName(String name);
 
-    List<Room> findAllByConfidential(boolean confidential);
-
     @Query("SELECT i2.room FROM Interlocutor i2 WHERE i2.user = :user2 " +
             "AND i2.room IN (SELECT i1.room FROM Interlocutor i1 WHERE i1.user = :user1 AND i1.room.closed = false)")
     List<Room> findSharedRoomsOfTwoUsers(User user1, User user2);

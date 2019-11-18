@@ -77,10 +77,10 @@ public class SecurityController {
     }
 
     @PostMapping(value = "/save_user_own", params = "id!=")
-    public String updateUser(@ModelAttribute("user") UserDto user) {
+    public String updateUser(@ModelAttribute("user") UserDto user, Principal principal) {
 
         userService.updateUser(user);
-        return "redirect:/";
+        return user.getUserName().equals(principal.getName()) ? "redirect:/" : "redirect:/logout";
     }
 
     @GetMapping("/new_user_own")

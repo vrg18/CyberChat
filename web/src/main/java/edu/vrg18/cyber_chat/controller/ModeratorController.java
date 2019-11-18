@@ -4,13 +4,10 @@ import edu.vrg18.cyber_chat.dto.MessageDto;
 import edu.vrg18.cyber_chat.dto.RoomDto;
 import edu.vrg18.cyber_chat.dto.UserDto;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
-import edu.vrg18.cyber_chat.entity.Message;
-import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.service.InterlocutorService;
 import edu.vrg18.cyber_chat.service.MessageService;
 import edu.vrg18.cyber_chat.service.RoomService;
 import edu.vrg18.cyber_chat.service.UserService;
-import edu.vrg18.cyber_chat.util.Triple;
 import edu.vrg18.cyber_chat.utils.WebUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -61,11 +58,10 @@ public class ModeratorController {
         String userInfo = WebUtils.userToString(loginedUser);
         model.addAttribute("userInfo", userInfo);
 
-        Triple<List<MessageDto>, Integer, Integer> messagesPage =
+        Page<MessageDto> messagesPage =
                 messageService.findAllMessages(false, mCurrentPage - 1, mPageSize);
-        model.addAttribute("messages", messagesPage.getValue1());
-        int mTotalPages = messagesPage.getValue2();
-        mCurrentPage = messagesPage.getValue3() + 1;
+        model.addAttribute("messages", messagesPage.getContent());
+        int mTotalPages = messagesPage.getTotalPages();
         if (mTotalPages > 0) {
             List<Integer> mPageNumbers = IntStream.rangeClosed(1, mTotalPages)
                     .boxed()
@@ -73,7 +69,7 @@ public class ModeratorController {
             model.addAttribute("mPageNumbers", mPageNumbers);
             model.addAttribute("mTotalPages", mTotalPages);
             model.addAttribute("mPageSize", mPageSize);
-            model.addAttribute("mCurrentPage", mCurrentPage);
+            model.addAttribute("mCurrentPage", messagesPage.getNumber() + 1);
         }
 
         List<RoomDto> rooms = roomService.findAllRooms();

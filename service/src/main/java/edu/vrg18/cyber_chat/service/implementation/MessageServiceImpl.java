@@ -12,7 +12,6 @@ import edu.vrg18.cyber_chat.repository.FamiliarizeRepository;
 import edu.vrg18.cyber_chat.repository.MessageRepository;
 import edu.vrg18.cyber_chat.repository.RoomRepository;
 import edu.vrg18.cyber_chat.service.MessageService;
-import edu.vrg18.cyber_chat.util.Triple;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -69,19 +68,15 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Triple<List<MessageDto>, Integer, Integer> findAllMessages(Boolean increase, int currentPage, int pageSize) {
+    public Page<MessageDto> findAllMessages(Boolean increase, int currentPage, int pageSize) {
 
-        Page<Message> messagesPage = messageRepository.findAll(PageRequest.of(currentPage, pageSize,
-                new Sort(increase ? Sort.Direction.ASC : Sort.Direction.DESC, Message_.DATE)));
-        List<MessageDto> messagesDto = messagesPage
-                .stream()
-                .map(m -> modelMapper.map(m, MessageDto.class))
-                .collect(Collectors.toList());
-        return Triple.of(messagesDto, messagesPage.getTotalPages(), messagesPage.getNumber());
+        return messageRepository.findAll(PageRequest.of(currentPage, pageSize,
+                new Sort(increase ? Sort.Direction.ASC : Sort.Direction.DESC, Message_.DATE)))
+                .map(m -> modelMapper.map(m, MessageDto.class));
     }
 
     @Override
-    public Triple<List<MessageDto>, Integer, Integer> findAllMessagesByRoomAndMarkAsRead
+    public Page<MessageDto> findAllMessagesByRoomAndMarkAsRead
             (RoomDto roomDto, UserDto userDto, int currentPage, int pageSize) {
 
         if (currentPage < 0) {
@@ -98,11 +93,7 @@ public class MessageServiceImpl implements MessageService {
                         .orElseGet(() -> familiarizeRepository.save(
                                 new Familiarize(null, m, modelMapper.map(userDto, User.class)))));
 
-        List<MessageDto> messagesDto = messagesPageByRoom
-                .stream()
-                .map(m -> modelMapper.map(m, MessageDto.class))
-                .collect(Collectors.toList());
-        return Triple.of(messagesDto, messagesPageByRoom.getTotalPages(), messagesPageByRoom.getNumber());
+        return messagesPageByRoom.map(m -> modelMapper.map(m, MessageDto.class));
     }
 
     @Override

@@ -13,6 +13,9 @@ import edu.vrg18.cyber_chat.repository.UserRepository;
 import edu.vrg18.cyber_chat.service.RoomService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,11 +85,22 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<RoomDto> findAllRoomsOfUserAndAllOpenRooms(UserDto userDto) {
+    public List<RoomDto> findAllPublicRooms() {
+
+        return roomRepository.findAll(where(publicRoom().and(openRoom())))
+                .stream()
+                .map(r -> modelMapper.map(r, RoomDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RoomDto> findAllRoomsOfUserAndAllPublicRooms(UserDto userDto) {
 
 //        List<Room> r1 = roomRepository.findAll(openRoom());
 //        List<Room> r2 = roomRepository.findAll(publicRoom());
 //        List<Room> r3 = roomRepository.findAll(userRoom(user));
+//        Page<Room> roomPage = roomRepository.findAll(where(publicRoom().and(openRoom())), PageRequest.of(0, 10));
+
         return Stream.concat(
                 interlocutorRepository.findAll(userInterlocutor(modelMapper.map(userDto, User.class))).stream().map(Interlocutor::getRoom),
                 roomRepository.findAll(where(publicRoom().and(openRoom()))).stream())

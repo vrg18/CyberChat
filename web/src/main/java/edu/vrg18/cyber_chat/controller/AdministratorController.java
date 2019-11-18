@@ -67,7 +67,7 @@ public class AdministratorController {
         UserDto user = userService.getUserById(id).get();
         model.addAttribute("user", user);
 
-        List<RoomDto> rooms = roomService.findAllRooms();
+        List<RoomDto> rooms = roomService.findAllRooms(0, 100).getContent();
         model.addAttribute("rooms", rooms);
 
         model.addAttribute("title", "EditUser");

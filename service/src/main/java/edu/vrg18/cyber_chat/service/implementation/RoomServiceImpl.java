@@ -76,12 +76,9 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<RoomDto> findAllRooms() {
-        return roomRepository.findAll(new Sort(Sort.Direction.ASC, Room_.NAME))
-                .stream()
-                .map(r -> modelMapper.map(r, RoomDto.class))
-                .peek(rd -> rd.setNumberInterlocutors(interlocutorRepository.findAllByRoomId(rd.getId()).size()))
-                .collect(Collectors.toList());
+    public Page<RoomDto> findAllRooms(int currentPage, int pageSize) {
+        return roomRepository.findAll(PageRequest.of(currentPage, pageSize, new Sort(Sort.Direction.ASC, Room_.NAME)))
+                .map(r -> modelMapper.map(r, RoomDto.class));
     }
 
     @Override

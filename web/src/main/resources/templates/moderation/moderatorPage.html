@@ -45,10 +45,19 @@
         </tr>
         </tbody>
         <tr class="d-flex">
-            <td class="col-lg-12" style="background-color:#E1E1E4">
+            <td class="col-lg-2" style="background-color:#E1E1E4">
                 <form th:action="@{/new_room}">
                     <button type="submit" class="btn btn-primary">Add room</button>
                 </form>
+            </td>
+            <td class="col-lg-10 text-center" style="background-color:#E1E1E4">
+                <div th:if="${rTotalPages > 0}" class="pagination" style="display:inline-block"
+                     th:each="rNumber : ${rPageNumbers}">
+                    <a th:href="@{'/moderator?rSize={rSize}&rPage={rPage}&mSize={mSize}&mPage={mPage}'
+                    (rSize=${rPageSize},rPage=${rNumber},mSize=${mPageSize},mPage=${mCurrentPage})}"
+                       th:text="${rNumber}"
+                       th:style="${rNumber==rCurrentPage}?'font-weight:bold'"></a>
+                </div>
             </td>
         </tr>
     </table>
@@ -95,7 +104,8 @@
             <td class="col-lg-10 text-center" style="background-color:#E1E1E4">
                 <div th:if="${mTotalPages > 0}" class="pagination" style="display:inline-block"
                      th:each="mNumber : ${mPageNumbers}">
-                    <a th:href="@{'/moderator?size={size}&page={page}'(size=${mPageSize},page=${mNumber})}"
+                    <a th:href="@{'/moderator?rSize={rSize}&rPage={rPage}&mSize={mSize}&mPage={mPage}'
+                    (rSize=${rPageSize},rPage=${rCurrentPage},mSize=${mPageSize},mPage=${mNumber})}"
                        th:text="${mNumber}"
                        th:style="${mNumber==mCurrentPage}?'font-weight:bold'"></a>
                 </div>

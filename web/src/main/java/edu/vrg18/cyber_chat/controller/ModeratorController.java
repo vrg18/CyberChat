@@ -47,16 +47,34 @@ public class ModeratorController {
 
     @GetMapping("/moderator")
     public String adminPage(Model model, Principal principal,
-                            @RequestParam("page") Optional<Integer> page,
-                            @RequestParam("size") Optional<Integer> size) {
+                            @RequestParam("rPage") Optional<Integer> rPage,
+                            @RequestParam("rSize") Optional<Integer> rSize,
+                            @RequestParam("mPage") Optional<Integer> mPage,
+                            @RequestParam("mSize") Optional<Integer> mSize) {
 
-        int mCurrentPage = page.orElse(1);
-        int mPageSize = size.orElse(5);
+        int rCurrentPage = rPage.orElse(1);
+        int rPageSize = rSize.orElse(10);
+        int mCurrentPage = mPage.orElse(1);
+        int mPageSize = mSize.orElse(8);
 
         org.springframework.security.core.userdetails.User loginedUser =
                 (org.springframework.security.core.userdetails.User) ((Authentication) principal).getPrincipal();
         String userInfo = WebUtils.userToString(loginedUser);
         model.addAttribute("userInfo", userInfo);
+
+        Page<RoomDto> roomsPage =
+                roomService.findAllRooms(rCurrentPage - 1, rPageSize);
+        model.addAttribute("rooms", roomsPage.getContent());
+        int rTotalPages = roomsPage.getTotalPages();
+        if (rTotalPages > 0) {
+            List<Integer> rPageNumbers = IntStream.rangeClosed(1, rTotalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("rPageNumbers", rPageNumbers);
+            model.addAttribute("rTotalPages", rTotalPages);
+            model.addAttribute("rPageSize", rPageSize);
+            model.addAttribute("rCurrentPage", roomsPage.getNumber() + 1);
+        }
 
         Page<MessageDto> messagesPage =
                 messageService.findAllMessages(false, mCurrentPage - 1, mPageSize);
@@ -72,9 +90,6 @@ public class ModeratorController {
             model.addAttribute("mCurrentPage", messagesPage.getNumber() + 1);
         }
 
-        List<RoomDto> rooms = roomService.findAllRooms();
-        model.addAttribute("rooms", rooms);
-
         List<Interlocutor> interlocutors = interlocutorService.findAllInterlocutors();
         model.addAttribute("interlocutors", interlocutors);
 
@@ -88,7 +103,7 @@ public class ModeratorController {
         MessageDto message = messageService.getMessageById(id).get();
         model.addAttribute("message", message);
 
-        List<RoomDto> rooms = roomService.findAllRooms();
+        List<RoomDto> rooms = roomService.findAllRooms(0, 100).getContent();
         model.addAttribute("rooms", rooms);
 
         List<UserDto> users = userService.findAllUsers();
@@ -108,7 +123,7 @@ public class ModeratorController {
     @GetMapping("/new_message")
     public String newMessage(Model model, Principal principal) {
 
-        List<RoomDto> rooms = roomService.findAllRooms();
+        List<RoomDto> rooms = roomService.findAllRooms(0, 100).getContent();
         model.addAttribute("rooms", rooms);
 
         List<UserDto> users = userService.findAllUsers();
@@ -193,7 +208,7 @@ public class ModeratorController {
         List<UserDto> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
-        List<RoomDto> rooms = roomService.findAllRooms();
+        List<RoomDto> rooms = roomService.findAllRooms(0, 100).getContent();
         model.addAttribute("rooms", rooms);
 
         model.addAttribute("title", "EditInterlocutor");
@@ -213,7 +228,7 @@ public class ModeratorController {
         List<UserDto> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
-        List<RoomDto> rooms = roomService.findAllRooms();
+        List<RoomDto> rooms = roomService.findAllRooms(0, 100).getContent();
         model.addAttribute("rooms", rooms);
 
         model.addAttribute("newInterlocutor", true);

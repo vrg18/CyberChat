@@ -4,6 +4,7 @@ import edu.vrg18.cyber_chat.dto.RoomDto;
 import edu.vrg18.cyber_chat.dto.UserDto;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.entity.User;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +19,7 @@ public interface RoomService {
 
     void deleteRoom(UUID id);
 
-    List<RoomDto> findAllRooms();
+    Page<RoomDto> findAllRooms(int currentPage, int pageSize);
 
     public List<RoomDto> findAllPublicRooms();
 

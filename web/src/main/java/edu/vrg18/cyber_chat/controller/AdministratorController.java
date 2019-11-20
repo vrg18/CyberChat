@@ -1,10 +1,10 @@
 package edu.vrg18.cyber_chat.controller;
 
+import edu.vrg18.cyber_chat.dto.RoleDto;
 import edu.vrg18.cyber_chat.dto.RoomDto;
 import edu.vrg18.cyber_chat.dto.UserDto;
+import edu.vrg18.cyber_chat.dto.UserRoleDto;
 import edu.vrg18.cyber_chat.entity.Role;
-import edu.vrg18.cyber_chat.entity.User;
-import edu.vrg18.cyber_chat.entity.UserRole;
 import edu.vrg18.cyber_chat.service.RoleService;
 import edu.vrg18.cyber_chat.service.RoomService;
 import edu.vrg18.cyber_chat.service.UserRoleService;
@@ -51,11 +51,8 @@ public class AdministratorController {
         List<UserDto> users = userService.findAllUsers();
         model.addAttribute("users", users);
 
-        List<Role> roles = roleService.findAllRoles();
+        List<RoleDto> roles = roleService.findAllRoles();
         model.addAttribute("roles", roles);
-
-        List<UserRole> usersRoles = userRoleService.findAllUsersRoles();
-        model.addAttribute("usersRoles", usersRoles);
 
         model.addAttribute("title", "AdministratorPage");
         return "administration/administratorPage";
@@ -142,6 +139,7 @@ public class AdministratorController {
         return "redirect:/administrator";
     }
 
+/*
     @GetMapping("/edit_userrole/{id}")
     public String editUserRole(@PathVariable UUID id, Model model) {
 
@@ -185,11 +183,43 @@ public class AdministratorController {
         userRoleService.createUserRole(userRole);
         return "redirect:/administrator";
     }
+*/
 
+    @GetMapping("/new_userrole/{userId}")
+    public String newUserRole(@PathVariable UUID userId, Model model) {
+
+        UserDto selectedUser = userService.getUserById(userId).get();
+        model.addAttribute("selectedUser", selectedUser);
+        UserRoleDto newUserRole = new UserRoleDto(null, selectedUser, null);
+        model.addAttribute("newUserRole ", newUserRole);
+
+        List<RoleDto> roles = roleService.findAllRoles();
+        model.addAttribute("roles", roles);
+
+        model.addAttribute("title", "NewUserRole");
+        return "administration/createUserRole";
+    }
+
+    @PostMapping(value = "/save_userrole")
+    public String createUserRole(@ModelAttribute("newUserRole") UserRoleDto newUserRole) {
+
+        userRoleService.createUserRole(newUserRole);
+        return "redirect:/administrator";
+    }
+
+/*
     @GetMapping("/delete_userrole/{id}")
     public String deleteUserRole(@PathVariable UUID id) {
 
         userRoleService.deleteUserRole(id);
+        return "redirect:/administrator";
+    }
+*/
+
+    @GetMapping("/delete_userrole/{userId}//{roleId}")
+    public String deleteUserRole(@PathVariable UUID userId, @PathVariable UUID roleId) {
+
+        userRoleService.deleteUserRole(userId, roleId);
         return "redirect:/administrator";
     }
 }

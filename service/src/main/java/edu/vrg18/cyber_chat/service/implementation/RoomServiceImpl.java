@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -31,6 +32,7 @@ import java.util.stream.Stream;
 import static edu.vrg18.cyber_chat.specification.InterlocutorSpecifications.userInterlocutor;
 import static edu.vrg18.cyber_chat.specification.RoomSpecifications.openRoom;
 import static edu.vrg18.cyber_chat.specification.RoomSpecifications.publicRoom;
+import static org.springframework.data.domain.Sort.by;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
@@ -77,7 +79,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Page<RoomDto> findAllRooms(int currentPage, int pageSize) {
-        return roomRepository.findAll(PageRequest.of(currentPage, pageSize, new Sort(Sort.Direction.ASC, Room_.NAME)))
+        return roomRepository.findAll(PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.ASC, Room_.NAME)))
                 .map(r -> modelMapper.map(r, RoomDto.class));
     }
 

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -55,7 +56,7 @@ public class InterlocutorServiceImpl implements InterlocutorService {
 
     @Override
     public List<Interlocutor> findAllInterlocutors() {
-        return interlocutorRepository.findAll(new Sort(Sort.Direction.ASC,
+        return interlocutorRepository.findAll(Sort.by(Sort.Direction.ASC,
                 Interlocutor_.ROOM.concat(".").concat(Room_.NAME),
                 Interlocutor_.USER.concat(".").concat(User_.USER_NAME)));
     }
@@ -70,7 +71,7 @@ public class InterlocutorServiceImpl implements InterlocutorService {
 
     @Override
     public List<Interlocutor> findAllInterlocutorsInRoomId(UUID id) {
-        return interlocutorRepository.findAllByRoomId(id, new Sort(Sort.Direction.ASC,
+        return interlocutorRepository.findAllByRoomId(id, Sort.by(Sort.Direction.ASC,
                 Interlocutor_.USER.concat(".").concat(User_.USER_NAME)));
     }
 

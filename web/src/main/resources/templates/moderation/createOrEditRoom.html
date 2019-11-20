@@ -55,10 +55,11 @@
                 <tr class="d-flex">
                     <td class="col-lg-5 text-right">Owner</td>
                     <td><select name="owner" id="owner">
-                        <option th:each="owner : ${users}"
-                                th:value="${owner.id}"
-                                th:selected="${owner.id.equals(room.owner.id)}"
-                                th:text="${owner.userName}">
+<!--                    <td><select th:field="*{owner}">-->
+                        <option th:each="user : ${users}"
+                                th:value="${user.id}"
+                                th:selected="${user.id==room.owner.id}"
+                                th:text="${user.userName}">
                         </option>
                     </select></td>
                 </tr>

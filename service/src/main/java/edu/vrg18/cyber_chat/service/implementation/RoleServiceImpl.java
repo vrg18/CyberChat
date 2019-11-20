@@ -1,27 +1,33 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
+import edu.vrg18.cyber_chat.dto.RoleDto;
 import edu.vrg18.cyber_chat.entity.Role;
 import edu.vrg18.cyber_chat.entity.Role_;
 import edu.vrg18.cyber_chat.repository.RoleRepository;
 import edu.vrg18.cyber_chat.service.RoleService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public RoleServiceImpl(RoleRepository roleRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository, ModelMapper modelMapper) {
         this.roleRepository = roleRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -45,7 +51,10 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<Role> findAllRoles() {
-        return roleRepository.findAll(new Sort(Sort.Direction.ASC, Role_.NAME));
+    public List<RoleDto> findAllRoles() {
+        return roleRepository.findAll(Sort.by(Sort.Direction.ASC, Role_.NAME))
+                .stream()
+                .map(r -> modelMapper.map(r, RoleDto.class))
+                .collect(Collectors.toList());
     }
 }

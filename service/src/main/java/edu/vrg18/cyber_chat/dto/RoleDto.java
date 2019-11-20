@@ -11,14 +11,8 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoomDto {
+public class RoleDto {
 
     private UUID id;
     private String name;
-    private UserDto owner;
-    private boolean confidential;
-    private boolean closed;
-
-    private int numberInterlocutors;
-    private String unreadMessages;
 }

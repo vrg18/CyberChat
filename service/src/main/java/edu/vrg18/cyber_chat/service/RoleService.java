@@ -1,5 +1,6 @@
 package edu.vrg18.cyber_chat.service;
 
+import edu.vrg18.cyber_chat.dto.RoleDto;
 import edu.vrg18.cyber_chat.entity.Role;
 
 import java.util.List;
@@ -16,5 +17,5 @@ public interface RoleService {
 
     void deleteRole(UUID id);
 
-    List<Role> findAllRoles();
+    List<RoleDto> findAllRoles();
 }

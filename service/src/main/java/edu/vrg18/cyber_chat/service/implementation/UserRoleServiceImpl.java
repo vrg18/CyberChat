@@ -1,11 +1,13 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
+import edu.vrg18.cyber_chat.dto.UserRoleDto;
 import edu.vrg18.cyber_chat.entity.Role_;
 import edu.vrg18.cyber_chat.entity.UserRole;
 import edu.vrg18.cyber_chat.entity.UserRole_;
 import edu.vrg18.cyber_chat.entity.User_;
 import edu.vrg18.cyber_chat.repository.UserRoleRepository;
 import edu.vrg18.cyber_chat.service.UserRoleService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -20,36 +22,21 @@ import java.util.UUID;
 public class UserRoleServiceImpl implements UserRoleService {
 
     private final UserRoleRepository userRoleRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public UserRoleServiceImpl(UserRoleRepository userRoleRepository) {
+    public UserRoleServiceImpl(UserRoleRepository userRoleRepository, ModelMapper modelMapper) {
         this.userRoleRepository = userRoleRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public Optional<UserRole> getUserRoleById(UUID id) {
-        return userRoleRepository.findById(id);
+    public UserRoleDto createUserRole(UserRoleDto userRoleDto) {
+        return modelMapper.map(userRoleRepository.save(modelMapper.map(userRoleDto, UserRole.class)), UserRoleDto.class);
     }
 
     @Override
-    public UserRole createUserRole(UserRole userRole) {
-        return userRoleRepository.save(userRole);
-    }
-
-    @Override
-    public UserRole updateUserRole(UserRole userRole) {
-        return userRoleRepository.save(userRole);
-    }
-
-    @Override
-    public void deleteUserRole(UUID id) {
-        userRoleRepository.deleteById(id);
-    }
-
-    @Override
-    public List<UserRole> findAllUsersRoles() {
-        return userRoleRepository.findAll(new Sort(Sort.Direction.ASC,
-                UserRole_.USER.concat(".").concat(User_.USER_NAME),
-                UserRole_.ROLE.concat(".").concat(Role_.NAME)));
+    public void deleteUserRole(UUID userId, UUID roleId) {
+        userRoleRepository.deleteInBatch(userRoleRepository.findAllByUserIdAndRoleId(userId, roleId));
     }
 }

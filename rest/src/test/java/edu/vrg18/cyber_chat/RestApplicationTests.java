@@ -76,13 +76,13 @@ public class RestApplicationTests {
         testUser1 = userService.getUserByUserName(USERNAME_1)
                 .orElseGet(() -> userService.createUser(
                         new UserDto(null, USERNAME_1, true, true,
-                                FIRSTNAME_1, null, null, null, PASSWORD)));
+                                FIRSTNAME_1, null, null, null, PASSWORD, null)));
         userIdListForRemoteAfterTest.add(testUser1.getId());
 
         testUser2 = userService.getUserByUserName(USERNAME_2)
                 .orElseGet(() -> userService.createUser(
                         new UserDto(null, USERNAME_2, true, true,
-                                FIRSTNAME_2, null, null, null, PASSWORD)));
+                                FIRSTNAME_2, null, null, null, PASSWORD, null)));
         userIdListForRemoteAfterTest.add(testUser2.getId());
     }
 
@@ -100,7 +100,7 @@ public class RestApplicationTests {
     @Test
     public void whenCreateUser_thenStatus200() {
 
-        UserDto userDto = new UserDto(null, USERNAME_3, true, true, FIRSTNAME_3, null, null, null, PASSWORD);
+        UserDto userDto = new UserDto(null, USERNAME_3, true, true, FIRSTNAME_3, null, null, null, PASSWORD, null);
 
         userIdListForRemoteAfterTest.add(UUID.fromString(
                 given().log().body()
@@ -115,7 +115,8 @@ public class RestApplicationTests {
     @Test
     public void whenUpdateUser_thenStatus200() {
 
-        UserDto userDto = new UserDto(testUser1.getId(), USERNAME_1, true, true, FIRSTNAME_1, LASTNAME_1, null, null, null);
+        UserDto userDto = new UserDto(testUser1.getId(), USERNAME_1, true, true,
+                FIRSTNAME_1, LASTNAME_1, null, null, null, null);
 
         given().log().body()
                 .contentType(ContentType.JSON).body(userDto)

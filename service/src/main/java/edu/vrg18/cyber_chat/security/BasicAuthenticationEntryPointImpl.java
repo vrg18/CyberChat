@@ -22,7 +22,7 @@ public class BasicAuthenticationEntryPointImpl extends BasicAuthenticationEntryP
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         // RealmName appears in the login window (Firefox).
         setRealmName("CyberChat");
         super.afterPropertiesSet();

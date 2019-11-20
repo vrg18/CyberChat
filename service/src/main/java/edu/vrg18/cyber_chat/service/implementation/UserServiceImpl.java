@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -67,7 +68,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDto> getUserById(UUID id) {
-        return userRepository.findById(id).map(userMapper::toDto);
+        return userRepository.findById(id).map(u -> userMapper.toDto(u, false));
     }
 
     @Override
@@ -76,7 +77,7 @@ public class UserServiceImpl implements UserService {
 //        UserDto userDto = userMapper.toDto(user);
 //        if (Objects.isNull(userDto)) return Optional.empty();
 //        else return Optional.of(userDto);
-        return userRepository.findUserByUserName(userName).map(userMapper::toDto);
+        return userRepository.findUserByUserName(userName).map(u -> userMapper.toDto(u, false));
     }
 
     @Override
@@ -99,7 +100,7 @@ public class UserServiceImpl implements UserService {
         Role simpleUserRole = roleRepository.findRoleByName("ROLE_USER").get();
         userRoleRepository.save(new UserRole(null, newUser, simpleUserRole));
 
-        return userMapper.toDto(newUser);
+        return userMapper.toDto(newUser, false);
     }
 
     @Override
@@ -116,7 +117,7 @@ public class UserServiceImpl implements UserService {
 
         if (userDto.getLastActivity() == null) updatedUser.setLastActivity(LocalDateTime.now());
 
-        return userMapper.toDto(userRepository.save(updatedUser));
+        return userMapper.toDto(userRepository.save(updatedUser), false);
     }
 
     @Override
@@ -130,9 +131,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> findAllUsers() {
 
-        return userRepository.findAll(new Sort(Sort.Direction.ASC, User_.USER_NAME))
+        return userRepository.findAll(Sort.by(Sort.Direction.ASC,User_.USER_NAME))
                 .stream()
-                .map(userMapper::toDto)
+                .map(u -> userMapper.toDto(u, true))
                 .collect(Collectors.toList());
     }
 
@@ -140,8 +141,8 @@ public class UserServiceImpl implements UserService {
     public Page<UserDto> findAllUsersWithoutDisabled(int currentPage, int pageSize) {
 
         return userRepository.findUsersByEnabled(true,
-                PageRequest.of(currentPage, pageSize, new Sort(Sort.Direction.ASC, User_.USER_NAME)))
-                .map(userMapper::toDto);
+                PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.ASC, User_.USER_NAME)))
+                .map(u -> userMapper.toDto(u, false));
     }
 
     @Override
@@ -149,7 +150,7 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.findAllUsersByRoomId(id)
                 .stream()
-                .map(userMapper::toDto)
+                .map(u -> userMapper.toDto(u, false))
                 .collect(Collectors.toList());
     }
 

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_head :: head"></head>
+<body>
+<div class="container-fluid">
+    <!-- Include _menu.html -->
+    <th:block th:include="/_menu"></th:block>
+    <!--    <h4><a th:text="${newUR}"></a></h4>-->
+    <br>
+    <table>
+        <form action="#" th:object="${newUserRole}" th:action="@{/save_userrole}" method="post">
+            <input type="hidden" id="id" name="id"/>
+            <input type="hidden" th:field="*{user}"/>-->
+            <!--            <tr class="d-flex">-->
+            <!--                <td class="col-lg-5 text-right">User</td>-->
+            <!--                <td><input type="text" th:value="${selectedUser}" th:text="${selectedUser.userName}" readonly/></td>-->
+            <!--            </tr>-->
+            <tr class="d-flex">
+                <td class="col-lg-5 text-right">Role</td>
+                <td><select name="role" id="role">
+                    <!--                <td><select th:field="*{role}">-->
+                    <option th:value="${null}">-- Select role --</option>
+                    <option th:each="selectRole : ${roles}"
+                            th:value="${selectRole}"
+                            th:text="${selectRole.name}">
+                    </option>
+                </select></td>
+            </tr>
+            <tr class="d-flex">
+                <td class="col-lg-5"></td>
+                <td><input type="submit" class="btn btn-primary" value="Save"/></td>
+            </tr>
+        </form>
+    </table>
+</div>
+</body>
+</html>

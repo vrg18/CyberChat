@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -71,7 +72,7 @@ public class MessageServiceImpl implements MessageService {
     public Page<MessageDto> findAllMessages(Boolean increase, int currentPage, int pageSize) {
 
         return messageRepository.findAll(PageRequest.of(currentPage, pageSize,
-                new Sort(increase ? Sort.Direction.ASC : Sort.Direction.DESC, Message_.DATE)))
+                Sort.by(increase ? Sort.Direction.ASC : Sort.Direction.DESC, Message_.DATE)))
                 .map(m -> modelMapper.map(m, MessageDto.class));
     }
 
@@ -86,7 +87,7 @@ public class MessageServiceImpl implements MessageService {
 
         Page<Message> messagesPageByRoom = messageRepository.findAllByRoom(
                 modelMapper.map(roomDto, Room.class),
-                PageRequest.of(currentPage, pageSize, new Sort(Sort.Direction.ASC, Message_.DATE)));
+                PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.ASC, Message_.DATE)));
 
         messagesPageByRoom.getContent()
                 .forEach(m -> familiarizeRepository.findByMessageAndUser(m, modelMapper.map(userDto, User.class))

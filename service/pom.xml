@@ -60,7 +60,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.1.9.RELEASE</version>
+                <version>2.2.1.RELEASE</version>
             </plugin>
 
             <plugin>
@@ -82,7 +82,7 @@
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
-                <version>3.5.5</version>
+                <version>3.8.1</version>
                 <configuration>
                     <propertyFile>
                         ${project.basedir}/service/src/main/resources/liquibase-maven-plugin.properties
@@ -102,12 +102,12 @@
                     <dependency>
                         <groupId>org.liquibase.ext</groupId>
                         <artifactId>liquibase-hibernate5</artifactId>
-                        <version>3.6</version>
+                        <version>3.8</version>
                     </dependency>
                     <dependency>
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-starter-data-jpa</artifactId>
-                        <version>2.1.9.RELEASE</version>
+                        <version>2.2.1.RELEASE</version>
                     </dependency>
                     <dependency>
                         <groupId>javax.validation</groupId>
@@ -117,12 +117,12 @@
                     <dependency>
                         <groupId>org.javassist</groupId>
                         <artifactId>javassist</artifactId>
-                        <version>3.24.0-GA</version>
+                        <version>3.26.0-GA</version>
                     </dependency>
                     <dependency>
                         <groupId>org.yaml</groupId>
                         <artifactId>snakeyaml</artifactId>
-                        <version>1.23</version>
+                        <version>1.25</version>
                     </dependency>
                 </dependencies>
 

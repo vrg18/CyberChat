@@ -58,7 +58,7 @@
 <!--                    <td><select th:field="*{owner}">-->
                         <option th:each="user : ${users}"
                                 th:value="${user.id}"
-                                th:selected="${user.id==room.owner.id}"
+                                th:selected="${user.id}==${room.owner.id}"
                                 th:text="${user.userName}">
                         </option>
                     </select></td>

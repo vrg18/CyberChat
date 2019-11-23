@@ -1,5 +1,6 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
+import edu.vrg18.cyber_chat.dto.InterlocutorDto;
 import edu.vrg18.cyber_chat.dto.RoomDto;
 import edu.vrg18.cyber_chat.dto.UserDto;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
@@ -12,6 +13,8 @@ import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
 import edu.vrg18.cyber_chat.service.InterlocutorService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,30 +38,13 @@ public class InterlocutorServiceImpl implements InterlocutorService {
     }
 
     @Override
-    public Optional<Interlocutor> getInterlocutorById(UUID id) {
-        return interlocutorRepository.findById(id);
-    }
-
-    @Override
-    public Interlocutor createInterlocutor(Interlocutor interlocutor) {
-        return interlocutorRepository.save(interlocutor);
-    }
-
-    @Override
-    public Interlocutor updateInterlocutor(Interlocutor interlocutor) {
-        return interlocutorRepository.save(interlocutor);
+    public InterlocutorDto createInterlocutor(InterlocutorDto interlocutorDto) {
+        return modelMapper.map(interlocutorRepository.save(modelMapper.map(interlocutorDto, Interlocutor.class)), InterlocutorDto.class);
     }
 
     @Override
     public void deleteInterlocutor(UUID id) {
         interlocutorRepository.deleteById(id);
-    }
-
-    @Override
-    public List<Interlocutor> findAllInterlocutors() {
-        return interlocutorRepository.findAll(Sort.by(Sort.Direction.ASC,
-                Interlocutor_.ROOM.concat(".").concat(Room_.NAME),
-                Interlocutor_.USER.concat(".").concat(User_.USER_NAME)));
     }
 
     @Override
@@ -70,9 +56,9 @@ public class InterlocutorServiceImpl implements InterlocutorService {
     }
 
     @Override
-    public List<Interlocutor> findAllInterlocutorsInRoomId(UUID id) {
-        return interlocutorRepository.findAllByRoomId(id, Sort.by(Sort.Direction.ASC,
-                Interlocutor_.USER.concat(".").concat(User_.USER_NAME)));
+    public Page<InterlocutorDto> findAllInterlocutorsInRoomId(UUID id, int currentPage, int pageSize) {
+        return interlocutorRepository.findAllByRoomId(id, PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.ASC,
+                Interlocutor_.USER.concat(".").concat(User_.USER_NAME)))).map(f -> modelMapper.map(f, InterlocutorDto.class));
     }
 
 }

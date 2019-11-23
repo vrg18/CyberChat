@@ -1,7 +1,6 @@
 package edu.vrg18.cyber_chat.controller;
 
 import edu.vrg18.cyber_chat.dto.UserDto;
-import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.service.UserService;
 import edu.vrg18.cyber_chat.utils.WebUtils;
 import org.springframework.security.access.prepost.PreAuthorize;

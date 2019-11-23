@@ -7,19 +7,13 @@
 <div class="container-fluid">
     <!-- Include _menu.html -->
     <th:block th:include="/_menu"></th:block>
-    <h4><a th:text="${newUserRole.user.userName}"></a></h4>
+    <h4 th:text="${'Add role for user &#34;'+newUserRole.user.userName+'&#34;'}"></h4>
     <br>
     <table>
-        <form action="#" th:object="${newUserRole}" th:action="@{/save_userrole}" method="post">
-<!--            <input type="hidden" id="id" name="id"/>-->
-            <input type="hidden" th:field="*{user.id}" th:value="${newUserRole.user.id}"/>
-            <!--            <tr class="d-flex">-->
-            <!--                <td class="col-lg-5 text-right">User</td>-->
-            <!--                <td><input type="text" th:value="${selectedUser}" th:text="${selectedUser.userName}" readonly/></td>-->
-            <!--            </tr>-->
+        <form th:object="${newUserRole}" th:action="@{/save_userrole}" method="post">
+            <input type="hidden" th:field="*{user.id}"/>
             <tr class="d-flex">
                 <td class="col-lg-5 text-right">Role</td>
-                <!--                <td><select name="role" id="role">-->
                 <td><select th:field="*{role.id}">
                     <option th:value="${null}">-- Select role --</option>
                     <option th:each="selectRole : ${roles}"

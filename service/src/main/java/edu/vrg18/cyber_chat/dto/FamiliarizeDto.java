@@ -9,11 +9,11 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserRoleDto {
+@AllArgsConstructor
+public class FamiliarizeDto {
 
     private UUID id;
+    private MessageDto message;
     private UserDto user;
-    private RoleDto role;
 }

@@ -3,6 +3,8 @@ package edu.vrg18.cyber_chat.repository;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -14,7 +16,7 @@ public interface InterlocutorRepository extends JpaRepository<Interlocutor, UUID
 
     List<Interlocutor> findAllByRoomId(UUID id);
 
-    List<Interlocutor> findAllByRoomId(UUID id, Sort sort);
+    Page<Interlocutor> findAllByRoomId(UUID id, Pageable page);
 
     List<Interlocutor> findAllByRoomAndUser(Room room, User user);
 }

@@ -129,12 +129,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findAllUsers() {
+    public Page<UserDto> findAllUsers(int currentPage, int pageSize) {
 
-        return userRepository.findAll(Sort.by(Sort.Direction.ASC,User_.USER_NAME))
-                .stream()
-                .map(u -> userMapper.toDto(u, true))
-                .collect(Collectors.toList());
+        return userRepository.findAll(
+                PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.ASC,User_.USER_NAME)))
+                .map(u -> userMapper.toDto(u, true));
     }
 
     @Override
@@ -143,6 +142,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.findUsersByEnabled(true,
                 PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.ASC, User_.USER_NAME)))
                 .map(u -> userMapper.toDto(u, false));
+    }
+
+    @Override
+    public List<UserDto> findAllUsersWithoutDisabled() {
+
+        return userRepository.findUsersByEnabled(true, Sort.by(Sort.Direction.ASC, User_.USER_NAME))
+                .stream().map(u -> userMapper.toDto(u, false)).collect(Collectors.toList());
     }
 
     @Override

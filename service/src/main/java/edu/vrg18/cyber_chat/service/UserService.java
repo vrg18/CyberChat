@@ -19,9 +19,11 @@ public interface UserService {
 
     Optional<UserDto> getUserByUserName(String userName);
 
-    List<UserDto> findAllUsers();
+    Page<UserDto> findAllUsers(int currentPage, int pageSize);
 
     Page<UserDto> findAllUsersWithoutDisabled(int currentPage, int pageSize);
+
+    List<UserDto> findAllUsersWithoutDisabled();
 
     List<UserDto> findUsersInRoomId(UUID id);
 

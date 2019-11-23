@@ -68,9 +68,9 @@
                         </td>
                         <div th:if="${room.confidential}">
                             <td style="text-align: center">
-                                <div th:if="${room.owner!=currentUser}" class="fa fa-lock"
+                                <div th:if="${room.owner.id!=currentUser.id}" class="fa fa-lock"
                                      style="font-size: 15px"></div>
-                                <div th:if="${room.owner==currentUser}">
+                                <div th:if="${room.owner.id==currentUser.id}">
                                     <a th:href="@{'/lock_unlock_room/{id}'(id=${room.id})}">
                                         <i class="fa fa-lock" style="font-size: 15px"></i></a>
                                 </div>
@@ -78,18 +78,18 @@
                         </div>
                         <div th:if="${!room.confidential}">
                             <td style="text-align: center">
-                                <div th:if="${room.owner!=currentUser}" class="fa fa-unlock"
+                                <div th:if="${room.owner.id!=currentUser.id}" class="fa fa-unlock"
                                      style="font-size: 15px"></div>
-                                <div th:if="${room.owner==currentUser}">
+                                <div th:if="${room.owner.id==currentUser.id}">
                                     <a th:href="@{'/lock_unlock_room/{id}'(id=${room.id})}">
                                         <i class="fa fa-unlock" style="font-size: 15px"></i></a>
                                 </div>
                             </td>
                         </div>
                         <td style="text-align: center">
-                            <div th:if="${room.owner!=currentUser}" class="fa fa-list-ol"
+                            <div th:if="${room.owner.id!=currentUser.id}" class="fa fa-list-ol"
                                  style="font-size: 15px"></div>
-                            <div th:if="${room.owner==currentUser}">
+                            <div th:if="${room.owner.id==currentUser.id}">
                                 <a th:href="@{'/edit_list_room/{id}'(id=${room.id})}">
                                     <i class="fa fa-list-ol" style="font-size: 15px"></i></a>
                             </div>

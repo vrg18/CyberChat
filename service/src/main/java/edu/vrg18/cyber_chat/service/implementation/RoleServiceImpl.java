@@ -7,6 +7,8 @@ import edu.vrg18.cyber_chat.repository.RoleRepository;
 import edu.vrg18.cyber_chat.service.RoleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,18 +33,18 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Optional<Role> getRoleById(UUID id) {
-        return roleRepository.findById(id);
+    public Optional<RoleDto> getRoleById(UUID id) {
+        return roleRepository.findById(id).map(f -> modelMapper.map(f, RoleDto.class));
     }
 
     @Override
-    public Role createRole(Role role) {
-        return roleRepository.save(role);
+    public RoleDto createRole(RoleDto roleDto) {
+        return modelMapper.map(roleRepository.save(modelMapper.map(roleDto, Role.class)), RoleDto.class);
     }
 
     @Override
-    public Role updateRole(Role role) {
-        return roleRepository.save(role);
+    public RoleDto updateRole(RoleDto roleDto) {
+        return modelMapper.map(roleRepository.save(modelMapper.map(roleDto, Role.class)), RoleDto.class);
     }
 
     @Override
@@ -51,10 +53,14 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public Page<RoleDto> findAllRoles(int currentPage, int pageSize) {
+        return roleRepository.findAll(PageRequest.of(currentPage, pageSize))
+                .map(r -> modelMapper.map(r, RoleDto.class));
+    }
+
+    @Override
     public List<RoleDto> findAllRoles() {
-        return roleRepository.findAll(Sort.by(Sort.Direction.ASC, Role_.NAME))
-                .stream()
-                .map(r -> modelMapper.map(r, RoleDto.class))
-                .collect(Collectors.toList());
+        return roleRepository.findAll().stream()
+                .map(r -> modelMapper.map(r, RoleDto.class)).collect(Collectors.toList());
     }
 }

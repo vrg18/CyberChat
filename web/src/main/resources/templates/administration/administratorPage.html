@@ -74,10 +74,19 @@
         </tr>
         </tbody>
         <tr class="d-flex">
-            <td class="col-lg-12" style="background-color:#E1E1E4">
+            <td class="col-lg-2" style="background-color:#E1E1E4">
                 <form th:action="@{/new_user_admin}">
                     <button type="submit" class="btn btn-primary">Add user</button>
                 </form>
+            </td>
+            <td class="col-lg-10 text-center" style="background-color:#E1E1E4">
+                <div th:if="${uTotalPages > 0}" class="pagination" style="display:inline-block"
+                     th:each="uNumber : ${uPageNumbers}">
+                    <a th:href="@{'/administrator?uSize={uSize}&uPage={uPage}&rSize={rSize}&rPage={rPage}'
+                    (uSize=${uPageSize},uPage=${uNumber},rSize=${rPageSize},rPage=${rCurrentPage})}"
+                       th:text="${uNumber}"
+                       th:style="${uNumber==uCurrentPage}?'font-weight:bold'"></a>
+                </div>
             </td>
         </tr>
     </table>
@@ -107,50 +116,22 @@
         </tr>
         </tbody>
         <tr class="d-flex">
-            <td class="col-lg-12" style="background-color:#E1E1E4">
+            <td class="col-lg-2" style="background-color:#E1E1E4">
                 <form th:action="@{/new_role}">
                     <button type="submit" class="btn btn-primary">Add role</button>
                 </form>
             </td>
-        </tr>
-    </table>
-
-<!--
-    <br>
-    <div class="text-center"><h5>Users and their roles</h5></div>
-    <table class="table table-sm table-bordered" style="word-break:break-word">
-        <thead class="thead-light text-center">
-        <tr class="d-flex">
-            <th class="col-lg-5">User</th>
-            <th class="col-lg-5">His role</th>
-            <th class="col-lg-1"></th>
-            <th class="col-lg-1"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr class="d-flex" th:each="userRole : ${usersRoles}">
-            <td th:hidden="${userRole.id}"></td>
-            <td class="col-lg-5" style="background:Khaki" th:text="${userRole.user.userName}"></td>
-            <td class="col-lg-5" style="background:Khaki" th:text="${userRole.role.name}"></td>
-            <td class="col-lg-1 text-center" style="background-color:LightCyan">
-                <a th:href="@{'/edit_userrole/{id}'(id=${userRole.id})}">
-                    <i class="fa fa-edit" style="font-size:20px"></i></a>
-            </td>
-            <td class="col-lg-1 text-center" style="background-color:LightCyan">
-                <a th:href="@{'/delete_userrole/{id}'(id=${userRole.id})}">
-                    <i class="fa fa-trash" style="font-size:20px"></i></a>
-            </td>
-        </tr>
-        </tbody>
-        <tr class="d-flex">
-            <td class="col-lg-12" style="background-color:#E1E1E4">
-                <form th:action="@{/new_userrole}">
-                    <button type="submit" class="btn btn-primary">Add link</button>
-                </form>
+            <td class="col-lg-10 text-center" style="background-color:#E1E1E4">
+                <div th:if="${rTotalPages > 0}" class="pagination" style="display:inline-block"
+                     th:each="rNumber : ${rPageNumbers}">
+                    <a th:href="@{'/administrator?uSize={uSize}&uPage={uPage}&rSize={rSize}&rPage={rPage}'
+                    (uSize=${uPageSize},uPage=${uCurrentPage},rSize=${rPageSize},rPage=${rNumber})}"
+                       th:text="${rNumber}"
+                       th:style="${rNumber==rCurrentPage}?'font-weight:bold'"></a>
+                </div>
             </td>
         </tr>
     </table>
--->
 
 </div>
 </body>

@@ -43,29 +43,42 @@
     </table>
     <br>
 
-    <div class="left-container col-lg-5">
+    <div class="left-container col-lg-6">
         <div class="text-center"><h5>Interlocutors</h5></div>
         <table class="table table-sm table-bordered">
-            <tbody>
+<!--            <tbody>-->
             <tr th:each="interlocutor : ${interlocutors}">
-                <td th:hidden="${interlocutor.id}">id</td>
-                <td style="background:Khaki"
+                <td th:hidden="${interlocutor.id}"></td>
+                <td class="col-lg-11" style="background:Khaki"
                     th:text="${interlocutor.user.firstName+' '+#strings.defaultString(interlocutor.user.lastName,'')}">
                 </td>
-                <td style="background-color:LightCyan" class="text-center">
-                    <div th:if="${room.owner==interlocutor.user}" class="fa fa-trash"
+                <td class="col-lg-1 text-center" style="background-color:LightCyan">
+                    <div th:if="${room.owner.id==interlocutor.user.id}" class="fa fa-trash"
                          style="font-size: 20px"></div>
-                    <div th:if="${room.owner!=interlocutor.user}">
+                    <div th:if="${room.owner.id!=interlocutor.user.id}">
                         <a th:href="@{'/delete_interlocutor/{id}'(id=${interlocutor.id})}">
                             <i class="fa fa-trash" style="font-size: 20px"></i></a>
                     </div>
                 </td>
             </tr>
-            </tbody>
+            <tr class="d-flex">
+                <td class="col-lg-4" style="background-color:#E1E1E4">
+                    <form th:action="@{'/new_interlocutor_room/{id}'(id=${room.id})}">
+                        <button type="submit" class="btn btn-primary">Add interlocutor</button>
+                    </form>
+                </td>
+                <td class="col-lg-8 text-center" style="background-color:#E1E1E4">
+                    <div th:if="${uTotalPages > 0}" class="pagination" style="display:inline-block"
+                         th:each="uNumber : ${uPageNumbers}">
+                        <a th:href="@{'//edit_list_room/{id}?uSize={uSize}&uPage={uPage}'
+                    (id=${room.id},uSize=${uPageSize},uPage=${uNumber})}"
+                           th:text="${uNumber}"
+                           th:style="${uNumber==uCurrentPage}?'font-weight:bold'"></a>
+                    </div>
+                </td>
+            </tr>
+<!--            </tbody>-->
         </table>
-        <a th:href="@{'/new_interlocutor_room/{id}'(id=${room.id})}">
-            <button class="btn btn-primary">Add interlocutor</button>
-        </a>
     </div>
 </div>
 </body>

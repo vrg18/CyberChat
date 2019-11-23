@@ -58,7 +58,7 @@
                         <option th:each="user : ${users}"
                                 th:value="${user.id}"
                                 th:text="${user.userName}">
-                            <!--                            th:selected="${owner.equals(room.owner)}"-->
+                            <!--                            th:selected="${user.id.equals(room.owner.id)}"-->
                         </option>
                     </select></td>
                 </tr>
@@ -74,7 +74,7 @@
                     <td class="col-lg-5"></td>
                     <td><input type="submit" class="btn btn-primary" value="Save"/></td>
                 </tr>
-                <!--            </div>-->
+            </div>
         </form>
     </table>
 </div>

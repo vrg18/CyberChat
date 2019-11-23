@@ -1,8 +1,7 @@
 package edu.vrg18.cyber_chat.controller;
 
+import edu.vrg18.cyber_chat.dto.FamiliarizeDto;
 import edu.vrg18.cyber_chat.dto.MessageDto;
-import edu.vrg18.cyber_chat.entity.Familiarize;
-import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.service.FamiliarizeService;
 import edu.vrg18.cyber_chat.service.MessageService;
 import org.springframework.http.HttpStatus;
@@ -61,7 +60,7 @@ public class MessageRestController {
     }
 
     @PostMapping("/familiarized")
-    public Familiarize markMessageAsRead(@RequestBody @Valid Familiarize familiarize) {
+    public FamiliarizeDto markMessageAsRead(@RequestBody @Valid FamiliarizeDto familiarize) {
         return familiarizeService.createFamiliarize(familiarize);
     }
 }

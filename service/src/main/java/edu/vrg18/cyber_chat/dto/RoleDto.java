@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class RoleDto {
 
-    @Id
+//    @Id
     private UUID id;
     private String name;
 }

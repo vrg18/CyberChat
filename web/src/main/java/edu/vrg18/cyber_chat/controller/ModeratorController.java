@@ -171,7 +171,8 @@ public class ModeratorController {
     }
 
     @PostMapping(value = "/save_room", params = "id!=")
-    public String updateRoom(@ModelAttribute("room") RoomDto room, BindingResult result) {
+    public String updateRoom(@ModelAttribute("room") RoomDto room) {
+//    public String updateRoom(@ModelAttribute("room") RoomDto room, BindingResult result) {
 //        public String updateRoom(@RequestBody String room) {
 
         roomService.updateRoom(room);

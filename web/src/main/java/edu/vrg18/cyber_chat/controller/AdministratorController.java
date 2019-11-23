@@ -189,9 +189,9 @@ public class AdministratorController {
     public String newUserRole(@PathVariable UUID userId, Model model) {
 
         UserDto selectedUser = userService.getUserById(userId).get();
-        model.addAttribute("selectedUser", selectedUser);
+//        model.addAttribute("selectedUser", selectedUser);
         UserRoleDto newUserRole = new UserRoleDto(null, selectedUser, null);
-        model.addAttribute("newUserRole ", newUserRole);
+        model.addAttribute("newUserRole", newUserRole);
 
         List<RoleDto> roles = roleService.findAllRoles();
         model.addAttribute("roles", roles);

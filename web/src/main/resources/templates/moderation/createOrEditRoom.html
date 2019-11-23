@@ -24,12 +24,11 @@
                 </tr>
                 <tr class="d-flex">
                     <td class="col-lg-5 text-right">Owner</td>
-                    <td><select name="owner" id="owner">
+                    <td><select th:field="*{owner.id}">
                         <option value="">-- Select owner --</option>
-                        <option th:each="owner : ${users}"
-                                th:value="${owner.id}"
-                                th:selected="${owner.id.equals(currentUserId)}"
-                                th:text="${owner.userName}">
+                        <option th:each="user : ${users}"
+                                th:value="${user.id}"
+                                th:text="${user.userName}">
                         </option>
                     </select></td>
                 </tr>
@@ -54,12 +53,12 @@
                 </tr>
                 <tr class="d-flex">
                     <td class="col-lg-5 text-right">Owner</td>
-                    <td><select name="owner" id="owner">
-<!--                    <td><select th:field="*{owner}">-->
+                    <!--                <td><select name="owner" id="owner">-->
+                    <td><select th:field="*{owner.id}">
                         <option th:each="user : ${users}"
                                 th:value="${user.id}"
-                                th:selected="${user.id}==${room.owner.id}"
                                 th:text="${user.userName}">
+                            <!--                            th:selected="${owner.equals(room.owner)}"-->
                         </option>
                     </select></td>
                 </tr>
@@ -75,7 +74,7 @@
                     <td class="col-lg-5"></td>
                     <td><input type="submit" class="btn btn-primary" value="Save"/></td>
                 </tr>
-            </div>
+                <!--            </div>-->
         </form>
     </table>
 </div>

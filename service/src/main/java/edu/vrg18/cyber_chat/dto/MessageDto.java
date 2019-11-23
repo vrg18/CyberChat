@@ -17,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class MessageDto {
 
-    @Id
+//    @Id
     private UUID id;
     private LocalDateTime date;
     private UserDto author;

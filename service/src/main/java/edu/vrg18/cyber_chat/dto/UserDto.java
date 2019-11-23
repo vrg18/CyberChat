@@ -19,7 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UserDto {
 
-    @Id
+//   @Id
 //    @JsonProperty("owner")
     private UUID id;
     private String userName;

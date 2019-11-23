@@ -17,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class RoomDto {
 
-    @Id
+//    @Id
     private UUID id;
     private String name;
 //    @JsonProperty("userId")

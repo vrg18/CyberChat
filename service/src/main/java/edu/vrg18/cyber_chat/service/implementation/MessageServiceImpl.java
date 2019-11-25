@@ -64,7 +64,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public void deleteMessage(UUID id) {
-        familiarizeRepository.deleteInBatch(familiarizeRepository.findAllByMessageId(id));
+        familiarizeRepository.deleteAllByMessageId(id);
         messageRepository.deleteById(id);
     }
 
@@ -119,14 +119,11 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public MessageDto newMessage(UserDto userDto, RoomDto roomDto) {
-        return modelMapper.map(
-                new Message(
-                        null,
-                        null,
-                        modelMapper.map(userDto, User.class),
-                        modelMapper.map(roomDto, Room.class),
-                        null),
-                MessageDto.class);
+
+        MessageDto newMessage = new MessageDto();
+        newMessage.setAuthor(userDto);
+        newMessage.setRoom(roomDto);
+        return newMessage;
     }
 }
 

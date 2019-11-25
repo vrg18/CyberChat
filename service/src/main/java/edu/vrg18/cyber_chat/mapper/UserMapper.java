@@ -33,8 +33,7 @@ public class UserMapper {
 
         if (Objects.isNull(userDto)) {
             return null;
-        }
-        else {
+        } else {
             User user = modelMapper.map(userDto, User.class);
             UUID lastRoomId = userDto.getLastRoomId();
             user.setLastRoom(Objects.isNull(lastRoomId) ? null : roomRepository.getOne(userDto.getLastRoomId()));
@@ -46,15 +45,19 @@ public class UserMapper {
 
         if (Objects.isNull(user)) {
             return null;
-        }
-        else {
+        } else {
+
             UserDto userDto = modelMapper.map(user, UserDto.class);
             Room lastRoom = user.getLastRoom();
             userDto.setLastRoomId(Objects.isNull(lastRoom) ? null : lastRoom.getId());
-            if (includingRoles) userDto.setRoles(userRoleRepository.findAllRoleByUser(user)
-                    .stream()
-                    .map(r -> modelMapper.map(r, RoleDto.class))
-                    .collect(Collectors.toList()));
+
+            if (includingRoles) {
+                userDto.setRoles(userRoleRepository.findAllRoleByUser(user)
+                        .stream()
+                        .map(r -> modelMapper.map(r, RoleDto.class))
+                        .collect(Collectors.toList()));
+            }
+
             return userDto;
         }
     }

@@ -7,7 +7,7 @@ import edu.vrg18.cyber_chat.service.InterlocutorService;
 import edu.vrg18.cyber_chat.service.MessageService;
 import edu.vrg18.cyber_chat.service.RoomService;
 import edu.vrg18.cyber_chat.service.UserService;
-import org.springframework.data.domain.Page;
+import edu.vrg18.cyber_chat.util.PaginationAssistant;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -20,11 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Controller
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
@@ -53,11 +50,15 @@ public class ChatController {
 
     @GetMapping("/room/{id}")
     public String roomPage(@PathVariable UUID id, Model model, Principal principal,
+                           @RequestParam("rPage") Optional<Integer> rPage,
+                           @RequestParam("rSize") Optional<Integer> rSize,
                            @RequestParam("mPage") Optional<Integer> mPage,
                            @RequestParam("mSize") Optional<Integer> mSize,
                            @RequestParam("uPage") Optional<Integer> uPage,
                            @RequestParam("uSize") Optional<Integer> uSize) {
 
+        int rCurrentPage = rPage.orElse(1);
+        int rPageSize = rSize.orElse(8);
         int mCurrentPage = mPage.orElse(0);   // 0 - show from the last page
         int mPageSize = mSize.orElse(8);
         int uCurrentPage = uPage.orElse(1);
@@ -66,58 +67,23 @@ public class ChatController {
         UserDto currentUser = userService.getUserByUserName(principal.getName()).get();
         RoomDto currentRoom = roomService.getRoomById(id);
 
-        if (!currentUser.getLastRoomId().equals(id)) {
-            currentUser.setLastRoomId(id);
-            userService.updateUser(currentUser);
-        }
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("currentUserId", currentUser.getId().toString());
+        userService.setLastUserRoom(currentUser, id);
+        model.addAttribute("currentUserId", currentUser.getId());
         model.addAttribute("currentRoomId", id);
 
-        List<RoomDto> rooms = roomService.findAllRoomsOfUserAndAllPublicRooms(currentUser);
-        model.addAttribute("rooms", rooms);
-
-        Page<MessageDto> messagesPage = messageService.findAllMessagesByRoomAndMarkAsRead(currentRoom, currentUser,
-                mCurrentPage - 1, mPageSize);
-        model.addAttribute("messages", messagesPage.getContent());
-        int mTotalPages = messagesPage.getTotalPages();
-        if (mTotalPages > 0) {
-            List<Integer> mPageNumbers = IntStream.rangeClosed(1, mTotalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("mPageNumbers", mPageNumbers);
-            model.addAttribute("mTotalPages", mTotalPages);
-            model.addAttribute("mPageSize", mPageSize);
-            model.addAttribute("mCurrentPage", messagesPage.getNumber() + 1);
-        }
+        PaginationAssistant.assistant("room", model,
+                roomService.findAllRoomsOfUserAndAllPublicRooms(currentUser, rCurrentPage - 1, rPageSize));
+        PaginationAssistant.assistant("message", model,
+                messageService.findAllMessagesByRoomAndMarkAsRead(currentRoom, currentUser,
+                        mCurrentPage - 1, mPageSize));
+        PaginationAssistant.assistant("user", model,
+                userService.findAllUsersWithoutDisabled(uCurrentPage - 1, uPageSize));
 
         model.addAttribute("newMessage", messageService.newMessage(currentUser, currentRoom));
-
-        Page<UserDto> usersPage = userService.findAllUsersWithoutDisabled(uCurrentPage - 1, uPageSize);
-        model.addAttribute("users", usersPage.getContent());
-        int uTotalPages = usersPage.getTotalPages();
-        if (uTotalPages > 0) {
-            List<Integer> uPageNumbers = IntStream.rangeClosed(1, uTotalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("uPageNumbers", uPageNumbers);
-            model.addAttribute("uTotalPages", uTotalPages);
-            model.addAttribute("uPageSize", uPageSize);
-            model.addAttribute("uCurrentPage", usersPage.getNumber() + 1);
-        }
-
-        StringBuffer roomName = new StringBuffer(currentRoom.getName());
-        roomName.append(" (");
-        userService.findUsersInRoomId(id).forEach(u -> roomName.append(u.getFirstName()).append(", "));
-        roomName.setLength(roomName.length() - 2);
-        roomName.append(")");
-        model.addAttribute("roomName", roomName);
-
-        boolean isUserInRoom = interlocutorService.isUserInRoom(currentUser, currentRoom);
-        model.addAttribute("isUserInRoom", isUserInRoom);
+        model.addAttribute("roomName", roomService.getFullNameOfRoom(currentRoom));
+        model.addAttribute("isUserInRoom", interlocutorService.isUserInRoom(currentUser, currentRoom));
 
         model.addAttribute("title", "CyberChat");
-//        model.addAttribute("message", "Добро пожаловать в CyberChat!");
         return "chatPage";
     }
 
@@ -126,8 +92,7 @@ public class ChatController {
 
         UserDto currentUser = userService.getUserByUserName(principal.getName()).get();
         if (currentUser.getId().equals(id)) {
-            String referer = request.getHeader("Referer");
-            return "redirect:".concat(referer);
+            return "redirect:".concat(request.getHeader("Referer"));
         } else {
             RoomDto teteATeteRoom = roomService.findOrCreateTeteATeteRoom(currentUser, userService.getUserById(id).get());
             return "redirect:/room/".concat(teteATeteRoom.getId().toString());
@@ -142,8 +107,7 @@ public class ChatController {
         simpMessagingTemplate.convertAndSend("/topic/" + message.getRoom().getId().toString(),
                 message.getAuthor().getId().toString());
 
-        String referer = request.getHeader("Referer");
-        return "redirect:".concat(referer);
+        return "redirect:".concat(request.getHeader("Referer"));
     }
 
     @GetMapping("/lock_unlock_room/{id}")
@@ -152,7 +116,6 @@ public class ChatController {
         RoomDto room = roomService.getRoomById(id);
         room.setConfidential(!room.isConfidential());
         roomService.updateRoom(room);
-        String referer = request.getHeader("Referer");
-        return "redirect:".concat(referer);
+        return "redirect:".concat(request.getHeader("Referer"));
     }
 }

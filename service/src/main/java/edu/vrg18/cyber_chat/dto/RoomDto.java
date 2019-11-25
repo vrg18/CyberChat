@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -21,4 +22,5 @@ public class RoomDto {
 
     private int numberInterlocutors;
     private String unreadMessages;
+    private List<UserDto> users;
 }

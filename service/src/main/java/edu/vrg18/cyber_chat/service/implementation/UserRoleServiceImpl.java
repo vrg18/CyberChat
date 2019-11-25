@@ -37,6 +37,6 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public void deleteUserRole(UUID userId, UUID roleId) {
-        userRoleRepository.deleteInBatch(userRoleRepository.findAllByUserIdAndRoleId(userId, roleId));
+        userRoleRepository.deleteAllByUserIdAndRoleId(userId, roleId);
     }
 }

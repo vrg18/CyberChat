@@ -12,18 +12,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-//@Component
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
 
-//   @Id
-//    @JsonProperty("owner")
     private UUID id;
     private String userName;
-    //    private String encryptedPassword;
     private boolean enabled;
     private boolean bot;
     private String firstName;

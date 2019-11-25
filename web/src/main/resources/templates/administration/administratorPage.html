@@ -13,7 +13,7 @@
     <table class="table table-sm table-bordered" style="word-break:break-word">
         <thead class="thead-light text-center">
         <tr class="d-flex">
-            <th class="col-lg-1">Username</th>
+            <th class="col-lg-2">Username</th>
             <th class="col-lg-1">On</th>
             <th class="col-lg-1">Bot</th>
             <th class="col-lg-2">First name</th>
@@ -22,13 +22,12 @@
             <th class="col-lg-1">Last activity</th>
             <th class="col-lg-2">Roles</th>
             <th class="col-lg-1"></th>
-            <th class="col-lg-1"></th>
         </tr>
         </thead>
         <tbody>
         <tr class="d-flex" th:each="user : ${users}">
             <td th:hidden="${user.id}"></td>
-            <td class="col-lg-1" style="background:Khaki" th:text="${user.userName}"></td>
+            <td class="col-lg-2" style="background:Khaki" th:text="${user.userName}"></td>
             <td class="col-lg-1 text-center" style="background:Khaki">
                 <div th:if="${user.enabled}" class="fa fa-check" style="font-size:20px"></div>
             </td>
@@ -46,30 +45,32 @@
                 th:text="${#temporals.format(user.lastActivity,'dd.MM.yyyy HH:mm')}"></td>
             <td class="col-lg-2" style="background:Khaki">
                 <table class="table table-sm" style="word-break:break-word">
-                    <colgroup>
-                        <col span="2" style="background:Khaki">
-                    </colgroup>
                     <tr class="d-flex" th:each="role : ${user.roles}">
-                        <td class="col-lg-10" th:text="${role.name}"></td>
-                        <td class="col-lg-1" style="text-align:center">
+                        <td class="col-lg-10" style="background:DarkKhaki" th:text="${role.name}"></td>
+                        <td class="col-lg-2 text-center" style="background-color:PaleTurquoise">
                             <a th:href="@{'/delete_userrole/{userId}/{roleId}'(userId=${user.id},roleId=${role.id})}">
                                 <i class="fa fa-trash" style="font-size:15px"></i></a>
                         </td>
-                        <td class="col-lg-1" style="background:Khaki">
+                   </tr>
+                </table>
+            </td>
+            <td class="col-lg-1 text-center" style="background-color:LightCyan">
+                <table class="table table-sm">
+                    <tr class="d-flex">
+                        <td class="col-lg-4 text-center" style="background-color:PaleTurquoise">
                             <a th:href="@{'/new_userrole/{userId}'(userId=${user.id})}">
-                                <i class="fa fa-plus-circle" style="font-size:15px"></i></a>
+                                <i class="fa fa-plus-circle" style="font-size:18px"></i></a>
+                        </td>
+                        <td class="col-lg-4 text-center" style="background-color:LightCyan">
+                            <a th:href="@{'/edit_user_admin/{id}'(id=${user.id})}">
+                                <i class="fa fa-edit" style="font-size:20px"></i></a>
+                        </td>
+                        <td class="col-lg-4 text-center" style="background-color:LightCyan">
+                            <a th:href="@{'/delete_user/{id}'(id=${user.id})}">
+                                <i class="fa fa-trash" style="font-size:20px"></i></a>
                         </td>
                     </tr>
                 </table>
-
-            </td>
-            <td class="col-lg-1 text-center" style="background-color:LightCyan">
-                <a th:href="@{'/edit_user_admin/{id}'(id=${user.id})}">
-                    <i class="fa fa-edit" style="font-size:20px"></i></a>
-            </td>
-            <td class="col-lg-1 text-center" style="background-color:LightCyan">
-                <a th:href="@{'/delete_user/{id}'(id=${user.id})}">
-                    <i class="fa fa-trash" style="font-size:20px"></i></a>
             </td>
         </tr>
         </tbody>

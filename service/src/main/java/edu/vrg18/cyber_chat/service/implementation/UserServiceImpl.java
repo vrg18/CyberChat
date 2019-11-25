@@ -1,5 +1,6 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
+import edu.vrg18.cyber_chat.dto.RoomDto;
 import edu.vrg18.cyber_chat.dto.UserDto;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Role;
@@ -28,6 +29,7 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -48,14 +50,13 @@ public class UserServiceImpl implements UserService {
     private final UserRoleRepository userRoleRepository;
     private final FamiliarizeRepository familiarizeRepository;
     private final UserMapper userMapper;
-    private final AuthenticationManager authenticationManager;
     private static BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, InterlocutorRepository interlocutorRepository,
                            RoomRepository roomRepository, RoleRepository roleRepository,
                            UserRoleRepository userRoleRepository, FamiliarizeRepository familiarizeRepository,
-                           UserMapper userMapper, AuthenticationManager authenticationManager) {
+                           UserMapper userMapper) {
         this.userRepository = userRepository;
         this.interlocutorRepository = interlocutorRepository;
         this.roomRepository = roomRepository;
@@ -63,7 +64,6 @@ public class UserServiceImpl implements UserService {
         this.userRoleRepository = userRoleRepository;
         this.familiarizeRepository = familiarizeRepository;
         this.userMapper = userMapper;
-        this.authenticationManager = authenticationManager;
     }
 
     @Override
@@ -73,10 +73,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDto> getUserByUserName(String userName) {
-//        User user = userRepository.findUserByUserName(userName).orElse(null);
-//        UserDto userDto = userMapper.toDto(user);
-//        if (Objects.isNull(userDto)) return Optional.empty();
-//        else return Optional.of(userDto);
         return userRepository.findUserByUserName(userName).map(u -> userMapper.toDto(u, false));
     }
 
@@ -108,14 +104,12 @@ public class UserServiceImpl implements UserService {
 
         User updatedUser = userMapper.toEntity(userDto);
 
-        if (!(userDto.getNewPassword() == null) &&
-                !userDto.getNewPassword().equals("8a38aeb0-0caa-49be-8f8b-f64b6ae2ce1e")) {
-            updatedUser.setEncryptedPassword(encoder.encode(userDto.getNewPassword()));
-        } else {
-            updatedUser.setEncryptedPassword(userRepository.getOne(userDto.getId()).getEncryptedPassword());
-        }
+        updatedUser.setEncryptedPassword(
+                Objects.isNull(userDto.getNewPassword()) || userDto.getNewPassword().isEmpty() ?
+                userRepository.getOne(userDto.getId()).getEncryptedPassword() :
+                encoder.encode(userDto.getNewPassword()));
 
-        if (userDto.getLastActivity() == null) updatedUser.setLastActivity(LocalDateTime.now());
+        if (Objects.isNull(userDto.getLastActivity())) updatedUser.setLastActivity(LocalDateTime.now());
 
         return userMapper.toDto(userRepository.save(updatedUser), false);
     }
@@ -123,8 +117,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(UUID id) {
 
-        familiarizeRepository.deleteInBatch(familiarizeRepository.findAllByUserId(id));
-        userRoleRepository.deleteInBatch(userRoleRepository.findAllByUserId(id));
+        interlocutorRepository.deleteAllByUserId(id);
+        familiarizeRepository.deleteAllByUserId(id);
+        userRoleRepository.deleteAllByUserId(id);
         userRepository.deleteById(id);
     }
 
@@ -166,5 +161,13 @@ public class UserServiceImpl implements UserService {
                 .map(User::getLastRoom)
                 .orElse(roomRepository.findAll(where(publicRoom().and(openRoom()))).get(0))
                 .getId().toString();
+    }
+
+    public void setLastUserRoom(UserDto userDto, UUID roomId) {
+
+        if (!userDto.getLastRoomId().equals(roomId)) {
+            userDto.setLastRoomId(roomId);
+            userRepository.save(userMapper.toEntity(userDto));
+        }
     }
 }

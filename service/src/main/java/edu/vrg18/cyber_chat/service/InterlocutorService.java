@@ -18,6 +18,8 @@ public interface InterlocutorService {
 
     void deleteInterlocutor(UUID id);
 
+    void deleteInterlocutor(UUID roomId, UUID userId);
+
     boolean isUserInRoom(UserDto userDto, RoomDto roomDto);
 
     Page<InterlocutorDto> findAllInterlocutorsInRoomId(UUID id, int currentPage, int pageSize);

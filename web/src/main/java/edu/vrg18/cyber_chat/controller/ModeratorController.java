@@ -8,6 +8,7 @@ import edu.vrg18.cyber_chat.service.InterlocutorService;
 import edu.vrg18.cyber_chat.service.MessageService;
 import edu.vrg18.cyber_chat.service.RoomService;
 import edu.vrg18.cyber_chat.service.UserService;
+import edu.vrg18.cyber_chat.util.PaginationAssistant;
 import edu.vrg18.cyber_chat.utils.WebUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -53,7 +55,7 @@ public class ModeratorController {
                             @RequestParam("mSize") Optional<Integer> mSize) {
 
         int rCurrentPage = rPage.orElse(1);
-        int rPageSize = rSize.orElse(10);
+        int rPageSize = rSize.orElse(5);
         int mCurrentPage = mPage.orElse(1);
         int mPageSize = mSize.orElse(8);
 
@@ -62,36 +64,10 @@ public class ModeratorController {
         String userInfo = WebUtils.userToString(loginedUser);
         model.addAttribute("userInfo", userInfo);
 
-        Page<RoomDto> roomsPage =
-                roomService.findAllRooms(rCurrentPage - 1, rPageSize);
-        model.addAttribute("rooms", roomsPage.getContent());
-        int rTotalPages = roomsPage.getTotalPages();
-        if (rTotalPages > 0) {
-            List<Integer> rPageNumbers = IntStream.rangeClosed(1, rTotalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("rPageNumbers", rPageNumbers);
-            model.addAttribute("rTotalPages", rTotalPages);
-            model.addAttribute("rPageSize", rPageSize);
-            model.addAttribute("rCurrentPage", roomsPage.getNumber() + 1);
-        }
-
-        Page<MessageDto> messagesPage =
-                messageService.findAllMessages(false, mCurrentPage - 1, mPageSize);
-        model.addAttribute("messages", messagesPage.getContent());
-        int mTotalPages = messagesPage.getTotalPages();
-        if (mTotalPages > 0) {
-            List<Integer> mPageNumbers = IntStream.rangeClosed(1, mTotalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("mPageNumbers", mPageNumbers);
-            model.addAttribute("mTotalPages", mTotalPages);
-            model.addAttribute("mPageSize", mPageSize);
-            model.addAttribute("mCurrentPage", messagesPage.getNumber() + 1);
-        }
-
-//        List<InterlocutorDto> interlocutors = interlocutorService.findAllInterlocutors();
-//        model.addAttribute("interlocutors", interlocutors);
+        PaginationAssistant.assistant("room", model,
+                roomService.findAllRooms(rCurrentPage - 1, rPageSize));
+        PaginationAssistant.assistant("message", model,
+                messageService.findAllMessages(false, mCurrentPage - 1, mPageSize));
 
         model.addAttribute("title", "ModeratorPage");
         return "moderation/moderatorPage";
@@ -103,7 +79,7 @@ public class ModeratorController {
         MessageDto message = messageService.getMessageById(id).get();
         model.addAttribute("message", message);
 
-        List<RoomDto> rooms = roomService.findAllRooms(0, 100).getContent();
+        List<RoomDto> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
 
         List<UserDto> users = userService.findAllUsersWithoutDisabled();
@@ -113,34 +89,30 @@ public class ModeratorController {
         return "moderation/createOrEditMessage";
     }
 
-    @PostMapping(value = "/save_message", params = "id!=")
-    public String updateMessage(@ModelAttribute("message") MessageDto message) {
-
-        messageService.updateMessage(message);
-        return "redirect:/moderator";
-    }
-
     @GetMapping("/new_message")
     public String newMessage(Model model, Principal principal) {
 
-        List<RoomDto> rooms = roomService.findAllRooms(0, 100).getContent();
+        MessageDto message = new MessageDto();
+        UserDto currentUser = userService.getUserByUserName(principal.getName()).get();
+        message.setAuthor(currentUser);
+        model.addAttribute("message", message);
+
+        List<RoomDto> rooms = roomService.findAllRooms();
         model.addAttribute("rooms", rooms);
 
         List<UserDto> users = userService.findAllUsersWithoutDisabled();
         model.addAttribute("users", users);
-
-        UserDto currentUser = userService.getUserByUserName(principal.getName()).get();
-        model.addAttribute("currentUserId", currentUser.getId());
 
         model.addAttribute("newMessage", true);
         model.addAttribute("title", "NewMessage");
         return "moderation/createOrEditMessage";
     }
 
-    @PostMapping(value = "/save_message", params = "id=")
+    @PostMapping("/save_message")
     public String createMessage(@ModelAttribute("message") MessageDto message) {
 
-        messageService.createMessage(message);
+        if (Objects.isNull(message.getId())) messageService.createMessage(message);
+        else messageService.updateMessage(message);
         return "redirect:/moderator";
     }
 
@@ -164,31 +136,27 @@ public class ModeratorController {
         return "moderation/createOrEditRoom";
     }
 
-    @PostMapping(value = "/save_room", params = "id!=")
-    public String updateRoom(@ModelAttribute("room") RoomDto room) {
-
-        roomService.updateRoom(room);
-        return "redirect:/moderator";
-    }
-
     @GetMapping("/new_room")
     public String newRoom(Model model, Principal principal) {
 
+        RoomDto room = new RoomDto();
+        UserDto currentUser = userService.getUserByUserName(principal.getName()).get();
+        room.setOwner(currentUser);
+        model.addAttribute("room", room);
+
         List<UserDto> users = userService.findAllUsersWithoutDisabled();
         model.addAttribute("users", users);
-
-        UserDto currentUser = userService.getUserByUserName(principal.getName()).get();
-        model.addAttribute("currentUserId", currentUser.getId());
 
         model.addAttribute("newRoom", true);
         model.addAttribute("title", "NewRoom");
         return "moderation/createOrEditRoom";
     }
 
-    @PostMapping(value = "/save_room", params = "id=")
+    @PostMapping("/save_room")
     public String createRoom(@ModelAttribute("room") RoomDto room) {
 
-        roomService.createRoom(room);
+        if (Objects.isNull(room.getId())) roomService.createRoom(room);
+        else roomService.updateRoom(room);
         return "redirect:/moderator";
     }
 
@@ -199,69 +167,52 @@ public class ModeratorController {
         return "redirect:/moderator";
     }
 
-/*
-    @GetMapping("/edit_interlocutor/{id}")
-    public String editInterlocutor(@PathVariable UUID id, Model model) {
+    @GetMapping("/new_room_user/{roomId}")
+    public String newInterlocutor(@PathVariable UUID roomId, Model model) {
 
-        InterlocutorDto interlocutor = interlocutorService.getInterlocutorById(id).get();
-        model.addAttribute("interlocutor", interlocutor);
+        InterlocutorDto newInterlocutor = new InterlocutorDto();
+        RoomDto selectedRoom = roomService.getRoomById(roomId);
+        newInterlocutor.setRoom(selectedRoom);
+        model.addAttribute("newInterlocutor", newInterlocutor);
 
-        List<UserDto> users = userService.findAllUsers();
+        List<UserDto> users = userService.findAllUsersWithoutDisabled();
         model.addAttribute("users", users);
 
-        List<RoomDto> rooms = roomService.findAllRooms(0, 100).getContent();
-        model.addAttribute("rooms", rooms);
-
-        model.addAttribute("title", "EditInterlocutor");
-        return "moderation/createOrEditInterlocutor";
-    }
-
-    @PostMapping(value = "/save_interlocutor", params = "id!=")
-    public String updateInterlocutor(@ModelAttribute("interlocutor") InterlocutorDto interlocutor) {
-
-        interlocutorService.updateInterlocutor(interlocutor);
-        return "redirect:/moderator";
-    }
-
-    @GetMapping("/new_interlocutor")
-    public String newInterlocutor(Model model) {
-
-        List<UserDto> users = userService.findAllUsers();
-        model.addAttribute("users", users);
-
-        List<RoomDto> rooms = roomService.findAllRooms(0, 100).getContent();
-        model.addAttribute("rooms", rooms);
-
-        model.addAttribute("newInterlocutor", true);
+        model.addAttribute("returnTo", "save_interlocutor");
         model.addAttribute("title", "NewInterlocutor");
-        return "moderation/createOrEditInterlocutor";
+        return "moderation/addInterlocutorInRoom";
     }
 
-    @PostMapping(value = "/save_interlocutor", params = "id=")
-    public String createInterlocutor(@ModelAttribute("interlocutor") InterlocutorDto interlocutor) {
+    @PostMapping("/save_interlocutor")
+    public String createInterlocutor(@ModelAttribute("newInterlocutor") InterlocutorDto newInterlocutor) {
 
-        interlocutorService.createInterlocutor(interlocutor);
+        interlocutorService.createInterlocutor(newInterlocutor);
         return "redirect:/moderator";
     }
-*/
+
+    @GetMapping("/delete_room_user/{roomId}/{userId}")
+    public String deleteInterlocutor(@PathVariable UUID roomId, @PathVariable UUID userId) {
+
+        interlocutorService.deleteInterlocutor(roomId, userId);
+        return "redirect:/moderator";
+    }
 
     @GetMapping("/delete_interlocutor/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
     public String deleteInterlocutor(@PathVariable UUID id, HttpServletRequest request) {
 
         interlocutorService.deleteInterlocutor(id);
-        String referer = request.getHeader("Referer");
-        return "redirect:".concat(referer);
+        return "redirect:".concat(request.getHeader("Referer"));
     }
 
     @GetMapping("/edit_list_room/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
     public String editAndListRoom(@PathVariable UUID id, Model model,
-                                  @RequestParam("uPage") Optional<Integer> uPage,
-                                  @RequestParam("uSize") Optional<Integer> uSize) {
+                                  @RequestParam("page") Optional<Integer> page,
+                                  @RequestParam("size") Optional<Integer> size) {
 
-        int uCurrentPage = uPage.orElse(1);
-        int uPageSize = uSize.orElse(10);
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(10);
 
         RoomDto room = roomService.getRoomById(id);
         model.addAttribute("room", room);
@@ -269,18 +220,8 @@ public class ModeratorController {
         List<UserDto> users = userService.findAllUsersWithoutDisabled();
         model.addAttribute("users", users);
 
-        Page<InterlocutorDto> interlocutorPage = interlocutorService.findAllInterlocutorsInRoomId(id, uCurrentPage - 1, uPageSize);
-        model.addAttribute("interlocutors", interlocutorPage.getContent());
-        int uTotalPages = interlocutorPage.getTotalPages();
-        if (uTotalPages > 0) {
-            List<Integer> uPageNumbers = IntStream.rangeClosed(1, uTotalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("uPageNumbers", uPageNumbers);
-            model.addAttribute("uTotalPages", uTotalPages);
-            model.addAttribute("uPageSize", uPageSize);
-            model.addAttribute("uCurrentPage", interlocutorPage.getNumber() + 1);
-        }
+        PaginationAssistant.assistant("interlocutor", model,
+                interlocutorService.findAllInterlocutorsInRoomId(id, currentPage - 1, pageSize));
 
         model.addAttribute("title", "EditAndListRoom");
         return "moderation/editAndListRoom";
@@ -298,13 +239,15 @@ public class ModeratorController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER')")
     public String newInterlocutorInRoom(@PathVariable UUID id, Model model) {
 
+        InterlocutorDto newInterlocutor = new InterlocutorDto();
+        RoomDto currentRoom = roomService.getRoomById(id);
+        newInterlocutor.setRoom(currentRoom);
+        model.addAttribute("newInterlocutor", newInterlocutor);
+
         List<UserDto> users = userService.findAllUsersWithoutDisabled();
         model.addAttribute("users", users);
 
-        RoomDto currentRoom = roomService.getRoomById(id);
-        InterlocutorDto newInterlocutor = new InterlocutorDto(null, currentRoom, null);
-        model.addAttribute("newInterlocutor", newInterlocutor);
-
+        model.addAttribute("returnTo", "add_interlocutor_room");
         model.addAttribute("title", "NewInterlocutorInRoom");
         return "moderation/addInterlocutorInRoom";
     }

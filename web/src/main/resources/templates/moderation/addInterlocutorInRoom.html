@@ -10,7 +10,7 @@
     <h4 th:text="${'Add interlocutor in room &#34;'+newInterlocutor.room.name+'&#34;'}"></h4>
     <br>
     <table>
-        <form th:object="${newInterlocutor}" th:action="@{/add_interlocutor_room}" method="post">
+        <form th:object="${newInterlocutor}" th:action="@{'/'+${returnTo}}" method="post">
             <input type="hidden" th:field="*{room.id}"/>
             <tr class="d-flex">
                 <td class="col-lg-5 text-right">User</td>

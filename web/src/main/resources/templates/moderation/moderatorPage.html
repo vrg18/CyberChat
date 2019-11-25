@@ -12,20 +12,20 @@
     <table class="table table-sm table-bordered" style="word-break:break-word">
         <thead class="thead-light text-center">
         <tr class="d-flex">
-            <th class="col-lg-4">Name (members)</th>
-            <th class="col-lg-4">Owner</th>
+            <th class="col-lg-2">Name (members)</th>
+            <th class="col-lg-2">Owner</th>
             <th class="col-lg-1">Private</th>
             <th class="col-lg-1">Closed</th>
-            <th class="col-lg-1"></th>
+            <th class="col-lg-5">Interlocutors</th>
             <th class="col-lg-1"></th>
         </tr>
         </thead>
         <tbody>
         <tr class="d-flex" th:each="room : ${rooms}">
             <td th:hidden="${room.id}"></td>
-            <td class="col-lg-4" style="background:Khaki"
+            <td class="col-lg-2" style="background:Khaki"
                 th:text="${room.name+' ('+room.numberInterlocutors+')'}"></td>
-            <td class="col-lg-4" style="background:Khaki"
+            <td class="col-lg-2" style="background:Khaki"
                 th:text="${room.owner.userName+' ('+room.owner.firstName+' '+
                 #strings.defaultString(room.owner.lastName,'')+')'}"></td>
             <td class="col-lg-1 text-center" style="background:Khaki">
@@ -34,13 +34,41 @@
             <td class="col-lg-1 text-center" style="background:Khaki">
                 <div th:if="${room.closed}" class="fa fa-check" style="font-size:20px"></div>
             </td>
-            <td class="col-lg-1 text-center" style="background-color:LightCyan">
-                <a th:href="@{'/edit_room/{id}'(id=${room.id})}">
-                    <i class="fa fa-edit" style="font-size:20px"></i></a>
+            <td class="col-lg-5" style="background:Khaki">
+                <table class="table table-sm" style="word-break:break-word">
+                    <tr class="d-flex" th:each="user : ${room.users}">
+                        <td class="col-lg-11" style="background:DarkKhaki"
+                            th:text="${user.userName+' ('+user.firstName+' '+
+                            #strings.defaultString(user.lastName,'')+')'}"></td>
+                        <td class="col-lg-1 text-center" style="background-color:PaleTurquoise">
+                            <div th:if="${room.owner.id==user.id}" class="fa fa-trash"
+                                 style="font-size: 15px"></div>
+                            <div th:if="${room.owner.id!=user.id}">
+                                <a th:href="@{'/delete_room_user/{roomId}/{userId}'
+                            (roomId=${room.id},userId=${user.id})}">
+                                    <i class="fa fa-trash" style="font-size:15px"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </td>
             <td class="col-lg-1 text-center" style="background-color:LightCyan">
-                <a th:href="@{'/delete_room/{id}'(id=${room.id})}">
-                    <i class="fa fa-trash" style="font-size:20px"></i></a>
+                <table class="table table-sm">
+                    <tr class="d-flex">
+                        <td class="col-lg-4 text-center" style="background-color:PaleTurquoise">
+                            <a th:href="@{'/new_room_user/{roomId}'(roomId=${room.id})}">
+                                <i class="fa fa-user-plus" style="font-size:18px"></i></a>
+                        </td>
+                        <td class="col-lg-4 text-center" style="background-color:LightCyan">
+                            <a th:href="@{'/edit_room/{id}'(id=${room.id})}">
+                                <i class="fa fa-edit" style="font-size:20px"></i></a>
+                        </td>
+                        <td class="col-lg-4 text-center" style="background-color:LightCyan">
+                            <a th:href="@{'/delete_room/{id}'(id=${room.id})}">
+                                <i class="fa fa-trash" style="font-size:20px"></i></a>
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
         </tbody>
@@ -51,12 +79,12 @@
                 </form>
             </td>
             <td class="col-lg-10 text-center" style="background-color:#E1E1E4">
-                <div th:if="${rTotalPages > 0}" class="pagination" style="display:inline-block"
-                     th:each="rNumber : ${rPageNumbers}">
+                <div th:if="${roomTotalPages > 0}" class="pagination" style="display:inline-block"
+                     th:each="rNumber : ${roomPageNumbers}">
                     <a th:href="@{'/moderator?rSize={rSize}&rPage={rPage}&mSize={mSize}&mPage={mPage}'
-                    (rSize=${rPageSize},rPage=${rNumber},mSize=${mPageSize},mPage=${mCurrentPage})}"
+                    (rSize=${roomPageSize},rPage=${rNumber},mSize=${messagePageSize},mPage=${messageCurrentPage})}"
                        th:text="${rNumber}"
-                       th:style="${rNumber==rCurrentPage}?'font-weight:bold'"></a>
+                       th:style="${rNumber==roomCurrentPage}?'font-weight:bold'"></a>
                 </div>
             </td>
         </tr>
@@ -102,52 +130,13 @@
                 </form>
             </td>
             <td class="col-lg-10 text-center" style="background-color:#E1E1E4">
-                <div th:if="${mTotalPages > 0}" class="pagination" style="display:inline-block"
-                     th:each="mNumber : ${mPageNumbers}">
+                <div th:if="${messageTotalPages > 0}" class="pagination" style="display:inline-block"
+                     th:each="mNumber : ${messagePageNumbers}">
                     <a th:href="@{'/moderator?rSize={rSize}&rPage={rPage}&mSize={mSize}&mPage={mPage}'
-                    (rSize=${rPageSize},rPage=${rCurrentPage},mSize=${mPageSize},mPage=${mNumber})}"
+                    (rSize=${roomPageSize},rPage=${roomCurrentPage},mSize=${messagePageSize},mPage=${mNumber})}"
                        th:text="${mNumber}"
-                       th:style="${mNumber==mCurrentPage}?'font-weight:bold'"></a>
+                       th:style="${mNumber==messageCurrentPage}?'font-weight:bold'"></a>
                 </div>
-            </td>
-        </tr>
-    </table>
-
-    <br>
-    <div class="text-center"><h5>Interlocutors in rooms</h5></div>
-    <table class="table table-sm table-bordered" style="word-break:break-word">
-        <thead class="thead-light text-center">
-        <tr class="d-flex">
-            <th class="col-lg-5">Room</th>
-            <th class="col-lg-5">Interlocutor</th>
-            <th class="col-lg-1"></th>
-            <th class="col-lg-1"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr class="d-flex" th:each="interlocutor : ${interlocutors}">
-            <td th:hidden="${interlocutor.id}"></td>
-            <td class="col-lg-5" style="background:Khaki"
-                th:text="${interlocutor.room.name}">
-            </td>
-            <td class="col-lg-5" style="background:Khaki"
-                th:text="${interlocutor.user.userName+' ('+interlocutor.user.firstName+' '+
-                #strings.defaultString(interlocutor.user.lastName,'')+')'}"></td>
-            <td class="col-lg-1 text-center" style="background-color:LightCyan">
-                <a th:href="@{'/edit_interlocutor/{id}'(id=${interlocutor.id})}">
-                    <i class="fa fa-edit" style="font-size:20px"></i></a>
-            </td>
-            <td class="col-lg-1 text-center" style="background-color:LightCyan">
-                <a th:href="@{'/delete_interlocutor/{id}'(id=${interlocutor.id})}">
-                    <i class="fa fa-trash" style="font-size:20px"></i></a>
-            </td>
-        </tr>
-        </tbody>
-        <tr class="d-flex">
-            <td class="col-lg-12" style="background-color:#E1E1E4">
-                <form th:action="@{/new_interlocutor}">
-                    <button type="submit" class="btn btn-primary">Add link</button>
-                </form>
             </td>
         </tr>
     </table>

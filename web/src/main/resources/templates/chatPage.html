@@ -56,46 +56,60 @@
                     <colgroup>
                         <col span="3" style="background:Pink">
                     </colgroup>
-                    <tbody>
-                    <tr th:each="room : ${rooms}">
-                        <td>
+                    <tr class="d-flex" th:each="room : ${rooms}">
+                        <td class="col-lg-10">
                             <img th:if="${!#strings.isEmpty(room.unreadMessages)}"
                                  th:src="${'https://ui-avatars.com/api/?size=24&font-size=0.6&rounded=true&name='+
                                  room.unreadMessages}">
-                            <a th:href="@{'/room/{id}'(id=${room.id})}"
+                            <a th:href="@{'/room/{id}?rSize={rSize}&rPage={rPage}&uSize={uSize}&uPage={uPage}'
+                                (id=${room.id},rSize=${roomPageSize},rPage=${roomCurrentPage},
+                                uSize=${userPageSize},uPage=${userCurrentPage})}"
                                th:text="${room.name+' ('+room.numberInterlocutors+')'}">
                             </a>
                         </td>
                         <div th:if="${room.confidential}">
-                            <td style="text-align: center">
-                                <div th:if="${room.owner.id!=currentUser.id}" class="fa fa-lock"
+                            <td class="col-lg-1 text-center">
+                                <div th:if="${room.owner.id!=currentUserId}" class="fa fa-lock"
                                      style="font-size: 15px"></div>
-                                <div th:if="${room.owner.id==currentUser.id}">
+                                <div th:if="${room.owner.id==currentUserId}">
                                     <a th:href="@{'/lock_unlock_room/{id}'(id=${room.id})}">
-                                        <i class="fa fa-lock" style="font-size: 15px"></i></a>
+                                        <i class="fa fa-lock" style="font-size:15px"></i></a>
                                 </div>
                             </td>
                         </div>
                         <div th:if="${!room.confidential}">
-                            <td style="text-align: center">
-                                <div th:if="${room.owner.id!=currentUser.id}" class="fa fa-unlock"
+                            <td class="col-lg-1 text-center">
+                                <div th:if="${room.owner.id!=currentUserId}" class="fa fa-unlock"
                                      style="font-size: 15px"></div>
-                                <div th:if="${room.owner.id==currentUser.id}">
+                                <div th:if="${room.owner.id==currentUserId}">
                                     <a th:href="@{'/lock_unlock_room/{id}'(id=${room.id})}">
-                                        <i class="fa fa-unlock" style="font-size: 15px"></i></a>
+                                        <i class="fa fa-unlock" style="font-size:15px"></i></a>
                                 </div>
                             </td>
                         </div>
-                        <td style="text-align: center">
-                            <div th:if="${room.owner.id!=currentUser.id}" class="fa fa-list-ol"
+                        <td class="col-lg-1 text-center">
+                            <div th:if="${room.owner.id!=currentUserId}" class="fa fa-edit"
                                  style="font-size: 15px"></div>
-                            <div th:if="${room.owner.id==currentUser.id}">
+                            <div th:if="${room.owner.id==currentUserId}">
                                 <a th:href="@{'/edit_list_room/{id}'(id=${room.id})}">
-                                    <i class="fa fa-list-ol" style="font-size: 15px"></i></a>
+                                    <i class="fa fa-edit" style="font-size:15px"></i></a>
                             </div>
                         </td>
                     </tr>
-                    </tbody>
+                    <tr class="d-flex">
+                        <td class="col-lg-12 text-center" style="background-color:#E1E1E4">
+                            <div th:if="${roomTotalPages > 0}" class="pagination" style="display:inline-block"
+                                 th:each="rNumber : ${roomPageNumbers}">
+                                <a th:href="@{'/room/{id}?rSize={rSize}&rPage={rPage}&'+
+                                'mSize={mSize}&mPage={mPage}&uSize={uSize}&uPage={uPage}'
+                                (id=${currentRoomId},rSize=${roomPageSize},rPage=${rNumber},
+                                mSize=${messagePageSize},mPage=${messageCurrentPage},
+                                uSize=${userPageSize},uPage=${userCurrentPage})}"
+                                   th:text="${rNumber}"
+                                   th:style="${rNumber==roomCurrentPage}?'font-weight:bold'"></a>
+                            </div>
+                        </td>
+                    </tr>
                 </table>
             </td>
             <td class="col-lg-8">
@@ -103,7 +117,6 @@
                     <colgroup>
                         <col span="2" style="background:Moccasin">
                     </colgroup>
-                    <tbody>
                     <tr class="d-flex" th:each="message : ${messages}">
                         <td class="col-lg-3">
                             <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.55&rounded=true&name='+
@@ -115,27 +128,27 @@
                         </td>
                         <td class="col-lg-9" th:text="${message.text}"></td>
                     </tr>
-                    </tbody>
                     <tr class="d-flex">
                         <td class="col-lg-12 text-center" style="background-color:#E1E1E4">
-                            <div th:if="${mTotalPages > 0}" class="pagination" style="display:inline-block"
-                                 th:each="mNumber : ${mPageNumbers}">
-                                <a th:href="@{'/room/{id}?mSize={mSize}&mPage={mPage}&uSize={uSize}&uPage={uPage}'
-                                (id=${currentRoomId},mSize=${mPageSize},mPage=${mNumber},
-                                uSize=${uPageSize},uPage=${uCurrentPage})}"
+                            <div th:if="${messageTotalPages > 0}" class="pagination" style="display:inline-block"
+                                 th:each="mNumber : ${messagePageNumbers}">
+                                <a th:href="@{'/room/{id}?rSize={rSize}&rPage={rPage}&'+
+                                'mSize={mSize}&mPage={mPage}&uSize={uSize}&uPage={uPage}'
+                                (id=${currentRoomId},rSize=${roomPageSize},rPage=${roomCurrentPage},
+                                mSize=${messagePageSize},mPage=${mNumber},
+                                uSize=${userPageSize},uPage=${userCurrentPage})}"
                                    th:text="${mNumber}"
-                                   th:style="${mNumber==mCurrentPage}?'font-weight:bold'"></a>
+                                   th:style="${mNumber==messageCurrentPage}?'font-weight:bold'"></a>
                             </div>
                         </td>
                     </tr>
                     <tr class="d-flex">
-                        <form th:if="${isUserInRoom}" style="text-align: justify" th:object="${newMessage}"
+                        <form class="text-justify" th:if="${isUserInRoom}" th:object="${newMessage}"
                               th:action="@{/send_message}" method="post">
-                            <input type="hidden" id="id" name="id"/>
-                            <input type="hidden" th:field="*{author}"/>
-                            <input type="hidden" th:field="*{room}"/>
+                            <input type="hidden" th:field="*{author.id}"/>
+                            <input type="hidden" th:field="*{room.id}"/>
                             <td class="col-lg-10" style="background-color:#E1E1E4">
-                            <textarea class="form-control" id="text" name="text" placeholder="Text of new message"
+                            <textarea class="form-control" th:field="*{text}" placeholder="Text of new message"
                                       maxlength="255"></textarea>
                             </td>
                             <td class="col-lg-2" style="background-color:#E1E1E4">
@@ -150,7 +163,6 @@
                     <colgroup>
                         <col span="1" style="background:Pink">
                     </colgroup>
-                    <tbody>
                     <tr th:each="user : ${users}">
                         <td>
                             <img th:src="${'https://ui-avatars.com/api/?size=32&font-size=0.55&rounded=true&name='+
@@ -161,16 +173,17 @@
                                th:text="${user.firstName+' '+#strings.defaultString(user.lastName,'')}"></a>
                         </td>
                     </tr>
-                    </tbody>
                     <tr class="d-flex">
                         <td class="col-lg-12 text-center" style="background-color:#E1E1E4">
-                            <div th:if="${uTotalPages > 0}" class="pagination" style="display:inline-block"
-                                 th:each="uNumber : ${uPageNumbers}">
-                                <a th:href="@{'/room/{id}?mSize={mSize}&mPage={mPage}&uSize={uSize}&uPage={uPage}'
-                                (id=${currentRoomId},mSize=${mPageSize},mPage=${mCurrentPage},
-                                uSize=${uPageSize},uPage=${uNumber})}"
+                            <div th:if="${userTotalPages > 0}" class="pagination" style="display:inline-block"
+                                 th:each="uNumber : ${userPageNumbers}">
+                                <a th:href="@{'/room/{id}?rSize={rSize}&rPage={rPage}&'+
+                                'mSize={mSize}&mPage={mPage}&uSize={uSize}&uPage={uPage}'
+                                (id=${currentRoomId},rSize=${roomPageSize},rPage=${roomCurrentPage},
+                                mSize=${messagePageSize},mPage=${mNumber},
+                                uSize=${userPageSize},uPage=${uNumber})}"
                                    th:text="${uNumber}"
-                                   th:style="${uNumber==uCurrentPage}?'font-weight:bold'"></a>
+                                   th:style="${uNumber==userCurrentPage}?'font-weight:bold'"></a>
                             </div>
                         </td>
                     </tr>

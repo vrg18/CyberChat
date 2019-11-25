@@ -7,81 +7,40 @@
 <div class="container-fluid">
     <!-- Include _menu.html -->
     <th:block th:include="/_menu"></th:block>
-    <div th:if="${newMessage}">
-        <h4>New message</h4>
-    </div>
-    <div th:unless="${newMessage}">
-        <h4>Message editing</h4>
-    </div>
+    <h4>Message editing</h4>
     <br>
     <form th:object="${message}" th:action="@{/save_message}" method="post">
-        <div th:if="${newMessage}" class="form-group">
-            <input type="hidden" id="id" name="id"/>
-            <table>
-                <tr class="d-flex">
-                    <td class="col-lg-5 text-right">Room</td>
-                    <td><select name="room" id="room">
-                        <option value="">-- Select room --</option>
-                        <option th:each="room : ${rooms}"
-                                th:value="${room.id}"
-                                th:text="${room.name}">
-                        </option>
-                    </select></td>
-                </tr>
-                <tr class="d-flex">
-                    <td class="col-lg-5 text-right">Author</td>
-                    <td><select name="author" id="author">
-                        <option th:each="author : ${users}"
-                                th:value="${author.id}"
-                                th:selected="${author.id.equals(currentUserId)}"
-                                th:text="${author.userName}">
-                        </option>
-                    </select></td>
-                </tr>
-                <tr class="d-flex">
-                    <td class="col-lg-5 text-right">Text</td>
-                    <td><textarea id="text" name="text" placeholder="Text of message" maxlength="255"></textarea></td>
-                </tr>
-                <tr class="d-flex">
-                    <td class="col-lg-5"></td>
-                    <td><input type="submit" class="btn btn-primary" value="Save"/></td>
-                </tr>
-            </table>
-        </div>
-        <div th:unless="${newMessage}" class="form-group">
-            <input type="hidden" th:field="*{id}"/>
-            <input type="hidden" th:field="*{date}"/>
-            <table>
-                <tr class="d-flex">
-                    <td class="col-lg-5 text-right">Room</td>
-                    <td><select name="room" id="room">
-                        <option th:each="room : ${rooms}"
-                                th:value="${room.id}"
-                                th:selected="${room.id.equals(message.room.id)}"
-                                th:text="${room.name}">
-                        </option>
-                    </select></td>
-                </tr>
-                <tr class="d-flex">
-                    <td class="col-lg-5 text-right">Author</td>
-                    <td><select name="author" id="author">
-                        <option th:each="author : ${users}"
-                                th:value="${author.id}"
-                                th:selected="${author.id.equals(message.author.id)}"
-                                th:text="${author.userName}">
-                        </option>
-                    </select></td>
-                </tr>
-                <tr class="d-flex">
-                    <td class="col-lg-5 text-right">Text</td>
-                    <td><textarea th:field="*{text}" maxlength="255"></textarea></td>
-                </tr>
-                <tr class="d-flex">
-                    <td class="col-lg-5"></td>
-                    <td><input type="submit" class="btn btn-primary" value="Save"/></td>
-                </tr>
-            </table>
-        </div>
+        <input type="hidden" th:field="*{id}"/>
+        <input type="hidden" th:field="*{date}"/>
+        <table>
+            <tr class="d-flex">
+                <td class="col-lg-5 text-right">Author</td>
+                <td><select th:field="*{author.id}">
+                    <option th:each="selectUser : ${users}"
+                            th:value="${selectUser.id}"
+                            th:text="${selectUser.userName}">
+                    </option>
+                </select></td>
+            </tr>
+            <tr class="d-flex">
+                <td class="col-lg-5 text-right">Room</td>
+                <td><select th:field="*{room.id}">
+                    <option th:if="${newMessage}" value="*{null}">-- Select room --</option>
+                    <option th:each="selectRoom : ${rooms}"
+                            th:value="${selectRoom.id}"
+                            th:text="${selectRoom.name}">
+                    </option>
+                </select></td>
+            </tr>
+            <tr class="d-flex">
+                <td class="col-lg-5 text-right">Text</td>
+                <td><textarea th:field="*{text}" maxlength="255"></textarea></td>
+            </tr>
+            <tr class="d-flex">
+                <td class="col-lg-5"></td>
+                <td><input type="submit" class="btn btn-primary" value="Save"/></td>
+            </tr>
+        </table>
     </form>
 </div>
 </body>

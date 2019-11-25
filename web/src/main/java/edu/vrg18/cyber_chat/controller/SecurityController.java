@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
+import java.util.Objects;
 
 @Controller
 public class SecurityController {
@@ -71,29 +72,32 @@ public class SecurityController {
 
         UserDto currentUser = userService.getUserByUserName(principal.getName()).get();
         model.addAttribute("user", currentUser);
+
         model.addAttribute("title", "EditUser");
         return "security/createOrEditUserOwn";
     }
 
-    @PostMapping(value = "/save_user_own", params = "id!=")
-    public String updateUser(@ModelAttribute("user") UserDto user, Principal principal) {
-
-        userService.updateUser(user);
-        return user.getUserName().equals(principal.getName()) ? "redirect:/" : "redirect:/logout";
-    }
-
     @GetMapping("/new_user_own")
     public String newUserAdmin(Model model) {
+
+        UserDto user = new UserDto();
+        user.setEnabled(true);
+        model.addAttribute("user", user);
 
         model.addAttribute("newUser", true);
         model.addAttribute("title", "NewUser");
         return "security/createOrEditUserOwn";
     }
 
-    @PostMapping(value = "/save_user_own", params = "id=")
-    public String createUser(@ModelAttribute("user") UserDto user) {
+    @PostMapping("/save_user_own")
+    public String saveUser(@ModelAttribute("user") UserDto user, Principal principal) {
 
-        userService.createUser(user);
-        return "redirect:/";
+        if (Objects.isNull(user.getId())) {
+            userService.createUser(user);
+            return "redirect:/";
+        } else {
+            userService.updateUser(user);
+            return user.getUserName().equals(principal.getName()) ? "redirect:/" : "redirect:/logout";
+        }
     }
 }

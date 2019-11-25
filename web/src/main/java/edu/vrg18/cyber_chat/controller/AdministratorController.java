@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -97,32 +98,27 @@ public class AdministratorController {
         UserDto user = userService.getUserById(id).get();
         model.addAttribute("user", user);
 
-        List<RoomDto> rooms = roomService.findAllRooms(0, 100).getContent();
-        model.addAttribute("rooms", rooms);
-
         model.addAttribute("title", "EditUser");
         return "administration/createOrEditUserAdmin";
     }
 
-    @PostMapping(value = "/save_user_admin", params = "id!=")
-    public String updateUser(@ModelAttribute("user") UserDto user) {
-
-        userService.updateUser(user);
-        return "redirect:/administrator";
-    }
-
     @GetMapping("/new_user_admin")
     public String newUserAdmin(Model model) {
+
+        UserDto user = new UserDto();
+        user.setEnabled(true);
+        model.addAttribute("user", user);
 
         model.addAttribute("newUser", true);
         model.addAttribute("title", "NewUser");
         return "administration/createOrEditUserAdmin";
     }
 
-    @PostMapping(value = "/save_user_admin", params = "id=")
+    @PostMapping("/save_user_admin")
     public String createUser(@ModelAttribute("user") UserDto user) {
 
-        userService.createUser(user);
+        if (Objects.isNull(user.getId())) userService.createUser(user);
+        else userService.updateUser(user);
         return "redirect:/administrator";
     }
 
@@ -143,25 +139,21 @@ public class AdministratorController {
         return "administration/createOrEditRole";
     }
 
-    @PostMapping(value = "/save_role", params = "id!=")
-    public String updateRole(@ModelAttribute("role") RoleDto role) {
-
-        roleService.updateRole(role);
-        return "redirect:/administrator";
-    }
-
     @GetMapping("/new_role")
     public String newRole(Model model) {
 
+        RoleDto role = new RoleDto();
+        model.addAttribute("role", role);
+
         model.addAttribute("title", "NewRole");
-        model.addAttribute("newRole", true);
         return "administration/createOrEditRole";
     }
 
-    @PostMapping(value = "/save_role", params = "id=")
+    @PostMapping("/save_role")
     public String createRole(@ModelAttribute("role") RoleDto role) {
 
-        roleService.createRole(role);
+        if (Objects.isNull(role.getId())) roleService.createRole(role);
+        else roleService.updateRole(role);
         return "redirect:/administrator";
     }
 
@@ -175,18 +167,19 @@ public class AdministratorController {
     @GetMapping("/new_userrole/{userId}")
     public String newUserRole(@PathVariable UUID userId, Model model) {
 
+        UserRoleDto newUserRole = new UserRoleDto();
         UserDto selectedUser = userService.getUserById(userId).get();
-        UserRoleDto newUserRole = new UserRoleDto(null, selectedUser, null);
+        newUserRole.setUser(selectedUser);
         model.addAttribute("newUserRole", newUserRole);
 
         List<RoleDto> roles = roleService.findAllRoles();
         model.addAttribute("roles", roles);
 
         model.addAttribute("title", "NewUserRole");
-        return "administration/createUserRole";
+        return "administration/addRoleToUser";
     }
 
-    @PostMapping(value = "/save_userrole")
+    @PostMapping("/save_userrole")
     public String createUserRole(@ModelAttribute("newUserRole") UserRoleDto newUserRole) {
 
         userRoleService.createUserRole(newUserRole);

@@ -48,6 +48,11 @@ public class InterlocutorServiceImpl implements InterlocutorService {
     }
 
     @Override
+    public void deleteInterlocutor(UUID roomId, UUID userId) {
+        interlocutorRepository.deleteAllByRoomIdAndUserId(roomId, userId);
+    }
+
+    @Override
     public boolean isUserInRoom(UserDto userDto, RoomDto roomDto) {
         return interlocutorRepository.findAllByRoomAndUser(
                 modelMapper.map(roomDto, Room.class),

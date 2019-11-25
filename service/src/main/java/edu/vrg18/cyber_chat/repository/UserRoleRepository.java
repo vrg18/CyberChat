@@ -11,10 +11,10 @@ import java.util.UUID;
 
 public interface UserRoleRepository extends JpaRepository<UserRole, UUID> {
 
-    List<UserRole> findAllByUserId(UUID id);
-
-    List<UserRole> findAllByUserIdAndRoleId(UUID userId, UUID roleId);
-
     @Query("SELECT ur.role FROM UserRole ur WHERE ur.user = :user")
     List<Role> findAllRoleByUser(User user);
+
+    void deleteAllByUserId(UUID id);
+
+    void deleteAllByUserIdAndRoleId(UUID userId, UUID roleId);
 }

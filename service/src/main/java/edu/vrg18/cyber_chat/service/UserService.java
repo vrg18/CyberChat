@@ -1,6 +1,8 @@
 package edu.vrg18.cyber_chat.service;
 
+import edu.vrg18.cyber_chat.dto.RoomDto;
 import edu.vrg18.cyber_chat.dto.UserDto;
+import edu.vrg18.cyber_chat.entity.Room;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -28,4 +30,6 @@ public interface UserService {
     List<UserDto> findUsersInRoomId(UUID id);
 
     String getLastUserRoomId(String userName);
+
+    void setLastUserRoom(UserDto userDto, UUID roomId);
 }

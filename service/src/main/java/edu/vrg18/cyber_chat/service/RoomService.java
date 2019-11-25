@@ -21,12 +21,13 @@ public interface RoomService {
 
     Page<RoomDto> findAllRooms(int currentPage, int pageSize);
 
+    List<RoomDto> findAllRooms();
+
     public List<RoomDto> findAllPublicRooms();
 
-    List<RoomDto> findAllRoomsOfUserAndAllPublicRooms(UserDto userDto);
+    Page<RoomDto> findAllRoomsOfUserAndAllPublicRooms(UserDto userDto, int currentPage, int pageSize);
 
     RoomDto findOrCreateTeteATeteRoom(UserDto initiatingUserDto, UserDto slaveUserDto);
 
-    Room getRealRoomById(UUID id);
-
+    String getFullNameOfRoom(RoomDto roomDto);
 }

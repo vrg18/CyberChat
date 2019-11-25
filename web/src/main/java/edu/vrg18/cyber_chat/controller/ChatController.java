@@ -46,7 +46,7 @@ public class ChatController {
     public String chatPage(Principal principal) {
 
         return "redirect:/room/".concat(userService.getLastUserRoomId(principal.getName()));
-   }
+    }
 
     @GetMapping("/room/{id}")
     public String roomPage(@PathVariable UUID id, Model model, Principal principal,
@@ -71,11 +71,11 @@ public class ChatController {
         model.addAttribute("currentUserId", currentUser.getId());
         model.addAttribute("currentRoomId", id);
 
-        PaginationAssistant.assistant("room", model,
-                roomService.findAllRoomsOfUserAndAllPublicRooms(currentUser, rCurrentPage - 1, rPageSize));
         PaginationAssistant.assistant("message", model,
                 messageService.findAllMessagesByRoomAndMarkAsRead(currentRoom, currentUser,
                         mCurrentPage - 1, mPageSize));
+        PaginationAssistant.assistant("room", model,
+                roomService.findAllRoomsOfUserAndAllPublicRooms(currentUser, rCurrentPage - 1, rPageSize));
         PaginationAssistant.assistant("user", model,
                 userService.findAllUsersWithoutDisabled(uCurrentPage - 1, uPageSize));
 
@@ -103,7 +103,6 @@ public class ChatController {
     public String sendMessage(@ModelAttribute("message") MessageDto message, HttpServletRequest request) {
 
         messageService.createMessage(message);
-
         simpMessagingTemplate.convertAndSend("/topic/" + message.getRoom().getId().toString(),
                 message.getAuthor().getId().toString());
 

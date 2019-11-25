@@ -2,18 +2,16 @@ package edu.vrg18.cyber_chat.service.implementation;
 
 import edu.vrg18.cyber_chat.dto.RoleDto;
 import edu.vrg18.cyber_chat.entity.Role;
-import edu.vrg18.cyber_chat.entity.Role_;
 import edu.vrg18.cyber_chat.repository.RoleRepository;
+import edu.vrg18.cyber_chat.repository.UserRoleRepository;
 import edu.vrg18.cyber_chat.service.RoleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,11 +22,15 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
+    private final UserRoleRepository userRoleRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public RoleServiceImpl(RoleRepository roleRepository, ModelMapper modelMapper) {
+    public RoleServiceImpl(RoleRepository roleRepository,
+                           UserRoleRepository userRoleRepository,
+                           ModelMapper modelMapper) {
         this.roleRepository = roleRepository;
+        this.userRoleRepository = userRoleRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -49,6 +51,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void deleteRole(UUID id) {
+        userRoleRepository.deleteAllByRoleId(id);
         roleRepository.deleteById(id);
     }
 

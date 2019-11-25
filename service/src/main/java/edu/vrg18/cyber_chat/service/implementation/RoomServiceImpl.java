@@ -8,6 +8,7 @@ import edu.vrg18.cyber_chat.entity.Room_;
 import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.mapper.RoomMapper;
 import edu.vrg18.cyber_chat.mapper.UserMapper;
+import edu.vrg18.cyber_chat.repository.FamiliarizeRepository;
 import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
 import edu.vrg18.cyber_chat.repository.MessageRepository;
 import edu.vrg18.cyber_chat.repository.RoomRepository;
@@ -43,17 +44,20 @@ public class RoomServiceImpl implements RoomService {
     private final InterlocutorRepository interlocutorRepository;
     private final UserRepository userRepository;
     private final MessageRepository messageRepository;
+    private final FamiliarizeRepository familiarizeRepository;
     private final RoomMapper roomMapper;
     private final UserMapper userMapper;
 
     @Autowired
     public RoomServiceImpl(RoomRepository roomRepository, InterlocutorRepository interlocutorRepository,
                            UserRepository userRepository, MessageRepository messageRepository,
+                           FamiliarizeRepository familiarizeRepository,
                            RoomMapper roomMapper, UserMapper userMapper) {
         this.roomRepository = roomRepository;
         this.interlocutorRepository = interlocutorRepository;
         this.userRepository = userRepository;
         this.messageRepository = messageRepository;
+        this.familiarizeRepository = familiarizeRepository;
         this.roomMapper = roomMapper;
         this.userMapper = userMapper;
     }
@@ -77,7 +81,14 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void deleteRoom(UUID id) {
+
         interlocutorRepository.deleteAllByRoomId(id);
+        messageRepository.findAllByRoomId(id).forEach(m -> {
+            familiarizeRepository.deleteAllByMessageId(m.getId());
+        });
+        messageRepository.deleteAllByRoomId(id);
+        userRepository.saveAll(userRepository.findAllByLastRoomId(id)
+                .stream().peek(u -> u.setLastRoom(null)).collect(Collectors.toList()));
         roomRepository.deleteById(id);
     }
 

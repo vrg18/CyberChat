@@ -2,8 +2,6 @@ package edu.vrg18.cyber_chat.service;
 
 import edu.vrg18.cyber_chat.dto.RoomDto;
 import edu.vrg18.cyber_chat.dto.UserDto;
-import edu.vrg18.cyber_chat.entity.Room;
-import edu.vrg18.cyber_chat.entity.User;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

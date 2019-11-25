@@ -1,6 +1,5 @@
 package edu.vrg18.cyber_chat.repository;
 
-import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.entity.Room;
 import org.springframework.data.domain.Page;
@@ -17,6 +16,8 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
 
     Page<Message> findAllByRoom(Room room, Pageable page);
 
+    List<Message> findAllByRoomId(UUID roomId);
+
     /**
      * Used by the bot to get a list of new messages.
      * Pagination is not needed.
@@ -32,4 +33,9 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
 
     @Query("SELECT COUNT(m) FROM Message m WHERE m.room.id = :roomId AND m NOT IN (SELECT f.message FROM Familiarize f WHERE f.user.id = :userId AND f.message.room.id = :roomId)")
     int countOfUnreadMessagesInRoom(UUID userId, UUID roomId);
+
+    void deleteAllByRoomId(UUID id);
+
+    int countAllByAuthorId(UUID id);
+
 }

@@ -1,15 +1,13 @@
 package edu.vrg18.cyber_chat.controller;
 
 import edu.vrg18.cyber_chat.dto.RoleDto;
-import edu.vrg18.cyber_chat.dto.RoomDto;
 import edu.vrg18.cyber_chat.dto.UserDto;
 import edu.vrg18.cyber_chat.dto.UserRoleDto;
 import edu.vrg18.cyber_chat.service.RoleService;
-import edu.vrg18.cyber_chat.service.RoomService;
 import edu.vrg18.cyber_chat.service.UserRoleService;
 import edu.vrg18.cyber_chat.service.UserService;
+import edu.vrg18.cyber_chat.util.PaginationAssistant;
 import edu.vrg18.cyber_chat.utils.WebUtils;
-import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -25,8 +23,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Controller
 @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -35,14 +31,12 @@ public class AdministratorController {
     private final UserService userService;
     private final RoleService roleService;
     private final UserRoleService userRoleService;
-    private final RoomService roomService;
 
     public AdministratorController(UserService userService, RoleService roleService,
-                                   UserRoleService userRoleService, RoomService roomService) {
+                                   UserRoleService userRoleService) {
         this.userService = userService;
         this.roleService = roleService;
         this.userRoleService = userRoleService;
-        this.roomService = roomService;
     }
 
     @GetMapping("/administrator")
@@ -62,31 +56,10 @@ public class AdministratorController {
         String userInfo = WebUtils.userToString(loginedUser);
         model.addAttribute("userInfo", userInfo);
 
-        Page<UserDto> usersPage = userService.findAllUsers(uCurrentPage - 1, uPageSize);
-        model.addAttribute("users", usersPage.getContent());
-        int uTotalPages = usersPage.getTotalPages();
-        if (uTotalPages > 0) {
-            List<Integer> uPageNumbers = IntStream.rangeClosed(1, uTotalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("uPageNumbers", uPageNumbers);
-            model.addAttribute("uTotalPages", uTotalPages);
-            model.addAttribute("uPageSize", uPageSize);
-            model.addAttribute("uCurrentPage", usersPage.getNumber() + 1);
-        }
-
-        Page<RoleDto> rolesPage = roleService.findAllRoles(rCurrentPage - 1, rPageSize);
-        model.addAttribute("roles", rolesPage.getContent());
-        int rTotalPages = rolesPage.getTotalPages();
-        if (rTotalPages > 0) {
-            List<Integer> rPageNumbers = IntStream.rangeClosed(1, rTotalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("rPageNumbers", rPageNumbers);
-            model.addAttribute("rTotalPages", rTotalPages);
-            model.addAttribute("rPageSize", rPageSize);
-            model.addAttribute("rCurrentPage", rolesPage.getNumber() + 1);
-        }
+        PaginationAssistant.assistant("user", model,
+                userService.findAllUsers(uCurrentPage - 1, uPageSize));
+        PaginationAssistant.assistant("role", model,
+                roleService.findAllRoles(rCurrentPage - 1, rPageSize));
 
         model.addAttribute("title", "AdministratorPage");
         return "administration/administratorPage";

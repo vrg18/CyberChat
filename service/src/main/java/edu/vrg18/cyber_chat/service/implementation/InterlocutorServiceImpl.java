@@ -6,7 +6,6 @@ import edu.vrg18.cyber_chat.dto.UserDto;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Interlocutor_;
 import edu.vrg18.cyber_chat.entity.Room;
-import edu.vrg18.cyber_chat.entity.Room_;
 import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.User_;
 import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
@@ -19,9 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

@@ -1,6 +1,5 @@
 package edu.vrg18.cyber_chat.service.implementation;
 
-import edu.vrg18.cyber_chat.dto.RoomDto;
 import edu.vrg18.cyber_chat.dto.UserDto;
 import edu.vrg18.cyber_chat.entity.Interlocutor;
 import edu.vrg18.cyber_chat.entity.Role;
@@ -11,6 +10,7 @@ import edu.vrg18.cyber_chat.entity.User_;
 import edu.vrg18.cyber_chat.mapper.UserMapper;
 import edu.vrg18.cyber_chat.repository.FamiliarizeRepository;
 import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
+import edu.vrg18.cyber_chat.repository.MessageRepository;
 import edu.vrg18.cyber_chat.repository.RoleRepository;
 import edu.vrg18.cyber_chat.repository.RoomRepository;
 import edu.vrg18.cyber_chat.repository.UserRepository;
@@ -20,14 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -46,6 +44,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final InterlocutorRepository interlocutorRepository;
     private final RoomRepository roomRepository;
+    private final MessageRepository messageRepository;
     private final RoleRepository roleRepository;
     private final UserRoleRepository userRoleRepository;
     private final FamiliarizeRepository familiarizeRepository;
@@ -54,12 +53,13 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, InterlocutorRepository interlocutorRepository,
-                           RoomRepository roomRepository, RoleRepository roleRepository,
-                           UserRoleRepository userRoleRepository, FamiliarizeRepository familiarizeRepository,
-                           UserMapper userMapper) {
+                           RoomRepository roomRepository, MessageRepository messageRepository,
+                           RoleRepository roleRepository, UserRoleRepository userRoleRepository,
+                           FamiliarizeRepository familiarizeRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.interlocutorRepository = interlocutorRepository;
         this.roomRepository = roomRepository;
+        this.messageRepository = messageRepository;
         this.roleRepository = roleRepository;
         this.userRoleRepository = userRoleRepository;
         this.familiarizeRepository = familiarizeRepository;
@@ -106,8 +106,8 @@ public class UserServiceImpl implements UserService {
 
         updatedUser.setEncryptedPassword(
                 Objects.isNull(userDto.getNewPassword()) || userDto.getNewPassword().isEmpty() ?
-                userRepository.getOne(userDto.getId()).getEncryptedPassword() :
-                encoder.encode(userDto.getNewPassword()));
+                        userRepository.getOne(userDto.getId()).getEncryptedPassword() :
+                        encoder.encode(userDto.getNewPassword()));
 
         if (Objects.isNull(userDto.getLastActivity())) updatedUser.setLastActivity(LocalDateTime.now());
 
@@ -116,6 +116,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(UUID id) {
+
+        if (roomRepository.countAllByOwnerId(id) > 0) return;
+        if (messageRepository.countAllByAuthorId(id) > 0) return;
 
         interlocutorRepository.deleteAllByUserId(id);
         familiarizeRepository.deleteAllByUserId(id);
@@ -127,7 +130,7 @@ public class UserServiceImpl implements UserService {
     public Page<UserDto> findAllUsers(int currentPage, int pageSize) {
 
         return userRepository.findAll(
-                PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.ASC,User_.USER_NAME)))
+                PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.ASC, User_.USER_NAME)))
                 .map(u -> userMapper.toDto(u, true));
     }
 
@@ -147,14 +150,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findUsersInRoomId(UUID id) {
-
-        return userRepository.findAllUsersByRoomId(id)
-                .stream()
-                .map(u -> userMapper.toDto(u, false))
-                .collect(Collectors.toList());
-    }
-
     public String getLastUserRoomId(String userName) {
 
         return userRepository.findUserByUserName(userName)
@@ -163,11 +158,12 @@ public class UserServiceImpl implements UserService {
                 .getId().toString();
     }
 
+    @Override
     public void setLastUserRoom(UserDto userDto, UUID roomId) {
 
-        if (!userDto.getLastRoomId().equals(roomId)) {
+        if (Objects.isNull(userDto.getLastRoomId()) || !userDto.getLastRoomId().equals(roomId)) {
             userDto.setLastRoomId(roomId);
-            userRepository.save(userMapper.toEntity(userDto));
+            updateUser(userDto);
         }
     }
 }

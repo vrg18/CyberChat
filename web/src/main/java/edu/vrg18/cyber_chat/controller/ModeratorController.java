@@ -10,7 +10,6 @@ import edu.vrg18.cyber_chat.service.RoomService;
 import edu.vrg18.cyber_chat.service.UserService;
 import edu.vrg18.cyber_chat.util.PaginationAssistant;
 import edu.vrg18.cyber_chat.utils.WebUtils;
-import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -27,8 +26,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Controller
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
@@ -171,8 +168,7 @@ public class ModeratorController {
     public String newInterlocutor(@PathVariable UUID roomId, Model model) {
 
         InterlocutorDto newInterlocutor = new InterlocutorDto();
-        RoomDto selectedRoom = roomService.getRoomById(roomId);
-        newInterlocutor.setRoom(selectedRoom);
+        newInterlocutor.setRoom(roomService.getRoomById(roomId));
         model.addAttribute("newInterlocutor", newInterlocutor);
 
         List<UserDto> users = userService.findAllUsersWithoutDisabled();
@@ -240,8 +236,7 @@ public class ModeratorController {
     public String newInterlocutorInRoom(@PathVariable UUID id, Model model) {
 
         InterlocutorDto newInterlocutor = new InterlocutorDto();
-        RoomDto currentRoom = roomService.getRoomById(id);
-        newInterlocutor.setRoom(currentRoom);
+        newInterlocutor.setRoom(roomService.getRoomById(id));
         model.addAttribute("newInterlocutor", newInterlocutor);
 
         List<UserDto> users = userService.findAllUsersWithoutDisabled();

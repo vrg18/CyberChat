@@ -1,7 +1,7 @@
 package edu.vrg18.cyber_chat.repository;
 
-import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.Room;
+import edu.vrg18.cyber_chat.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +26,6 @@ public interface RoomRepository extends JpaRepository<Room, UUID>, JpaSpecificat
 
     @Query("SELECT i.room FROM Interlocutor i WHERE i.user.id = :userId AND i.room.closed = false")
     List<Room> findAllRoomByUserId(UUID userId);
+
+    int countAllByOwnerId(UUID id);
 }

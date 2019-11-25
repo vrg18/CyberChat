@@ -16,5 +16,7 @@ public interface UserRoleRepository extends JpaRepository<UserRole, UUID> {
 
     void deleteAllByUserId(UUID id);
 
+    void deleteAllByRoleId(UUID id);
+
     void deleteAllByUserIdAndRoleId(UUID userId, UUID roleId);
 }

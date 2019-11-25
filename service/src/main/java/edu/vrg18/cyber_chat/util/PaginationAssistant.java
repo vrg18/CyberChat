@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 
 public class PaginationAssistant {
 
-    public static void assistant (String entityName, Model model, Page page) {
+    public static void assistant(String entityName, Model model, Page page) {
 
         model.addAttribute(entityName.concat("s"), page.getContent());
         int totalPages = page.getTotalPages();

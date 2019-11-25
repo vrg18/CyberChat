@@ -1,7 +1,6 @@
 package edu.vrg18.cyber_chat.service;
 
 import edu.vrg18.cyber_chat.dto.RoleDto;
-import edu.vrg18.cyber_chat.entity.Role;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

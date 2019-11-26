@@ -8,6 +8,8 @@ import edu.vrg18.cyber_chat.entity.Interlocutor_;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.entity.User;
 import edu.vrg18.cyber_chat.entity.User_;
+import edu.vrg18.cyber_chat.mapper.RoomMapper;
+import edu.vrg18.cyber_chat.mapper.UserMapper;
 import edu.vrg18.cyber_chat.repository.InterlocutorRepository;
 import edu.vrg18.cyber_chat.service.InterlocutorService;
 import org.modelmapper.ModelMapper;
@@ -26,11 +28,16 @@ public class InterlocutorServiceImpl implements InterlocutorService {
 
     private final InterlocutorRepository interlocutorRepository;
     private final ModelMapper modelMapper;
+    private final RoomMapper roomMapper;
+    private final UserMapper userMapper;
 
     @Autowired
-    public InterlocutorServiceImpl(InterlocutorRepository interlocutorRepository, ModelMapper modelMapper) {
+    public InterlocutorServiceImpl(InterlocutorRepository interlocutorRepository, ModelMapper modelMapper,
+                                   RoomMapper roomMapper, UserMapper userMapper) {
         this.interlocutorRepository = interlocutorRepository;
         this.modelMapper = modelMapper;
+        this.roomMapper = roomMapper;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -51,8 +58,8 @@ public class InterlocutorServiceImpl implements InterlocutorService {
     @Override
     public boolean isUserInRoom(UserDto userDto, RoomDto roomDto) {
         return interlocutorRepository.findAllByRoomAndUser(
-                modelMapper.map(roomDto, Room.class),
-                modelMapper.map(userDto, User.class))
+                roomMapper.toEntity(roomDto),
+                userMapper.toEntity(userDto))
                 .size() > 0;
     }
 

@@ -165,7 +165,7 @@ public class RoomServiceImpl implements RoomService {
 
     private Room createNewTeteATeteRoom(UserDto initiatingUserDto, UserDto slaveUserDto) {
 
-        User initiatingUser = userMapper.toEntity(initiatingUserDto);
+        User initiatingUser = userRepository.getOne(initiatingUserDto.getId());
         Room teteATeteRoom = roomRepository.save(
                 new Room(null, nameOfNewTeteATeteRoom(initiatingUserDto, slaveUserDto), initiatingUser, true, false));
         initiatingUser.setLastRoom(teteATeteRoom);

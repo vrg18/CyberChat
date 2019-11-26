@@ -8,6 +8,8 @@ import edu.vrg18.cyber_chat.entity.Message;
 import edu.vrg18.cyber_chat.entity.Message_;
 import edu.vrg18.cyber_chat.entity.Room;
 import edu.vrg18.cyber_chat.entity.User;
+import edu.vrg18.cyber_chat.mapper.RoomMapper;
+import edu.vrg18.cyber_chat.mapper.UserMapper;
 import edu.vrg18.cyber_chat.repository.FamiliarizeRepository;
 import edu.vrg18.cyber_chat.repository.MessageRepository;
 import edu.vrg18.cyber_chat.repository.RoomRepository;
@@ -35,14 +37,19 @@ public class MessageServiceImpl implements MessageService {
     private final FamiliarizeRepository familiarizeRepository;
     private final RoomRepository roomRepository;
     private final ModelMapper modelMapper;
+    private final RoomMapper roomMapper;
+    private final UserMapper userMapper;
 
     @Autowired
     public MessageServiceImpl(MessageRepository messageRepository, FamiliarizeRepository familiarizeRepository,
-                              RoomRepository roomRepository, ModelMapper modelMapper) {
+                              RoomRepository roomRepository, ModelMapper modelMapper,
+                              RoomMapper roomMapper, UserMapper userMapper) {
         this.messageRepository = messageRepository;
         this.familiarizeRepository = familiarizeRepository;
         this.roomRepository = roomRepository;
         this.modelMapper = modelMapper;
+        this.roomMapper = roomMapper;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -80,18 +87,19 @@ public class MessageServiceImpl implements MessageService {
             (RoomDto roomDto, UserDto userDto, int currentPage, int pageSize) {
 
         if (currentPage < 0) {
-            int countAllByRoom = messageRepository.countAllByRoom(modelMapper.map(roomDto, Room.class));
-            currentPage = (countAllByRoom / pageSize) + ((countAllByRoom % pageSize) > 0 ? 1 : 0) - 1;
+            int countAllByRoom = messageRepository.countAllByRoom(roomMapper.toEntity(roomDto));
+            currentPage = countAllByRoom > 0 ?
+                    ((countAllByRoom / pageSize) + ((countAllByRoom % pageSize) > 0 ? 1 : 0) - 1) : 0;
         }
 
         Page<Message> messagesPageByRoom = messageRepository.findAllByRoom(
-                modelMapper.map(roomDto, Room.class),
+                roomMapper.toEntity(roomDto),
                 PageRequest.of(currentPage, pageSize, Sort.by(Sort.Direction.ASC, Message_.DATE)));
 
         messagesPageByRoom.getContent()
-                .forEach(m -> familiarizeRepository.findByMessageAndUser(m, modelMapper.map(userDto, User.class))
+                .forEach(m -> familiarizeRepository.findByMessageAndUser(m, userMapper.toEntity(userDto))
                         .orElseGet(() -> familiarizeRepository.save(
-                                new Familiarize(null, m, modelMapper.map(userDto, User.class)))));
+                                new Familiarize(null, m, userMapper.toEntity(userDto)))));
 
         return messagesPageByRoom.map(m -> modelMapper.map(m, MessageDto.class));
     }
@@ -113,7 +121,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public boolean wasThereSuchMessageInRoom(RoomDto roomDto, String messageText) {
-        return messageRepository.countAllByRoomAndText(modelMapper.map(roomDto, Room.class), messageText) != 0;
+        return messageRepository.countAllByRoomAndText(roomMapper.toEntity(roomDto), messageText) != 0;
     }
 
     @Override
